@@ -1,0 +1,322 @@
+#!/bin/bash
+
+g_pipeline_name="FunctionalPreprocessing"
+
+if [ -z "${XNAT_PBS_JOBS}" ]; then
+	script_name=$(basename "${0}")
+	echo "${script_name}: ABORTING: XNAT_PBS_JOBS environment variable must be set"
+	exit 1
+fi
+
+# Logging related functions
+source "${XNAT_PBS_JOBS}/shlib/log.shlib" 
+
+# Utility functions
+source "${XNAT_PBS_JOBS}/shlib/utils.shlib"
+log_Msg "XNAT_PBS_JOBS: ${XNAT_PBS_JOBS}"
+
+# Show script usage information
+usage()
+{
+	cat <<EOF
+
+Run the HCP Functional Preprocessing pipeline scripts
+
+Usage: FunctionalPreprocessing.XNAT_PROCESS <options>
+
+  Options: [ ] = optional, < > = user-supplied-value
+
+  [--help] : show usage information and exit
+
+
+
+   --setup-script=<script>  : Full path to script to source to set up environment before running
+                              HCP Pipeline Scripts.
+
+EOF
+}
+
+# Parse command line options. "Return" the options to use in global variables
+get_options()
+{
+	local arguments=($@)
+
+	# initialize global output variables
+
+	# set default values
+	unset g_project
+	unset g_subject
+	unset g_session
+	unset g_scan
+	unset g_session_classifier
+	unset g_working_dir
+	unset g_gdcoeffs
+	unset g_topupconfig
+	unset g_dcmethod
+	
+	# parse arguments
+	local num_args=${#arguments[@]}
+	local argument
+	local index=0
+
+	while [ ${index} -lt ${num_args} ]; do
+		argument=${arguments[index]}
+
+		case ${argument} in
+			--help)
+				usage
+				exit 1
+				;;
+			--project=*)
+				g_project=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--subject=*)
+				g_subject=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--session=*)
+				g_session=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--scan=*)
+				g_scan=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--session-classifier=*)
+				g_session_classifier=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--working-dir=*)
+				g_working_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--gdcoeffs=*)
+				g_gdcoeffs=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--topupconfig=*)
+				g_topupconfig=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--dcmethod=*)
+				g_dcmethod=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			*)
+				usage
+				log_Err_Abort "unrecognized option: ${argument}"
+				;;
+		esac
+	done
+
+	local error_count=0
+
+	# check parameters
+	
+	if [ -z "${g_project}" ]; then
+		log_Err "project (--project=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "project: ${g_project}"
+	fi
+	
+	if [ -z "${g_subject}" ]; then
+		log_Err "subject (--subject=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "subject: ${g_subject}"
+	fi
+	
+	if [ -z "${g_session}" ]; then
+		log_Err "session (--session=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "session: ${g_session}"
+	fi
+	
+	if [ -z "${g_session_classifier}" ]; then
+		log_Err "session classifier (--session-classifier=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "session_classifier: ${g_session_classifier}"
+	fi
+	
+	if [ -z "${g_scan}" ]; then
+		log_Err "scan (--scan=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "scan: ${g_scan}"
+	fi
+	
+	if [ -z "${g_working_dir}" ]; then
+		log_Err "working directory (--working-dir=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "working directory: ${g_working_dir}"
+	fi
+
+	if [ -z "${g_gdcoeffs}" ] ; then
+		log_Err "gdcoeffs (--gdcoeffs=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "gdcoeffs: ${g_gdcoeffs}"
+	fi
+
+	if [ -z "${g_dcmethod}" ] ; then
+		log_Err "dcmethod (--dcmethod=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "dcmethod: ${g_dcmethod}"
+	fi
+
+	log_Msg "topupconfig: ${g_topupconfig}"
+	
+	if [ ${error_count} -gt 0 ]; then
+		log_Err_Abort "For usage information, use --help"
+	fi
+}
+
+# Main processing
+main()
+{
+	log_Debug_On
+
+	show_job_start
+
+	show_platform_info
+
+	get_options "$@"
+	
+	log_execution_info ${g_working_dir}/$(basename "${0}").execinfo
+
+	create_start_time_file ${g_working_dir} ${g_pipeline_name}
+
+	if [ -z "${HCPPIPEDIR}" ]; then
+		log_Err_Abort "HCPPIPEDIR environment variable must be set"
+	else
+		log_Msg "HCPPIPEDIR: ${HCPPIPEDIR}"
+	fi
+
+	source_script ${XNAT_PBS_JOBS}/ToolSetupScripts/epd-python_setup.sh
+	
+	# get names and full paths to files
+	local path_to_files="${g_working_dir}"
+	path_to_files+="/${g_subject}"
+	path_to_files+="/unprocessed"
+	path_to_files+="/${g_session_classifier}"
+	path_to_files+="/${g_scan}"
+	log_Debug_Msg "path_to_files: ${path_to_files}"
+
+	local nifti_file_name="${g_session}_${g_scan}.nii.gz"
+	log_Debug_Msg "nifti_file_name: ${nifti_file_name}"
+
+	local sbref_file_name="${g_session}_${g_scan}_SBRef.nii.gz"
+	log_Debug_Msg "sbref_file_name: ${sbref_file_name}"
+
+	local full_path_to_nifti_file="${path_to_files}/${nifti_file_name}"
+	log_Debug_Msg "full_path_to_nifti_file: ${full_path_to_nifti_file}"
+
+	if [ ! -f "${full_path_to_nifti_file}" ]; then
+		log_Err_Abort "${full_path_to_nifti_file} DOES NOT EXIST"
+	fi
+	
+	local full_path_to_sbref_file="${path_to_files}/${sbref_file_name}"
+	log_Debug_Msg "full_path_to_sbref_file: ${full_path_to_sbref_file}"
+
+	if [ ! -f "${full_path_to_sbref_file}" ]; then
+		log_Err_Abort "${full_path_to_sbref_file} DOES NOT EXIST"
+	fi
+	
+	local full_path_to_se_neg_file
+	full_path_to_se_neg_file=$(ls -1 ${path_to_files}/${g_session}_SpinEchoFieldMap*_AP.nii.gz | head -1)
+	log_Debug_Msg "full_path_to_se_neg_file: ${full_path_to_se_neg_file}"
+
+	if [ ! -f "${full_path_to_se_neg_file}" ]; then
+		log_Err_Abort "${full_path_to_se_neg_file} DOES NOT EXIST"
+	fi
+	
+	local full_path_to_se_pos_file
+	full_path_to_se_pos_file=$(ls -1 ${path_to_files}/${g_session}_SpinEchoFieldMap*_PA.nii.gz | head -1)
+	log_Debug_Msg "full_path_to_se_pos_file: ${full_path_to_se_pos_file}"
+
+	if [ ! -f "${full_path_to_se_pos_file}" ]; then
+		log_Err_Abort "${full_path_to_se_pos_file} DOES NOT EXIST"
+	fi
+
+	# get echo spacing value
+	echo_spacing=$(${XNAT_PBS_JOBS}/lib/utils/get_json_meta_data.sh \
+								   -f ${full_path_to_nifti_file} \
+								   -k EffectiveEchoSpacing)
+	log_Msg "echo_spacing: ${echo_spacing}"
+	
+	# Run the GenericfMRIVolumeProcessingPipeline.sh script
+	local vol_cmd=""
+	vol_cmd+="${HCPPIPEDIR}/fMRIVolume/GenericfMRIVolumeProcessingPipeline.sh"
+	vol_cmd+=" --path=${g_working_dir}"
+	vol_cmd+=" --subject=${g_subject}"
+	vol_cmd+=" --fmriname=${g_scan}"
+	vol_cmd+=" --fmritcs=${full_path_to_nifti_file}"
+	vol_cmd+=" --fmriscout=${full_path_to_sbref_file}"
+	vol_cmd+=" --SEPhaseNeg=${full_path_to_se_neg_file}"
+	vol_cmd+=" --SEPhasePos=${full_path_to_se_pos_file}"
+	vol_cmd+=" --echospacing=${echo_spacing}"
+
+	# Need to check to see if these can be extracted or derived from the JSON
+	vol_cmd+=" --echodiff=NONE"
+	vol_cmd+=" --unwarpdir=-x"
+	vol_cmd+=" --fmrires=2"
+
+	
+	vol_cmd+=" --dcmethod=${g_dcmethod}"
+	vol_cmd+=" --gdcoeffs=${HCPPIPEDIR}/global/config/${g_gdcoeffs}"
+
+	if [ -z "${g_topupconfig}" ]; then
+		vol_cmd+=" --topupconfig=NONE"
+	elif [ "${g_topupconfig}" = "NONE" ]; then
+		vol_cmd+=" --topupconfig=NONE"
+	else
+		vol_cmd+=" --topupconfig=${HCPPIPEDIR}/global/config/${g_topupconfig}"
+	fi
+
+	vol_cmd+=" --biascorrection=SEBASED"
+	
+	log_Msg "vol_cmd: ${vol_cmd}"
+
+	pushd ${g_working_dir}
+	${vol_cmd}
+	return_code=$?
+	if [ ${return_code} -ne 0 ]; then
+	 	log_Err_Abort "GenericfMRIVolumeProcessingPipeline.sh non-zero return code: ${return_code}"
+	fi
+	popd
+
+	# Run the GenericfMRISurfaceProcessingPipeline.sh script
+
+	local surf_cmd=""
+	surf_cmd+="${HCPPIPEDIR}/fMRISurface/GenericfMRISurfaceProcessingPipeline.sh"
+	surf_cmd+=" --path=${g_working_dir}"
+	surf_cmd+=" --subject=${g_subject}"
+	surf_cmd+=" --fmriname=${g_scan}"
+	surf_cmd+=" --lowresmesh=32"
+	surf_cmd+=" --fmrires=2"
+	surf_cmd+=" --smoothingFWHM=2"
+	surf_cmd+=" --grayordinatesres=2"
+	surf_cmd+=" --regname=MSMSulc"
+
+	log_Msg "surf_cmd: ${surf_cmd}"
+
+	pushd ${g_working_dir}
+	${surf_cmd}
+	return_code=$?
+	if [ ${return_code} -ne 0 ]; then
+		log_Err_Abort "GenericfMRISurfaceProcessingPipeline.sh non-zero return code: ${return_code}"
+	fi
+	popd
+
+	log_Msg "Complete"
+}
+
+# Invoke the main function to get things started
+main "$@"
+
