@@ -54,8 +54,10 @@ source_script()
 log_execution_info()
 {
 	local filename=${1}
-	echo "PBS_JOBID: ${PBS_JOBID}" > ${filename}
-	echo "PBS execution node: $(hostname)" >> ${filename}
+	#echo "PBS_JOBID: ${PBS_JOBID}" > ${filename}
+	echo "JOBID: ${PBS_JOBID}" > ${filename}
+	#echo "PBS execution node: $(hostname)" >> ${filename}
+	echo "execution node: $(hostname)" >> ${filename}
 }
 
 set_g_python_environment()
