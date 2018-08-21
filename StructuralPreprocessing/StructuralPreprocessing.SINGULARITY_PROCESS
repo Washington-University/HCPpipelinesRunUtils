@@ -2,18 +2,18 @@
 
 g_pipeline_name="StructuralPreprocessing"
 
-if [ -z "${XNAT_PBS_JOBS}" ]; then
+if [ -z "${HCP_RUN_UTILS}" ]; then
 	script_name=$(basename "${0}")
-	echo "${script_name}: ABORTING: XNAT_PBS_JOBS environment variable must be set"
+	echo "${script_name}: ABORTING: HCP_RUN_UTILS environment variable must be set"
 	exit 1
 fi
 
 # Logging related functions
-source "${XNAT_PBS_JOBS}/shlib/log.shlib"
+source "${HCP_RUN_UTILS}/shlib/log.shlib"
 
 # Utility functions
-source "${XNAT_PBS_JOBS}/shlib/utils.shlib"
-log_Msg "XNAT_PBS_JOBS: ${XNAT_PBS_JOBS}"
+source "${HCP_RUN_UTILS}/shlib/utils.shlib"
+log_Msg "HCP_RUN_UTILS: ${HCP_RUN_UTILS}"
 
 # Show script usage information
 usage()
@@ -21,41 +21,40 @@ usage()
 	cat <<EOF
 
 Run the HCP Structural Preprocessing pipeline scripts (PreFreeSurferPipeline.sh, 
-FreeSurferPipeline.sh, and PostFreeSurferPipeline.sh) in an XNAT-aware and
-XNAT-pipeline-like manner.
+FreeSurferPipeline.sh, and PostFreeSurferPipeline.sh)
 
-Usage: StructuralPreprocessingHCP.XNAT_PROCESS <options>
+Usage: StructuralPreprocessing.SINGULARITY_PROCESS <options>
 
   Options: [ ] = optional, < > = user-supplied-value
 
   [--help] : show usage information and exit
-   --project=<project>      : XNAT project (e.g. HCP_500)
-   --subject=<subject>      : XNAT subject ID within project (e.g. 100307)
-   --session=<session>      : XNAT session ID within project (e.g. 100307_3T)
+   --project=<project>      : project (e.g. HCP_500)
+   --subject=<subject>      : subject ID within project (e.g. 100307)
+   --session=<session>      : session ID within project (e.g. 100307_3T)
    --working-dir=<dir>      : Working directory in which to place retrieved data
                               and in which to produce results
    --first-t1w-directory-name=<directory-name>
                             : TBW
    --first-t1w-resource-name=<resource-name>
-                            : Name of XNAT session resource that contains the first T1w scan
+                            : Name of session resource that contains the first T1w scan
    --first-t1w-file-name=<file-name>
                             : Name of first T1w file
   [--second-t1w-directory-name=<directory-name>]
                             : TBW
   [--second-t1w-resource-name=<resource-name>]
-                            : Name of XNAT session resource that contains the second T1w scan
+                            : Name of session resource that contains the second T1w scan
   [--second-t1w-file-name=<file-name>]
                             : Name of second T1w file
    --first-t2w-directory-name=<directory-name>
                             : TBW
    --first-t2w-resource-name=<resource-name>
-                            : Name of XNAT session resource that contains the first T2w scan
+                            : Name of session resource that contains the first T2w scan
    --first-t2w-file-name=<file-name>
                             : Name of first T2w file
   [--second-t2w-directory-name=<directory-name>]
                             : TBW
   [--second-t2w-resource-name=<resource-name>]
-                            : Name of XNAT session resource that contains the second T2w scan
+                            : Name of session resource that contains the second T2w scan
   [--second-t2w-file-name=<file-name>]
                             : Name of second T2w file
   [--fieldmap-type=<type>]  : <type> values
@@ -585,7 +584,7 @@ get_parameters_for_first_t1w_scan()
 	# g_first_t1w_sample_spacing=$(${XNAT_PBS_JOBS}/lib/utils/get_json_meta_data.sh -f ${first_t1w_file} -k ReadoutSampleSpacing)
 	# sample_spacing_in_secs=`echo "${g_first_t1w_sample_spacing} 1000000000.0" | awk '{printf "%.9f", $1/$2}'`
 
-	g_first_t1w_sample_spacing=$(${XNAT_PBS_JOBS}/lib/utils/get_json_meta_data.sh -f ${first_t1w_file} -k DwellTime)
+	g_first_t1w_sample_spacing=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${first_t1w_file} -k DwellTime)
 	log_Msg "g_first_t1w_sample_spacing: ${g_first_t1w_sample_spacing}"
 	
 	if [ -z "${g_first_t1w_sample_spacing}" ] ; then
@@ -631,7 +630,7 @@ get_parameters_for_first_t1w_scan()
 	elif [[ ("${g_fieldmap_type}" = "SE") || ("${g_fieldmap_type}" = "SpinEcho") ]] ; then
 		local se_phase_pos_file
 		se_phase_pos_file="${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/${g_first_t1w_directory_name}/${g_se_phase_pos}"
-		g_first_t1w_positive_dwell_time=$(${XNAT_PBS_JOBS}/lib/utils/get_json_meta_data.sh -f ${se_phase_pos_file} -k EffectiveEchoSpacing)
+		g_first_t1w_positive_dwell_time=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${se_phase_pos_file} -k EffectiveEchoSpacing)
 		log_Msg "g_first_t1w_positive_dwell_time: ${g_first_t1w_positive_dwell_time}"
 
 	fi
@@ -672,7 +671,7 @@ get_parameters_for_first_t2w_scan()
 	# g_first_t2w_sample_spacing=$(${XNAT_PBS_JOBS}/lib/utils/get_json_meta_data.sh -f ${first_t2w_file} -k ReadoutSampleSpacing)
 	# sample_spacing_in_secs=`echo "${g_first_t2w_sample_spacing} 1000000000.0" | awk '{printf "%.9f", $1/$2}'`
 
-	g_first_t2w_sample_spacing=$(${XNAT_PBS_JOBS}/lib/utils/get_json_meta_data.sh -f ${first_t2w_file} -k DwellTime)
+	g_first_t2w_sample_spacing=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${first_t2w_file} -k DwellTime)
 	log_Msg "g_first_t2w_sample_spacing: ${g_first_t2w_sample_spacing}"
 
 	if [ -z "${g_first_t2w_sample_spacing}" ] ; then
@@ -747,7 +746,7 @@ main()
 		log_Msg "HCPPIPEDIR: ${HCPPIPEDIR}"
 	fi
 	
-	source_script ${XNAT_PBS_JOBS}/ToolSetupScripts/epd-python_setup.sh
+	source_script ${HCP_RUN_UTILS}/ToolSetupScripts/epd-python_setup.sh
 
 	# determine what resources exist and get parameters needed
 	first_T1w_resource_exists=`does_first_t1w_scan_exist`

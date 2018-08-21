@@ -2,18 +2,18 @@
 
 g_pipeline_name="FunctionalPreprocessing"
 
-if [ -z "${XNAT_PBS_JOBS}" ]; then
+if [ -z "${HCP_RUN_UTILS}" ]; then
 	script_name=$(basename "${0}")
-	echo "${script_name}: ABORTING: XNAT_PBS_JOBS environment variable must be set"
+	echo "${script_name}: ABORTING: HCP_RUN_UTILS environment variable must be set"
 	exit 1
 fi
 
 # Logging related functions
-source "${XNAT_PBS_JOBS}/shlib/log.shlib" 
+source "${HCP_RUN_UTILS}/shlib/log.shlib" 
 
 # Utility functions
-source "${XNAT_PBS_JOBS}/shlib/utils.shlib"
-log_Msg "XNAT_PBS_JOBS: ${XNAT_PBS_JOBS}"
+source "${HCP_RUN_UTILS}/shlib/utils.shlib"
+log_Msg "HCP_RUN_UTILS: ${HCP_RUN_UTILS}"
 
 # Show script usage information
 usage()
@@ -22,7 +22,7 @@ usage()
 
 Run the HCP Functional Preprocessing pipeline scripts
 
-Usage: FunctionalPreprocessing.XNAT_PROCESS <options>
+Usage: FunctionalPreprocessing.SINGULARITY_PROCESS <options>
 
   Options: [ ] = optional, < > = user-supplied-value
 
@@ -198,7 +198,7 @@ main()
 		log_Msg "HCPPIPEDIR: ${HCPPIPEDIR}"
 	fi
 
-	source_script ${XNAT_PBS_JOBS}/ToolSetupScripts/epd-python_setup.sh
+	source_script ${HCP_RUN_UTILS}/ToolSetupScripts/epd-python_setup.sh
 	
 	# get names and full paths to files
 	local path_to_files="${g_working_dir}"
@@ -245,7 +245,7 @@ main()
 	fi
 
 	# get echo spacing value
-	echo_spacing=$(${XNAT_PBS_JOBS}/lib/utils/get_json_meta_data.sh \
+	echo_spacing=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh \
 								   -f ${full_path_to_nifti_file} \
 								   -k EffectiveEchoSpacing)
 	log_Msg "echo_spacing: ${echo_spacing}"

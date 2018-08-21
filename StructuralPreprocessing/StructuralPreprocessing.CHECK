@@ -1,14 +1,14 @@
 #!/bin/bash
 g_script_name=$(basename "${0}")
 
-if [ -z "${XNAT_PBS_JOBS}" ]; then
-	echo "${g_script_name}: ABORTING: XNAT_PBS_JOBS environment variable must be set"
+if [ -z "${HCP_RUN_UTILS}" ]; then
+	echo "${g_script_name}: ABORTING: HCP_RUN_UTILS environment variable must be set"
 	exit 1
 fi
 
-source "${XNAT_PBS_JOBS}/shlib/log.shlib"  # Logging related functions
-source "${XNAT_PBS_JOBS}/shlib/utils.shlib"  # Utility functions
-log_Msg "XNAT_PBS_JOBS: ${XNAT_PBS_JOBS}"
+source "${HCP_RUN_UTILS}/shlib/log.shlib"  # Logging related functions
+source "${HCP_RUN_UTILS}/shlib/utils.shlib"  # Utility functions
+log_Msg "HCP_RUN_UTILS: ${HCP_RUN_UTILS}"
 
 usage()
 {
@@ -127,7 +127,7 @@ main()
 	success_file_name="${g_script_name}.success"
 
 	check_cmd=""
-	check_cmd+="${XNAT_PBS_JOBS}/lib/ccf/structural_preprocessing/one_subject_completion_checker.py"
+	check_cmd+="${HCP_RUN_UTILS}/lib/ccf/structural_preprocessing/one_subject_completion_checker.py"
 	check_cmd+=" --project=${g_project}"
 	check_cmd+=" --subject=${g_subject}"
 	check_cmd+=" --classifier=${g_classifier}"
