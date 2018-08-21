@@ -1,13 +1,13 @@
 #!/bin/bash
 
-if [ -z "${XNAT_PBS_JOBS}" ]; then
+if [ -z "${HCP_RUN_UTILS}" ]; then
 	script_name=$(basename "${0}")
-	echo "${script_name}: ABORTING: XNAT_PBS_JOBS environment variable must be set"
+	echo "${script_name}: ABORTING: HCP_RUN_UTILS environment variable must be set"
 	exit 1
 fi
 
-source ${XNAT_PBS_JOBS}/shlib/utils.shlib
+source ${HCP_RUN_UTILS}/shlib/utils.shlib
 set_g_python_environment
 source activate ${g_python_environment} 2>/dev/null
-${XNAT_PBS_JOBS}/lib/utils/get_json_meta_data.py $@
+${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.py $@
 source deactivate 2>/dev/null
