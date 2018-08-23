@@ -1,2 +1,2 @@
-# HCPpipelinesRunUtils
-Utilities for running and checking completion status of HCP Pipelines
+# xnat_pbs_jobs
+Scripts to run HCP Pipelines as XNAT aware PBS scheduled jobs

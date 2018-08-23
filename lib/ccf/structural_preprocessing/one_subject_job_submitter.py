@@ -162,7 +162,7 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 		script = open(script_name, 'w')
 
 		self._write_bash_header(script)
-		script.write('#PBS -l nodes=1:ppn=1,walltime=4:00:00,vmem=4gb' + os.linesep)
+		script.write('#PBS -l nodes=1:ppn=1,walltime=4:00:00,mem=4gb' + os.linesep)
 		script.write('#PBS -q HCPput' + os.linesep)
 		script.write('#PBS -o ' + self.working_directory_name + os.linesep)
 		script.write('#PBS -e ' + self.working_directory_name + os.linesep)
@@ -492,7 +492,7 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 		script = open(script_name, 'w')
 
 		self._write_bash_header(script)
-		script.write('#PBS -l nodes=1:ppn=1,walltime=4:00:00,vmem=4gb' + os.linesep)
+		script.write('#PBS -l nodes=1:ppn=1,walltime=4:00:00,mem=4gb' + os.linesep)
 		script.write('#PBS -o ' + self.working_directory_name + os.linesep)
 		script.write('#PBS -e ' + self.working_directory_name + os.linesep)
 		script.write(os.linesep)
@@ -630,7 +630,7 @@ if __name__ == "__main__":
 	print("\t	clean_output_first:", clean_output_first)
 	print("\t	  processing_stage:", processing_stage)
 	print("\t	walltime_limit_hrs:", walltime_limit_hrs)
-	print("\t		vmem_limit_gbs:", vmem_limit_gbs)
+	print("\t		mem_limit_gbs:", vmem_limit_gbs)
 	print("\toutput_resource_suffix:", output_resource_suffix)
 	print("\t			brain_size:", brain_size)
 	print("\tuse_prescan_normalized:", use_prescan_normalized)
