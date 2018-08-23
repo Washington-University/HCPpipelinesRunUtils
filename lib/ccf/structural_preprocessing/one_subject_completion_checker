@@ -1,0 +1,19 @@
+#!/bin/bash
+
+if [ -z "${XNAT_PBS_JOBS}" ]; then
+	script_name=$(basename "${0}")
+	echo "${script_name}: ABORTING: XNAT_PBS_JOBS environment variable must be set"
+	exit 1
+fi
+
+if [ -z "${HCP_RUN_UTILS}" ]; then
+	echo "${g_script_name}: ABORTING: HCP_RUN_UTILS environment variable must be set"
+	exit 1
+fi
+
+my_path=$(dirname "${0}")
+source ${HCP_RUN_UTILS}/shlib/utils.shlib
+set_g_python_environment
+source activate ${g_python_environment} 2>/dev/null
+${my_path}/one_subject_completion_xnat_checker.py $@
+source deactivate 2>/dev/null
