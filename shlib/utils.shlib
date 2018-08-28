@@ -46,7 +46,8 @@ create_start_time_file()
 	sleep 1m || log_Err_Abort "Unable to sleep before creating start time file"
 
 	log_Msg "Creating start time file: ${start_time_file}"
-	touch ${start_time_file} || log_Err_Abort "Unable to touch start time file"
+	# touch ${start_time_file} || log_Err_Abort "Unable to touch start time file"
+	echo $(date) > ${start_time_file} || log_Err_Abort "Unable to create start time file"
 	ls -l ${start_time_file}
 
 	# Sleep for 1 minute to make sure any files created or modified by the
