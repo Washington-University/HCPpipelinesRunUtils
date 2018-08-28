@@ -130,8 +130,28 @@ log_Debug_Msg()
 {
 	local msg="$*"
 	if [ ! -z "${log_debugOn}" ] ; then
-		log_Msg "DEBUG: ${msg}"
+		local dateTime
+		dateTime=$(date)
+		local toolname
+
+		if [ -z "${log_toolName}" ]; then
+			toolname=$(basename ${0})
+		else
+			toolname="${log_toolName}"
+		fi
+
+		echo ${dateTime} "-" ${toolname} "-" "DEBUG: ${msg}" 1>&2
 	fi
+}
+
+#
+# Description:
+#   Log a debugging message. If debugging is not turned on,
+#   this function logs nothing
+#
+log_Dbg()
+{
+	log_Debug_Msg "$*"
 }
 
 #
