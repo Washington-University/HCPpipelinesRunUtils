@@ -1234,7 +1234,7 @@ if __name__ == "__main__":
 		description="Program to check for completion of Structural Preprocessing.")
 
 	# mandatory arguments
-	parser.add_argument('-p', '--project', dest='project', required=True, type=str)
+	# parser.add_argument('-p', '--project', dest='project', required=True, type=str)
 	parser.add_argument('-s', '--subject', dest='subject', required=True, type=str)
 	parser.add_argument('-c', '--classifier', dest='classifier', required=True, type=str)
 
@@ -1248,7 +1248,8 @@ if __name__ == "__main__":
 	args = parser.parse_args()
   
 	# check the specified subject for structural preprocessing completion
-	subject_info = ccf_subject.SubjectInfo(args.project, args.subject, args.classifier)
+	# subject_info = ccf_subject.SubjectInfo(args.project, args.subject, args.classifier)
+	subject_info = ccf_subject.SubjectInfo('irrelevant', args.subject, args.classifier)
 	completion_checker = OneSubjectCompletionChecker()
 
 	if args.output:

@@ -20,9 +20,8 @@ Usage: ${g_script_name} PARAMETER..."
 
 PARAMETERs are [ ] = optional; < > = user supplied value
   [--help]                   : show usage information and exit with non-zero return code
-   --project=<project>       : project (e.g. HCP_500)
-   --subject=<subject>       : subject ID within project (e.g. 100307)
-   --classifier=<classifier> : session classifier (e.g. 3T, 7T, MR, V1, V2, etc.)
+   --subject=<subject>       : subject ID (e.g. 100307)
+   --classifier=<classifier> : classifier (e.g. 3T, 7T, MR, V1, V2, etc.)
    --working-dir=<dir>       : Working directory in which to place retrieved data
                                and in which to produce results
 
@@ -34,7 +33,6 @@ get_options()
 	local arguments=($@)
 
 	# initialize global output variables
-	unset g_project
 	unset g_subject
 	unset g_classifier
 	unset g_working_dir
@@ -51,10 +49,6 @@ get_options()
 			--help)
 				usage
 				exit 1
-				;;
-			--project=*)
-				g_project=${argument#*=}
-				index=$(( index + 1 ))
 				;;
 			--subject=*)
 				g_subject=${argument#*=}
@@ -78,13 +72,6 @@ get_options()
 	local error_count=0
 
 	# check required parameters
-	if [ -z "${g_project}" ]; then
-		log_Err "project (--project=) required"
-		error_count=$(( error_count + 1 ))
-	else
-		log_Msg "project: ${g_project}"
-	fi
-
 	if [ -z "${g_subject}" ]; then
 		log_Err "subject (--subject=) required"
 		error_count=$(( error_count + 1 ))
@@ -128,7 +115,7 @@ main()
 
 	check_cmd=""
 	check_cmd+="${HCP_RUN_UTILS}/lib/ccf/structural_preprocessing/one_subject_completion_checker.py"
-	check_cmd+=" --project=${g_project}"
+	check_cmd+=" --working-dir=${g_working_dir}"
 	check_cmd+=" --subject=${g_subject}"
 	check_cmd+=" --classifier=${g_classifier}"
 	check_cmd+=" --verbose"

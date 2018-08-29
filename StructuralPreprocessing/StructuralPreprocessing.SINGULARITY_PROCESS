@@ -28,23 +28,24 @@ Usage: StructuralPreprocessing.SINGULARITY_PROCESS <options>
   Options: [ ] = optional, < > = user-supplied-value
 
   [--help] : show usage information and exit
-   --subject=<subject>      : subject ID within study (e.g. 100307)
-   --working-dir=<dir>      : Working directory in which to place retrieved data
-                              and in which to produce results
+   --subject=<subject>       : subject ID within study (e.g. 100307)
+  [--classifier=<classifier>]: (e.g. 3T, 7T, MR, etc.), defaults to 3T
+   --working-dir=<dir>       : Working directory in which to place retrieved data
+                               and in which to produce results
    --first-t1w-directory-name=<directory-name>
-                            : TBW
+                             : directory in which first T1w file resides
    --first-t1w-file-name=<file-name>
-                            : Name of first T1w file
+                             : Name of first T1w file
   [--second-t1w-directory-name=<directory-name>]
-                            : TBW
+                             : directory in which second T1w file resides
   [--second-t1w-file-name=<file-name>]
-                            : Name of second T1w file
+                             : Name of second T1w file
    --first-t2w-directory-name=<directory-name>
-                            : TBW
+                             : directory in which first T2w file resides
    --first-t2w-file-name=<file-name>
-                            : Name of first T2w file
+                             : Name of first T2w file
   [--second-t2w-directory-name=<directory-name>]
-                            : TBW
+                             : directory in which second T2w file resides
   [--second-t2w-file-name=<file-name>]
                             : Name of second T2w file
   [--fieldmap-type=<type>]  : <type> values
@@ -72,7 +73,7 @@ Usage: StructuralPreprocessing.SINGULARITY_PROCESS <options>
    --templatemask=<name>    : Brain mask MNI Template
    --template2mmmask=<name> : Brain mask MNI 2mm Template
 
-   NB: The following file are expected to be found in HCPPIPEDIR/global/config
+   NB: The following files are expected to be found in HCPPIPEDIR/global/config
 
    --fnirtconfig=<name>     : FNIRT 2mm Configuration file
   [--gdcoeffs=<name>]       : Gradient Distortion Coefficients file
@@ -110,7 +111,7 @@ get_options()
 	unset g_second_t2w_directory_name
 	unset g_second_t2w_file_name
 
-	unset g_session_classifier
+	unset g_classifier
 
 	unset g_t1template
 	unset g_t1templatebrain
@@ -126,7 +127,7 @@ get_options()
 	# set default values
 	g_fieldmap_type="GE"
 	g_brainsize="150"
-	g_session_classifier="3T"
+	g_classifier="3T"
 	g_gdcoeffs="NONE"
 	g_topupconfig="NONE"
 	g_se_phase_pos="NONE"
@@ -149,8 +150,8 @@ get_options()
 				g_subject=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
-			--session-classifier=*)
-				g_session_classifier=${argument/*=/""}
+			--classifier=*)
+				g_classifier=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
 			--working-dir=*)
@@ -271,11 +272,11 @@ get_options()
 		log_Msg "subject: ${g_subject}"
 	fi
 
-	if [ -z "${g_session_classifier}" ]; then
-		log_Err "session classifier (--session-classifier=) required"
+	if [ -z "${g_classifier}" ]; then
+		log_Err "classifier (--classifier=) required"
 		error_count=$(( error_count + 1 ))
 	else
-		log_Msg "session_classifier: ${g_session_classifier}"
+		log_Msg "classifier: ${g_classifier}"
 	fi
 	
 	if [ -z "${g_working_dir}" ]; then
@@ -470,42 +471,42 @@ PHASE_FIELDMAP_NAME="FieldMap_Phase"
 
 first_t1w_scan_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/${g_first_t1w_directory_name}/${g_first_t1w_file_name}"
+	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_first_t1w_file_name}"
 }
 
 second_t1w_scan_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/${g_second_t1w_directory_name}/${g_second_t1w_file_name}"
+	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_second_t1w_directory_name}/${g_second_t1w_file_name}"
 }
 
 first_t2w_scan_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/${g_first_t2w_directory_name}/${g_first_t2w_file_name}"
+	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t2w_directory_name}/${g_first_t2w_file_name}"
 }
 
 second_t2w_scan_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/${g_second_t2w_directory_name}/${g_second_t2w_file_name}"
+	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_second_t2w_directory_name}/${g_second_t2w_file_name}"
 }
 
 siemens_mag_fieldmap_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/${g_first_t1w_directory_name}/${g_subject}_${g_session_classifier}_${MAG_FIELDMAP_NAME}${COMPRESSED_NIFTI_EXTENSION}"
+	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_subject}_${g_classifier}_${MAG_FIELDMAP_NAME}${COMPRESSED_NIFTI_EXTENSION}"
 }
 
 siemens_phase_fieldmap_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/${g_first_t1w_directory_name}/${g_subject}_${g_session_classifier}_${PHASE_FIELDMAP_NAME}${COMPRESSED_NIFTI_EXTENSION}"
+	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_subject}_${g_classifier}_${PHASE_FIELDMAP_NAME}${COMPRESSED_NIFTI_EXTENSION}"
 }
 
 spin_echo_phase_pos_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/${g_first_t1w_directory_name}/${g_se_phase_pos}"
+	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_se_phase_pos}"
 }
 
 spin_echo_phase_neg_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/${g_first_t1w_directory_name}/${g_se_phase_neg}"
+	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_se_phase_neg}"
 }
 
 does_first_t1w_scan_exist()
@@ -644,8 +645,8 @@ get_parameters_for_first_t2w_scan()
 
 do_gradient_echo_field_maps_exist()
 {
-	magnitude_fieldmaps=`find ${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/T[1-2]w* -maxdepth 1 -name "*${MAG_FIELDMAP_NAME}*"`
-	phase_fieldmaps=`find ${g_working_dir}/${g_subject}/unprocessed/${g_session_classifier}/T[1-2]w* -maxdepth 1 -name "*${PHASE_FIELDMAP_NAME}*"`
+	magnitude_fieldmaps=`find ${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/T[1-2]w* -maxdepth 1 -name "*${MAG_FIELDMAP_NAME}*"`
+	phase_fieldmaps=`find ${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/T[1-2]w* -maxdepth 1 -name "*${PHASE_FIELDMAP_NAME}*"`
 
 	if [ -z "${magnitude_fieldmaps}" ] ; then
 		echo "FALSE"
