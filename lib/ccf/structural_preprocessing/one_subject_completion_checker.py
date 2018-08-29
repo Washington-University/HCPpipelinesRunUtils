@@ -13,7 +13,7 @@ import utils.my_argparse as my_argparse
 
 # authorship information
 __author__ = "Timothy B. Brown"
-__copyright__ = "Copyright 2017, The Connectome Coordination Facility"
+__copyright__ = "Copyright 2017-2018, The Connectome Coordination Facility"
 __maintainer__ = "Timothy B. Brown"
 
 
@@ -22,12 +22,8 @@ class OneSubjectCompletionChecker(one_subject_completion_checker.OneSubjectCompl
 	def __init__(self):
 		super().__init__()
 
-	def my_resource(self, subject_info):
-		cwd = os.getcwd()
-		return cwd
-
-	def list_of_expected_files(self, subject_info):
-		subj_dir = os.sep.join([self.my_resource(subject_info), subject_info.subject_id])
+	def list_of_expected_files(self, working_dir, subject_info):
+		subj_dir = os.sep.join([working_dir, subject_info.subject_id])
 
 		l = []
 
@@ -1235,6 +1231,7 @@ if __name__ == "__main__":
 
 	# mandatory arguments
 	# parser.add_argument('-p', '--project', dest='project', required=True, type=str)
+	parser.add_argument('-w', '--working-dir', dest='working_dir', required=True, type=str)
 	parser.add_argument('-s', '--subject', dest='subject', required=True, type=str)
 	parser.add_argument('-c', '--classifier', dest='classifier', required=True, type=str)
 
@@ -1258,6 +1255,7 @@ if __name__ == "__main__":
 		processing_output = sys.stdout
 
 	if completion_checker.is_processing_complete(
+			working_dir=args.working_dir,
 			subject_info=subject_info,
 			verbose=args.verbose,
 			output=processing_output,

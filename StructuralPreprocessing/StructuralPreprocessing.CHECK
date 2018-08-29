@@ -36,7 +36,10 @@ get_options()
 	unset g_subject
 	unset g_classifier
 	unset g_working_dir
+	unset g_verbose
 
+	g_verbose="FALSE"
+	
 	# parse arguments
 	local num_args=${#arguments[@]}
 	local argument
@@ -60,6 +63,10 @@ get_options()
 				;;
 			--working-dir=*)
 				g_working_dir=${argument#*=}
+				index=$(( index + 1 ))
+				;;
+			--verbose)
+				g_verbose="TRUE"
 				index=$(( index + 1 ))
 				;;
 			*)
@@ -93,6 +100,8 @@ get_options()
 		log_Msg "working_dir: ${g_working_dir}"
 	fi
 
+	log_Msg "verbose: ${g_verbose}"
+	
 	if [ ${error_count} -gt 0 ]; then
 		log_Err_Abort "For usage information, use --help"
 	fi
@@ -110,8 +119,9 @@ main()
 	set_g_python_environment
 	source activate ${g_python_environment} 2>&1
 
-	log_file_name="${g_script_name}.log"
-	success_file_name="${g_script_name}.success"
+	mkdir -p ${g_working_dir}/${g_subject}/ProcessingInfo
+	log_file_name="${g_working_dir}/${g_subject}/ProcessingInfo/${g_script_name}.log"
+	success_file_name="${g_working_dir}/${g_subject}/ProcessingInfo/${g_script_name}.success"
 
 	check_cmd=""
 	check_cmd+="${HCP_RUN_UTILS}/lib/ccf/structural_preprocessing/one_subject_completion_checker.py"
@@ -121,6 +131,10 @@ main()
 	check_cmd+=" --verbose"
 	check_cmd+=" --output=${log_file_name}"
 	check_cmd+=" --check-all"
+
+	if [ "${g_verbose}" = "TRUE" ]; then
+		check_cmd+="  --verbose"
+	fi
 	
 	pushd ${g_working_dir}
 	
