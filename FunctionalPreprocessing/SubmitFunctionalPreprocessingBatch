@@ -1,7 +1,8 @@
 #!/bin/bash
 
 #source /export/HCP/bin/xnat_pbs_setup connectomedb
-source /export/HCP/bin/xnat_pbs_setup intradb
+# source /export/HCP/bin/xnat_pbs_setup intradb
+source ${XNAT_PBS_JOBS_CONTROL}/xnat_pbs_setup ${1}
 export PATH=/act/Anaconda3-2.3.0/bin:${PATH}
 
 if [ -z "${XNAT_PBS_JOBS}" ]; then
@@ -18,5 +19,6 @@ fi
 source ${HCP_RUN_UTILS}/shlib/utils.shlib
 set_g_python_environment
 source activate ${g_python_environment} 2>/dev/null
-${XNAT_PBS_JOBS}/lib/ccf/functional_preprocessing/SubmitFunctionalPreprocessingBatch.py $@
+# ${XNAT_PBS_JOBS}/lib/ccf/functional_preprocessing/SubmitFunctionalPreprocessingBatch.py $@
+${XNAT_PBS_JOBS}/lib/ccf/functional_preprocessing/SubmitFunctionalPreprocessingBatch.py
 source deactivate 2>/dev/null

@@ -163,13 +163,17 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 
 		self._write_bash_header(script)
 		script.write('#PBS -l nodes=1:ppn=1,walltime=4:00:00,mem=4gb' + os.linesep)
-		script.write('#PBS -q HCPput' + os.linesep)
+		#script.write('#PBS -q HCPput' + os.linesep)
 		script.write('#PBS -o ' + self.working_directory_name + os.linesep)
 		script.write('#PBS -e ' + self.working_directory_name + os.linesep)
 		script.write(os.linesep)
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
+		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version() + os.linesep)
 		script.write(os.linesep)
-		script.write(self.get_data_program_path + ' \\' + os.linesep)
+		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.get_data_program_path  + ' \\' + os.linesep)
+		#script.write('singularity run -B ' +_get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind() + ' --app ' + self.get_data_program_path  + ' ' + self._get_xnat_pbs_setup_script_singularity_path() + ' \\' + os.linesep)
+		# script.write('singularity run -B ' + os.environ["XNAT_PBS_JOBS_SINGULARITY_BIND"] + ' --app StructuralPreprocessingGetData ' + os.environ["XNAT_PBS_JOBS_SINGULARITY_PATH"]  + os.linesep)
+		#script.write(self.get_data_program_path + ' \\' + os.linesep)
 		script.write('  --project=' + self.project + ' \\' + os.linesep)
 		script.write('  --subject=' + self.subject + ' \\' + os.linesep)
 		script.write('  --classifier=' + self.classifier + ' \\' + os.linesep)
@@ -363,7 +367,14 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 
 		xnat_pbs_setup_line = 'source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name()
 		
-		script_line	= processing_script_dest_path
+		xnat_pbs_setup_singularity_load = 'module load ' + self._get_xnat_pbs_setup_script_singularity_version()
+		#xnat_pbs_setup_singularity_process = 'singularity run -B ' +_get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind() + ' --app ' + self.PIPELINE_NAME + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path()
+		xnat_pbs_setup_singularity_process = 'singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() \
+											+ ',' + self._get_xnat_pbs_setup_script_gradient_coefficient_path() + ':/export/HCP/gradient_coefficient_files' \
+											+ ',' + self._get_xnat_pbs_setup_script_freesurfer_license_path() + ':/export/freesurfer_license' \
+											+ ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + processing_script_source_path 
+	
+		#script_line	= processing_script_dest_path
 		user_line	  = '  --user=' + self.username
 		password_line  = '  --password=' + self.password
 		server_line	= '  --server=' + str_utils.get_server_name(self.server)
@@ -419,7 +430,7 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 			# phase_line = '  --fmapphase=' + self._get_fmap_phase_file_name(subject_info)
 			
 		wdir_line  = '  --working-dir=' + self.working_directory_name
-		setup_line = '  --setup-script=' + self.setup_file_name
+		# ####setup_line = '  --setup-script=' + self.setup_file_name
 
 		with open(script_name, 'w') as script:
 			script.write(resources_line + os.linesep)
@@ -427,8 +438,12 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 			script.write(stderr_line + os.linesep)
 			script.write(os.linesep)
 			script.write(xnat_pbs_setup_line + os.linesep)
+			script.write(xnat_pbs_setup_singularity_load + os.linesep)
 			script.write(os.linesep)
-			script.write(script_line + ' \\' + os.linesep)
+			
+			script.write(xnat_pbs_setup_singularity_process+ ' \\' + os.linesep)
+			#script.write(script_line + ' \\' + os.linesep)
+			
 			script.write(user_line + ' \\' + os.linesep)
 			script.write(password_line + ' \\' + os.linesep)
 			script.write(server_line + ' \\' + os.linesep)
@@ -461,8 +476,9 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 			# if (mag_line): script.write(mag_line + ' \\' + os.linesep)
 			# if (phase_line): script.write(phase_line + ' \\' + os.linesep)
 			
-			script.write(wdir_line + ' \\' + os.linesep)
-			script.write(setup_line + os.linesep)
+			# script.write(wdir_line + ' \\' + os.linesep)
+			script.write(wdir_line  + os.linesep)
+			# ####script.write(setup_line + os.linesep)
 
 			os.chmod(script_name, stat.S_IRWXU | stat.S_IRWXG)
 
@@ -559,28 +575,34 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 			module_logger.info("freesurfer assessor job not submitted because of requested processing stage")
 			return standard_process_data_jobno, all_process_data_jobs
 
-	def mark_running_status(self, stage):
-		module_logger.debug(debug_utils.get_name())
+	# def mark_running_status(self, stage):
+		# module_logger.debug(debug_utils.get_name())
+		
+		# if stage > ccf_processing_stage.ProcessingStage.PREPARE_SCRIPTS:
+			# # mark_cmd = self._xnat_pbs_jobs_home
+			# # mark_cmd += os.sep + self.PIPELINE_NAME 
+			# # mark_cmd += os.sep + self.PIPELINE_NAME
+			# # mark_cmd += '.XNAT_MARK_RUNNING_STATUS' 
+			# mark_cmd = 'source /home/junilc/pipeline_tools/xnat_pbs_jobs_control/xnat_pbs_setup intradb' + os.linesep 
+			# #mark_cmd = 'source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep
+			# #mark_cmd += 'module load ' + self._get_xnat_pbs_setup_script_singularity()  + os.linesep 
+			# mark_cmd += 'module load singularity-2.5.2'  + os.linesep 
+			# mark_cmd += 'singularity exec -B /HCP/intradb/archive,/HCP/hcpdb/build_ssd --contain /HCP/hcpdb/build_ssd/chpc/BUILD/junilc/MR_TEST/Test_sample_Test/single_RR4.simg /pipeline_tools/xnat_pbs_jobs/StructuralPreprocessing/StructuralPreprocessing.XNAT_MARK_RUNNING_STATUS'
+			# #mark_cmd += 'singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind() + ' --contain ' + self._get_xnat_pbs_setup_script_singularity_path() + ' ' + self.mark_running_status_program_path 
+			# mark_cmd += ' --user=' + self.username
+			# mark_cmd += ' --password=' + self.password
+			# mark_cmd += ' --server=' + str_utils.get_server_name(self.put_server)
+			# mark_cmd += ' --project=' + self.project
+			# mark_cmd += ' --subject=' + self.subject
+			# mark_cmd += ' --classifier=' + self.classifier
+			# mark_cmd += ' --resource=RunningStatus'
+			# mark_cmd += ' --queued'
 
-		if stage > ccf_processing_stage.ProcessingStage.PREPARE_SCRIPTS:
-			mark_cmd = self._xnat_pbs_jobs_home
-			mark_cmd += os.sep + self.PIPELINE_NAME 
-			mark_cmd += os.sep + self.PIPELINE_NAME
-			mark_cmd += '.XNAT_MARK_RUNNING_STATUS' 
-			mark_cmd += ' --user=' + self.username
-			mark_cmd += ' --password=' + self.password
-			mark_cmd += ' --server=' + str_utils.get_server_name(self.put_server)
-			mark_cmd += ' --project=' + self.project
-			mark_cmd += ' --subject=' + self.subject
-			mark_cmd += ' --classifier=' + self.classifier
-			mark_cmd += ' --resource=RunningStatus'
-			mark_cmd += ' --queued'
-
-			completed_mark_cmd_process = subprocess.run(
-				mark_cmd, shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
-			print(completed_mark_cmd_process.stdout)
+			# completed_mark_cmd_process = subprocess.run(
+				# mark_cmd, shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+			# print(completed_mark_cmd_process.stdout)
 			
-			return
+			# return
 
 if __name__ == "__main__":
 	import ccf.structural_preprocessing.one_subject_run_status_checker as one_subject_run_status_checker

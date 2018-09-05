@@ -31,11 +31,6 @@ Usage: FunctionalPreprocessing.XNAT_PROCESS <options>
 
   [--help] : show usage information and exit
 
-
-
-   --setup-script=<script>  : Full path to script to source to set up environment before running
-                              HCP Pipeline Scripts.
-
 EOF
 }
 
@@ -56,7 +51,7 @@ get_options()
 	unset g_scan
 	unset g_session_classifier
 	unset g_working_dir
-	unset g_setup_script
+	# #### unset g_setup_script
 	unset g_gdcoeffs
 	unset g_topupconfig
 	unset g_dcmethod
@@ -110,10 +105,10 @@ get_options()
 				g_working_dir=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
-			--setup-script=*)
-				g_setup_script=${argument/*=/""}
-				index=$(( index + 1 ))
-				;;
+			# --setup-script=*)
+				# g_setup_script=${argument/*=/""}
+				# index=$(( index + 1 ))
+				# ;;
 			--gdcoeffs=*)
 				g_gdcoeffs=${argument/*=/""}
 				index=$(( index + 1 ))
@@ -200,12 +195,12 @@ get_options()
 		log_Msg "working directory: ${g_working_dir}"
 	fi
 
-	if [ -z "${g_setup_script}" ] ; then
-		log_Err "setup script (--setup-script=) required"
-		error_count=$(( error_count + 1 ))
-	else
-		log_Msg "setup script: ${g_setup_script}"
-	fi
+	# if [ -z "${g_setup_script}" ] ; then
+		# log_Err "setup script (--setup-script=) required"
+		# error_count=$(( error_count + 1 ))
+	# else
+		# log_Msg "setup script: ${g_setup_script}"
+	# fi
 
 	if [ -z "${g_gdcoeffs}" ] ; then
 		log_Err "gdcoeffs (--gdcoeffs=) required"
@@ -243,7 +238,7 @@ main()
 
 	create_start_time_file ${g_working_dir} ${g_pipeline_name}
 	
-	source_script ${g_setup_script}
+	# #### source_script ${g_setup_script}
 
 	if [ -z "${HCPPIPEDIR}" ]; then
 		log_Err_Abort "HCPPIPEDIR environment variable must be set"
