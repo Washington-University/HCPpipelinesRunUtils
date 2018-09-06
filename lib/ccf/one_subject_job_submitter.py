@@ -333,7 +333,7 @@ class OneSubjectJobSubmitter(abc.ABC):
 		xnat_pbs_setup_singularity_bind = os_utils.getenv_required('SINGULARITY_BIND_PATH')
 		return xnat_pbs_setup_singularity_bind
 	
-		def _get_xnat_pbs_setup_script_gradient_coefficient_path(self):
+	def _get_xnat_pbs_setup_script_gradient_coefficient_path(self):
 		xnat_pbs_setup_gradient_coefficient = os_utils.getenv_required('GRADIENT_COEFFICIENT_PATH')
 		return xnat_pbs_setup_gradient_coefficient
 
