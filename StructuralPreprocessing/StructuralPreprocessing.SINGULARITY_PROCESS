@@ -612,7 +612,6 @@ get_parameters_for_first_t1w_scan()
 		se_phase_pos_file=$(spin_echo_phase_pos_fullpath)
 		g_first_t1w_positive_dwell_time=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${se_phase_pos_file} -k EffectiveEchoSpacing)
 		log_Msg "g_first_t1w_positive_dwell_time: ${g_first_t1w_positive_dwell_time}"
-
 	fi
 }
 
@@ -622,7 +621,7 @@ get_parameters_for_first_t2w_scan()
 
 	local first_t2w_file
 	first_t2w_file=$(first_t2w_scan_fullpath)
-	
+
 	g_first_t2w_sample_spacing=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${first_t2w_file} -k DwellTime)
 	log_Msg "g_first_t2w_sample_spacing: ${g_first_t2w_sample_spacing}"
 
@@ -639,7 +638,6 @@ get_parameters_for_first_t2w_scan()
 	
 		g_first_t2w_sample_spacing=${sample_spacing_in_secs}
 		log_Msg "g_first_t2w_sample_spacing: ${g_first_t2w_sample_spacing}"
-
 	fi
 }
 
