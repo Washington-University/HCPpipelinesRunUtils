@@ -14,9 +14,27 @@ create_start_time_file()
 {
 	local working_dir="${1}"
 	local pipeline_name="${2}"
+	local subject_id="${3}"
 
+	if [ -z "${working_dir}" ]; then
+		log_Err_Abort "create_start_time_file: working_dir must be specified"
+	fi
+
+	if [ -z "${pipeline_name}" ]; then
+		log_Err_Abort "create_start_time_file: pipeline_name must be specified"
+	fi
+
+	if [ -z "${subject_id}" ]; then
+		log_Err_Abort "create_start_time_file: subject_id must be specified"
+	fi
+	
+	local processing_info_dir="${working_dir}/${subject_id}/ProcessingInfo"
+
+	log_Msg "Checking/Creating processing information directory: ${processing_info_dir}"
+	mkdir -p ${processing_info_dir}
+	
 	log_Msg "Creating a start time file"
-	local start_time_file="${working_dir}/${pipeline_name}.starttime"
+	local start_time_file="${processing_info_dir}/${pipeline_name}.starttime"
 	if [ -e "${start_time_file}" ]; then
 	   log_Msg "Removing old ${start_time_file}"
 	   rm -f "${start_time_file}"
@@ -28,7 +46,8 @@ create_start_time_file()
 	sleep 1m || log_Err_Abort "Unable to sleep before creating start time file"
 
 	log_Msg "Creating start time file: ${start_time_file}"
-	touch ${start_time_file} || log_Err_Abort "Unable to touch start time file"
+	# touch ${start_time_file} || log_Err_Abort "Unable to touch start time file"
+	echo $(date) > ${start_time_file} || log_Err_Abort "Unable to create start time file"
 	ls -l ${start_time_file}
 
 	# Sleep for 1 minute to make sure any files created or modified by the
@@ -53,11 +72,35 @@ source_script()
 
 log_execution_info()
 {
-	local filename=${1}
-	#echo "PBS_JOBID: ${PBS_JOBID}" > ${filename}
-	echo "JOBID: ${PBS_JOBID}" > ${filename}
-	#echo "PBS execution node: $(hostname)" >> ${filename}
-	echo "execution node: $(hostname)" >> ${filename}
+	local working_dir="${1}"
+	local process_name="${2}"
+	local subject_id="${3}"
+
+	if [ -z "${working_dir}" ]; then
+		log_Err_Abort "log_execution_info: working_dir must be specified"
+	fi
+
+	if [ -z "${process_name}" ]; then
+		log_Err_Abort "log_execution_info: process_name must be specified"
+	fi
+
+	if [ -z "${subject_id}" ]; then
+		log_Err_Abort "log_execution_info: subject_id must be specified"
+	fi
+	
+	local processing_info_dir="${working_dir}/${subject_id}/ProcessingInfo"
+
+	log_Msg "Checking/Creating processing information directory: ${processing_info_dir}"
+	mkdir -p ${processing_info_dir}
+
+	local filename="${processing_info_dir}/${process_name}.execinfo"
+
+	if [ -n "${PBS_JOBID}" ]; then
+		log_Msg "PBS_JOBID: ${PBS_JOBID}" > ${filename}
+		log_Msg "PBS execution node: $(hostname)" >> ${filename}
+	else
+		log_Msg "Execution node: $(hostname)" >> ${filename}
+	fi
 }
 
 set_g_python_environment()
