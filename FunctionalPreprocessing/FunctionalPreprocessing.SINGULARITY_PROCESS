@@ -44,11 +44,10 @@ get_options()
 	# initialize global output variables
 
 	# set default values
-	unset g_project
 	unset g_subject
 	unset g_session
 	unset g_scan
-	unset g_session_classifier
+	unset g_classifier
 	unset g_working_dir
 	unset g_gdcoeffs
 	unset g_topupconfig
@@ -67,10 +66,6 @@ get_options()
 				usage
 				exit 1
 				;;
-			--project=*)
-				g_project=${argument/*=/""}
-				index=$(( index + 1 ))
-				;;
 			--subject=*)
 				g_subject=${argument/*=/""}
 				index=$(( index + 1 ))
@@ -83,8 +78,8 @@ get_options()
 				g_scan=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
-			--session-classifier=*)
-				g_session_classifier=${argument/*=/""}
+			--classifier=*)
+				g_classifier=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
 			--working-dir=*)
@@ -113,14 +108,6 @@ get_options()
 	local error_count=0
 
 	# check parameters
-	
-	if [ -z "${g_project}" ]; then
-		log_Err "project (--project=) required"
-		error_count=$(( error_count + 1 ))
-	else
-		log_Msg "project: ${g_project}"
-	fi
-	
 	if [ -z "${g_subject}" ]; then
 		log_Err "subject (--subject=) required"
 		error_count=$(( error_count + 1 ))
@@ -135,11 +122,11 @@ get_options()
 		log_Msg "session: ${g_session}"
 	fi
 	
-	if [ -z "${g_session_classifier}" ]; then
-		log_Err "session classifier (--session-classifier=) required"
+	if [ -z "${g_classifier}" ]; then
+		log_Err "classifier (--classifier=) required"
 		error_count=$(( error_count + 1 ))
 	else
-		log_Msg "session_classifier: ${g_session_classifier}"
+		log_Msg "classifier: ${g_classifier}"
 	fi
 	
 	if [ -z "${g_scan}" ]; then
@@ -204,7 +191,7 @@ main()
 	local path_to_files="${g_working_dir}"
 	path_to_files+="/${g_subject}"
 	path_to_files+="/unprocessed"
-	path_to_files+="/${g_session_classifier}"
+	path_to_files+="/${g_classifier}"
 	path_to_files+="/${g_scan}"
 	log_Debug_Msg "path_to_files: ${path_to_files}"
 
