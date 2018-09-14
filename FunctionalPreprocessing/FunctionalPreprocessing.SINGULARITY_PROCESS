@@ -45,7 +45,6 @@ get_options()
 
 	# set default values
 	unset g_subject
-	unset g_session
 	unset g_scan
 	unset g_classifier
 	unset g_working_dir
@@ -68,10 +67,6 @@ get_options()
 				;;
 			--subject=*)
 				g_subject=${argument/*=/""}
-				index=$(( index + 1 ))
-				;;
-			--session=*)
-				g_session=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
 			--scan=*)
@@ -113,13 +108,6 @@ get_options()
 		error_count=$(( error_count + 1 ))
 	else
 		log_Msg "subject: ${g_subject}"
-	fi
-	
-	if [ -z "${g_session}" ]; then
-		log_Err "session (--session=) required"
-		error_count=$(( error_count + 1 ))
-	else
-		log_Msg "session: ${g_session}"
 	fi
 	
 	if [ -z "${g_classifier}" ]; then
@@ -195,10 +183,10 @@ main()
 	path_to_files+="/${g_scan}"
 	log_Debug_Msg "path_to_files: ${path_to_files}"
 
-	local nifti_file_name="${g_session}_${g_scan}.nii.gz"
+	local nifti_file_name="${g_subject}_${g_classifier}_${g_scan}.nii.gz"
 	log_Debug_Msg "nifti_file_name: ${nifti_file_name}"
 
-	local sbref_file_name="${g_session}_${g_scan}_SBRef.nii.gz"
+	local sbref_file_name="${g_subject}_${g_classifier}_${g_scan}_SBRef.nii.gz"
 	log_Debug_Msg "sbref_file_name: ${sbref_file_name}"
 
 	local full_path_to_nifti_file="${path_to_files}/${nifti_file_name}"
@@ -216,7 +204,7 @@ main()
 	fi
 	
 	local full_path_to_se_neg_file
-	full_path_to_se_neg_file=$(ls -1 ${path_to_files}/${g_session}_SpinEchoFieldMap*_AP.nii.gz | head -1)
+	full_path_to_se_neg_file=$(ls -1 ${path_to_files}/${g_subject}_${g_classifier}_SpinEchoFieldMap*_AP.nii.gz | head -1)
 	log_Debug_Msg "full_path_to_se_neg_file: ${full_path_to_se_neg_file}"
 
 	if [ ! -f "${full_path_to_se_neg_file}" ]; then
@@ -224,7 +212,7 @@ main()
 	fi
 	
 	local full_path_to_se_pos_file
-	full_path_to_se_pos_file=$(ls -1 ${path_to_files}/${g_session}_SpinEchoFieldMap*_PA.nii.gz | head -1)
+	full_path_to_se_pos_file=$(ls -1 ${path_to_files}/${g_subject}_${g_classifier}_SpinEchoFieldMap*_PA.nii.gz | head -1)
 	log_Debug_Msg "full_path_to_se_pos_file: ${full_path_to_se_pos_file}"
 
 	if [ ! -f "${full_path_to_se_pos_file}" ]; then
