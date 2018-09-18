@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+"""ccf/diffusion_preprocessing/one_subject_completion_checker.py
+
+Defines the class used for completion checking of diffusion preprocessing
+
+"""
+
 # import of built-in modules
 
 # import of third-party modules
@@ -10,13 +16,15 @@ import ccf.diffusion_preprocessing.one_subject_job_submitter as one_subject_job_
 import utils.my_argparse as my_argparse
 
 # authorship information
-__author__ = "Timothy B. Brown"
-__copyright__ = "Copyright 2017, The Connectome Coordination Facility"
-__maintainer__ = "Timothy B. Brown"
+__author__ = "The Connectome Coordination Facility"
+__copyright__ = "Copyright 2017-2018, The Connectome Coordination Facility"
 
 
 class OneSubjectCompletionChecker(one_subject_completion_checker.OneSubjectCompletionChecker):
+	"""Used for completion checking of diffusion preprocessing
 
+	"""
+	
     def __init__(self):
         super().__init__()
 

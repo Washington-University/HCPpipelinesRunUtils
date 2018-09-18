@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+"""ccf/functional_preprocessing/one_subject_completion_checker.py
+
+Defines the class used for completion checking of functional preprocessing
+
+"""
+
 # import of built-in modules
 import os
 import sys
@@ -13,13 +19,15 @@ import utils.my_argparse as my_argparse
 import utils.os_utils as os_utils
 
 # authorship information
-__author__ = "Timothy B. Brown"
-__copyright__ = "Copyright 2017, The Connectome Coordination Facility"
-__maintainer__ = "Timothy B. Brown"
+__author__ = "The Connectome Coordination Facility"
+__copyright__ = "Copyright 2017-2018, The Connectome Coordination Facility"
 
 
 class OneSubjectCompletionChecker(one_subject_completion_checker.OneSubjectCompletionChecker):
+	"""Used for completion checking of functional preprocessing
 
+	"""
+	
 	def __init__(self):
 		super().__init__()
 
@@ -54,7 +62,6 @@ if __name__ == "__main__":
 		description="Program to check for completion of Functional Preprocessing.")
 
 	# mandatory arguments
-	#parser.add_argument('-p', '--project', dest='project', required=True, type=str)
 	parser.add_argument('-w', '--working-dir', dest='working_dir', required=True, type=str)
 	parser.add_argument('-s', '--subject', dest='subject', required=True, type=str)
 	parser.add_argument('-c', '--classifier', dest='classifier', required=True, type=str)
@@ -71,8 +78,11 @@ if __name__ == "__main__":
 	args = parser.parse_args()
 
 	# check the specified subject and scan for functional preprocessing completion
-	#subject_info = ccf_subject.SubjectInfo(project=args.project,subject_id=args.subject,classifier=args.classifier,extra=args.scan)
-	subject_info = ccf_subject.SubjectInfo('irrelevant', args.subject, args.classifier, args.scan)
+	subject_info = ccf_subject.SubjectInfo(
+		project='irrelevant',
+		subject_id=args.subject,
+		classifier=args.classifier,
+		extra=args.scan)
 	completion_checker = OneSubjectCompletionChecker()
 
 	if args.output:
