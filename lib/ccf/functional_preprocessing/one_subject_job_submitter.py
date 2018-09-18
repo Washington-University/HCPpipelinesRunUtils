@@ -187,14 +187,16 @@ if __name__ == "__main__":
 		print ('Process terminated')
 		sys.exit()	
 
-	min_shadow_str = os_utils.getenv_required("XNAT_PBS_JOBS_MIN_SHADOW")
-	max_shadow_str = os_utils.getenv_required("XNAT_PBS_JOBS_MAX_SHADOW")
-	random_shadow = (random.randint(int(min_shadow_str), int(max_shadow_str)))
+	# #### min_shadow_str = os_utils.getenv_required("XNAT_PBS_JOBS_MIN_SHADOW")
+	# #### max_shadow_str = os_utils.getenv_required("XNAT_PBS_JOBS_MAX_SHADOW")
+	# #### random_shadow = (random.randint(int(min_shadow_str), int(max_shadow_str)))
 	
 	job_submitter=OneSubjectJobSubmitter(archive, archive.build_home)	
-	put_server = 'http://intradb-shadow'
-	put_server += str(random_shadow)
-	put_server += '.nrg.mir:8080'
+	# #### put_server = 'http://intradb-shadow'
+	# #### put_server += str(random_shadow)
+	# #### put_server += '.nrg.mir:8080'
+	put_server_name = os.environ.get("XNAT_PBS_JOBS_PUT_SERVER_LIST").split(" ")
+	put_server = random.choice(put_server_name))
 
 	clean_output_first = eval(sys.argv[5])
 	processing_stage_str = sys.argv[6]

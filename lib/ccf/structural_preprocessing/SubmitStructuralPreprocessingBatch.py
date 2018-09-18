@@ -53,9 +53,11 @@ class BatchSubmitter(batch_submitter.BatchSubmitter):
 			submitter = one_subject_job_submitter.OneSubjectJobSubmitter(
 				self._archive, self._archive.build_home)
 
-			put_server = 'http://intradb-shadow'
-			put_server += str(self.get_and_inc_shadow_number())
-			put_server += '.nrg.mir:8080'
+            # ####put_server = 'http://intradb-shadow'
+            # ####put_server += str(self.get_and_inc_shadow_number())
+            # ####put_server += '.nrg.mir:8080'
+			put_server_name = os.environ.get("XNAT_PBS_JOBS_PUT_SERVER_LIST").split(" ")
+			put_server = random.choice(put_server_name))
 
 			# get information for the subject from the configuration
 			clean_output_first = config.get_bool_value(subject.subject_id, 'CleanOutputFirst')
