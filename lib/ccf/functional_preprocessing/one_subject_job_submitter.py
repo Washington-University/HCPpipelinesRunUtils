@@ -110,9 +110,7 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 		dcmethod_line	= '  --dcmethod=TOPUP'
 		topupconfig_line = '  --topupconfig=b02b0.cnf'
 		gdcoeffs_line	= '  --gdcoeffs=Prisma_3T_coeff_AS82.grad'
-	
 		wdir_line  = '  --working-dir=' + self.working_directory_name
-		# #### setup_line = '  --setup-script=' + self.setup_file_name
 		
 		with open(script_name, 'w') as script:
 			script.write(resources_line + os.linesep)
@@ -121,10 +119,8 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 			script.write(os.linesep)
 			script.write(xnat_pbs_setup_line + os.linesep)
 			script.write(xnat_pbs_setup_singularity_load + os.linesep)
-			script.write(os.linesep)
-						
+			script.write(os.linesep)	
 			script.write(xnat_pbs_setup_singularity_process+ ' \\' + os.linesep)
-			# script.write(script_line +	  ' \\' + os.linesep)
 			script.write(user_line +		' \\' + os.linesep)
 			script.write(password_line +	' \\' + os.linesep)
 			script.write(server_line +	  ' \\' + os.linesep)
@@ -136,9 +132,7 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 			script.write(dcmethod_line +	' \\' + os.linesep)
 			script.write(topupconfig_line + ' \\' + os.linesep)
 			script.write(gdcoeffs_line +	' \\' + os.linesep)
-			# ####script.write(wdir_line + ' \\' + os.linesep)
 			script.write(wdir_line + os.linesep)
-			# #### script.write(setup_line + os.linesep)
 			
 			os.chmod(script_name, stat.S_IRWXU | stat.S_IRWXG)
 			
@@ -187,16 +181,9 @@ if __name__ == "__main__":
 		print ('Process terminated')
 		sys.exit()	
 
-	# #### min_shadow_str = os_utils.getenv_required("XNAT_PBS_JOBS_MIN_SHADOW")
-	# #### max_shadow_str = os_utils.getenv_required("XNAT_PBS_JOBS_MAX_SHADOW")
-	# #### random_shadow = (random.randint(int(min_shadow_str), int(max_shadow_str)))
-	
 	job_submitter=OneSubjectJobSubmitter(archive, archive.build_home)	
-	# #### put_server = 'http://intradb-shadow'
-	# #### put_server += str(random_shadow)
-	# #### put_server += '.nrg.mir:8080'
 	put_server_name = os.environ.get("XNAT_PBS_JOBS_PUT_SERVER_LIST").split(" ")
-	put_server = random.choice(put_server_name))
+	put_server = random.choice(put_server_name)
 
 	clean_output_first = eval(sys.argv[5])
 	processing_stage_str = sys.argv[6]

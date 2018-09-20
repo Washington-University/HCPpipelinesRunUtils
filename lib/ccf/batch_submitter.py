@@ -60,7 +60,7 @@ class BatchSubmitter(abc.ABC):
     def __init__(self, archive):
         """Construct a BatchSumitter"""
         self._archive = archive
-        self._shadow_number = random.randint(self.MIN_SHADOW_NUMBER, self.MAX_SHADOW_NUMBER)
+        # #### self._shadow_number = random.randint(self.MIN_SHADOW_NUMBER, self.MAX_SHADOW_NUMBER)
 
     @property
     def shadow_number(self):

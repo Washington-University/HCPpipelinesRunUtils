@@ -1,17 +1,6 @@
 #!/bin/bash
 
-
-#export XNAT_PBS_JOBS_SINGULARITY=singularity-2.5.2
-#export XNAT_PBS_JOBS_SINGULARITY_PATH=/HCP/hcpdb/build_ssd/chpc/BUILD/junilc/MR_TEST/Test_sample_Test/single_RR4.simg
-#export XNAT_PBS_JOBS_SINGULARITY_BIND=/HCP/hcpdb/archive,/HCP/hcpdb/build_ssd
-
-
-#source /export/HCP/bin/xnat_pbs_setup connectomedb
-#export XNAT_PBS_JOBS_CONTROL=${HOME}/pipeline_tools/xnat_pbs_jobs_control
 source ${XNAT_PBS_JOBS_CONTROL}/xnat_pbs_setup ${1}
-#source ${XNAT_PBS_JOBS_CONTROL}/xnat_pbs_setup intradb
-
-export PATH=/act/Anaconda3-2.3.0/bin:${PATH}
 
 if [ -z "${XNAT_PBS_JOBS}" ]; then
 	script_name=$(basename "${0}")
@@ -27,6 +16,5 @@ fi
 source ${HCP_RUN_UTILS}/shlib/utils.shlib
 set_g_python_environment
 source activate ${g_python_environment} 2>/dev/null
-# ${XNAT_PBS_JOBS}/lib/ccf/structural_preprocessing/SubmitStructuralPreprocessingBatch.py $@
 ${XNAT_PBS_JOBS}/lib/ccf/structural_preprocessing/SubmitStructuralPreprocessingBatch.py 
 source deactivate 2>/dev/null

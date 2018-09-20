@@ -1,4 +1,5 @@
 #!/bin/bash
+
 g_script_name=$(basename "${0}")
 
 if [ -z "${XNAT_PBS_JOBS}" ]; then
@@ -216,12 +217,12 @@ main()
 		put_success_file_cmd+=" --use-http"
 		
 		#log_Msg "put_success_file_cmd: ${put_success_file_cmd}"
-		#### ${put_success_file_cmd}
+		${put_success_file_cmd}
 		
 	else
 		log_Msg "Completion Check was unsuccessful"
 		echo "Completion Check was unsuccessful" >> ${log_file_name}
-		#### rm -f ${success_file_name}
+		rm -f ${success_file_name}
 
 		success_file_in_archive=""
 		success_file_in_archive+="${XNAT_PBS_JOBS_ARCHIVE_ROOT}/${g_project}"
@@ -241,7 +242,7 @@ main()
 			remove_file_cmd+=" --resource=Structural_preproc"
 			remove_file_cmd+=" --file-path-within-resource=${success_file_name}"
 
-			#### ${remove_file_cmd}
+			${remove_file_cmd}
 		fi
 
 	fi
@@ -262,14 +263,14 @@ main()
 	put_log_file_cmd+=" --use-http"
 	
 	log_Msg "put_log_file_cmd: ${put_log_file_cmd}"
-	#### {put_log_file_cmd}
+	{put_log_file_cmd}
 	
 	popd	
 
 	# clean up
-	#### if [ "${check_cmd_ret_code}" -eq 0 ]; then
-		#### rm -rf ${g_working_dir}
-	#### fi
+	if [ "${check_cmd_ret_code}" -eq 0 ]; then
+		rm -rf ${g_working_dir}
+	fi
 	
 	log_Msg "Complete"
 }

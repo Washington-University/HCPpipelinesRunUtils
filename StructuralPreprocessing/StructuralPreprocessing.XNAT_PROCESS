@@ -18,12 +18,6 @@ source ${HCP_RUN_UTILS}/shlib/utils.shlib  # Utility functions
 log_Msg "XNAT_PBS_JOBS: ${XNAT_PBS_JOBS}"
 log_Msg "HCP_RUN_UTILS: ${HCP_RUN_UTILS}"
 
-# if [ -z "${NRG_PACKAGES}" ]; then
-	# log_Err_Abort "NRG_PACKAGES environment variable must be set"
-# else
-	# log_Msg "NRG_PACKAGES: ${NRG_PACKAGES}"
-# fi
-
 if [ -z "${XNAT_PBS_JOBS_XNAT_SERVER}" ]; then
 	log_Err_Abort "XNAT_PBS_JOBS_XNAT_SERVER environment variable must be set"
 else
@@ -145,7 +139,6 @@ get_options()
 	unset g_subject
 	unset g_session
 	unset g_working_dir
-	# #### unset g_setup_script	
 
 	unset g_fieldmap_type
 	unset g_seed
@@ -234,10 +227,6 @@ get_options()
 				g_working_dir=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
-			# --setup-script=*)
-				# g_setup_script=${argument/*=/""}
-				# index=$(( index + 1 ))
-				# ;;
 			--fieldmap-type=*)
 				g_fieldmap_type=${argument/*=/""}
 				index=$(( index + 1 ))
@@ -415,13 +404,6 @@ get_options()
 	else
 		log_Msg "working directory: ${g_working_dir}"
 	fi
-	
-	# if [ -z "${g_setup_script}" ] ; then
-		# log_Err "setup script (--setup-script=) required"
-		# error_count=$(( error_count + 1 ))
-	# else
-		# log_Msg "setup script: ${g_setup_script}"
-	# fi
 	
 	if [ -z "${g_fieldmap_type}" ]; then
 		log_Err "fieldmap type (--fieldmap-type=) required"
@@ -812,17 +794,16 @@ main()
 	
 	get_options "$@"
 
-	log_execution_info ${g_working_dir}/$(basename "${0}").execinfo
+	#log_execution_info ${g_working_dir}/$(basename "${0}").execinfo
+	log_execution_info ${g_working_dir} $(basename "${0}") ${g_subject}
 
-	create_start_time_file ${g_working_dir} ${g_pipeline_name}
+	#create_start_time_file ${g_working_dir} ${g_pipeline_name}
+	create_start_time_file ${g_working_dir} ${g_pipeline_name} ${g_subject}
 
-	# #### source_script ${g_setup_script}
-	
-	############
 	log_Msg "Activating Python 3"
 	set_g_python_environment
 	source activate ${g_python_environment} 2>&1
-	#################
+
 	if [ -z "${HCPPIPEDIR}" ]; then
 		log_Err_Abort "HCPPIPEDIR environment variable must be set"
 	else

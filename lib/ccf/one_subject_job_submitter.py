@@ -313,11 +313,9 @@ class OneSubjectJobSubmitter(abc.ABC):
 		name = self.xnat_pbs_jobs_home
 		name += os.sep + self.PIPELINE_NAME
 		name += os.sep + self.PIPELINE_NAME + '.XNAT_GET'
-		#name = self.PIPELINE_NAME + 'GetData'
 		return name
 
 	def _get_xnat_pbs_setup_script_path(self):
-		# ### return '/export/HCP/bin/xnat_pbs_setup'
 		xnat_pbs_setup_path = os_utils.getenv_required('XNAT_PBS_JOBS_CONTROL')+ '/xnat_pbs_setup'
 		return xnat_pbs_setup_path
 			
@@ -369,7 +367,6 @@ class OneSubjectJobSubmitter(abc.ABC):
 
 		self._write_bash_header(script)
 		script.write('#PBS -l nodes=1:ppn=1,walltime=4:00:00,mem=4gb' + os.linesep)
-		#script.write('#PBS -q HCPput' + os.linesep)
 		script.write('#PBS -o ' + self.working_directory_name + os.linesep)
 		script.write('#PBS -e ' + self.working_directory_name + os.linesep)
 		script.write(os.linesep)
@@ -377,7 +374,6 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version()  + os.linesep)
 		script.write(os.linesep)
 		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.get_data_program_path + ' \\' + os.linesep)
-		#script.write(self.get_data_program_path + ' \\' + os.linesep)
 		script.write('  --project=' + self.project + ' \\' + os.linesep)
 		script.write('  --subject=' + self.subject + ' \\' + os.linesep)
 		script.write('  --classifier=' + self.classifier + ' \\' + os.linesep)
@@ -406,16 +402,13 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script = open(script_name, 'w')
 
 		script.write('#PBS -l nodes=1:ppn=1,walltime=4:00:00,mem=12gb' + os.linesep)
-		# script.write('#PBS -q HCPput' + os.linesep)
 		script.write('#PBS -o ' + self.log_dir + os.linesep)
 		script.write('#PBS -e ' + self.log_dir + os.linesep)
 		script.write(os.linesep)
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version() + os.linesep)
 		script.write(os.linesep)
-		#script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' --contain ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.xnat_pbs_jobs_home + os.sep + 'WorkingDirPut' + os.sep + 'XNAT_working_dir_put.sh \\' + os.linesep)
 		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.xnat_pbs_jobs_home + os.sep + 'WorkingDirPut' + os.sep + 'XNAT_working_dir_put.sh \\' + os.linesep)
-		#script.write(self.xnat_pbs_jobs_home + os.sep + 'WorkingDirPut' + os.sep + 'XNAT_working_dir_put.sh \\' + os.linesep)
 		script.write('  --leave-subject-id-level \\' + os.linesep)
 		script.write('  --user="' + self.username + '" \\' + os.linesep)
 		script.write('  --password="' + self.password + '" \\' + os.linesep)
@@ -512,18 +505,6 @@ class OneSubjectJobSubmitter(abc.ABC):
 		name += '.' + 'XNAT_CHECK_DATA_job.sh'
 		return name
 
-	def create_setup_file(self):
-		module_logger.debug(debug_utils.get_name())
-		
-		setup_source_file_name = self.PIPELINE_NAME + '.SetUp.sh'
-		
-		xnat_pbs_jobs_control = os.getenv('XNAT_PBS_JOBS_CONTROL')
-		if xnat_pbs_jobs_control:
-			setup_source_file_name = xnat_pbs_jobs_control + os.sep + setup_source_file_name
-
-		shutil.copyfile(setup_source_file_name, self.setup_file_name)
-		os.chmod(self.setup_file_name, stat.S_IRWXU | stat.S_IRWXG)
-
 	@property
 	def check_data_program_path(self):
 		"""
@@ -555,9 +536,7 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version() + os.linesep)
 		script.write(os.linesep)
-		# script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' --contain ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.check_data_program_path  + ' \\' + os.linesep)
 		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.check_data_program_path  + ' \\' + os.linesep)
-		#script.write(self.check_data_program_path + ' \\' + os.linesep)
 		script.write('  --user="' + self.username + '" \\' + os.linesep)
 		script.write('  --password="' + self.password + '" \\' + os.linesep)
 		script.write('  --server="' + str_utils.get_server_name(self.put_server) + '" \\' + os.linesep)
@@ -571,7 +550,6 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.close()
 		os.chmod(script_name, stat.S_IRWXU | stat.S_IRWXG)
 
-	# ####	
 	@property
 	def mark_running_job_script_name(self):
 		module_logger.debug(debug_utils.get_name())
@@ -604,7 +582,6 @@ class OneSubjectJobSubmitter(abc.ABC):
 		name = self.xnat_pbs_jobs_home
 		name += os.sep + self.PIPELINE_NAME
 		name += os.sep + self.PIPELINE_NAME + '.XNAT_MARK_RUNNING_STATUS'
-		#name = self.PIPELINE_NAME + 'MarkRunningStatus'
 		return name
 		
 	def create_mark_running_job_script(self):
@@ -619,16 +596,13 @@ class OneSubjectJobSubmitter(abc.ABC):
 
 		self._write_bash_header(script)
 		script.write('#PBS -l nodes=1:ppn=1,walltime=4:00:00,mem=4gb' + os.linesep)
-		script.write('#PBS -o ' + self.mark_start_running_directory_name + os.linesep)
-		script.write('#PBS -e ' + self.mark_start_running_directory_name + os.linesep)
+		script.write('#PBS -o ' + self.log_dir + os.linesep)
+		script.write('#PBS -e ' + self.log_dir + os.linesep)
 		script.write(os.linesep)
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version()  + os.linesep)
 		script.write(os.linesep)
-		# script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' --contain ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.mark_running_status_program_path   + ' \\' + os.linesep)
 		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.mark_running_status_program_path   + ' \\' + os.linesep)
-		#script.write(os.linesep)
-		#script.write(self.mark_running_status_program_path + ' \\' + os.linesep)
 		script.write('  --user="' + self.username + '" \\' + os.linesep)
 		script.write('  --password="' + self.password + '" \\' + os.linesep)
 		script.write('  --server="' + str_utils.get_server_name(self.put_server) + '" \\' + os.linesep)
@@ -640,7 +614,7 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write('  --resource="' + 'RunningStatus' + '" \\' + os.linesep)
 		script.write('  --queued' + os.linesep)
 		script.write(os.linesep)
-		#script.write("rm -rf " + self.mark_start_running_directory_name)
+		script.write("rm -rf " + self.mark_start_running_directory_name)
 		
 		script.close()
 		os.chmod(script_name, stat.S_IRWXU | stat.S_IRWXG)
@@ -658,17 +632,13 @@ class OneSubjectJobSubmitter(abc.ABC):
 
 		self._write_bash_header(script)
 		script.write('#PBS -l nodes=1:ppn=1,walltime=4:00:00,mem=4gb' + os.linesep)
-		script.write('#PBS -o ' + self.mark_completion_directory_name + os.linesep)
-		script.write('#PBS -e ' + self.mark_completion_directory_name + os.linesep)
+		script.write('#PBS -o ' + self.log_dir + os.linesep)
+		script.write('#PBS -e ' + self.log_dir + os.linesep)
 		script.write(os.linesep)
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version()  + os.linesep)
 		script.write(os.linesep)
-		#script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' --contain ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.mark_running_status_program_path   + ' \\' + os.linesep)
 		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.mark_running_status_program_path   + ' \\' + os.linesep)
-
-		#script.write(os.linesep)
-		#script.write(self.mark_running_status_program_path + ' \\' + os.linesep)
 		script.write('  --user="' + self.username + '" \\' + os.linesep)
 		script.write('  --password="' + self.password + '" \\' + os.linesep)
 		script.write('  --server="' + str_utils.get_server_name(self.put_server) + '" \\' + os.linesep)
@@ -680,12 +650,11 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write('  --resource="' + 'RunningStatus' + '" \\' + os.linesep)
 		script.write('  --done' + os.linesep)
 		script.write(os.linesep)
-		#script.write("rm -rf " + self.mark_completion_directory_name)
+		script.write("rm -rf " + self.mark_completion_directory_name)
 		
 		script.close()
 		os.chmod(script_name, stat.S_IRWXU | stat.S_IRWXG)
 		
-		# ##########
 	def submit_mark_running_jobs(self, stage, prior_job=None):
 		module_logger.debug(debug_utils.get_name())
 
@@ -817,7 +786,6 @@ class OneSubjectJobSubmitter(abc.ABC):
 		if stage >= ccf_processing_stage.ProcessingStage.PREPARE_SCRIPTS:
 			self.create_mark_running_job_script()
 			self.create_get_data_job_script()
-			# #### self.create_setup_file()
 			self.create_process_data_job_script()
 			self.create_clean_data_script()
 			self.create_put_data_script()
@@ -827,10 +795,6 @@ class OneSubjectJobSubmitter(abc.ABC):
 		else:
 			module_logger.info("Scripts not created")
 
-	# #### @abc.abstractmethod
-	# #### def mark_running_status(self, stage):
-		# #### raise NotImplementedError()
-
 	def do_job_submissions(self, processing_stage):
 		submitted_jobs_list = []
 		prior = None
@@ -838,10 +802,6 @@ class OneSubjectJobSubmitter(abc.ABC):
 		# create scripts
 		self.create_scripts(stage=processing_stage)
 
-		# create running status marker file to indicate that jobs are queued
-		# ####self.mark_running_status(stage=processing_stage)
-		
-		# ##########
 		# Submit job(s) to mark running the data
 		last_mark_running_job_no, all_mark_running_job_nos = self.submit_mark_running_jobs(stage=processing_stage, prior_job=prior)
 		if all_mark_running_job_nos:
