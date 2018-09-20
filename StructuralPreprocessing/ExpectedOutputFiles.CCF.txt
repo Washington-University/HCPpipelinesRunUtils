@@ -872,6 +872,7 @@ T1w {subjectid} surf lh.thickness
 T1w {subjectid} surf lh.volume
 T1w {subjectid} surf lh.w-g.pct.mgh
 T1w {subjectid} surf lh.white
+T1w {subjectid} surf lh.white.deformed
 T1w {subjectid} surf lh.white.H
 T1w {subjectid} surf lh.white.K
 T1w {subjectid} surf lh.white.preaparc
@@ -913,6 +914,7 @@ T1w {subjectid} surf rh.thickness
 T1w {subjectid} surf rh.volume
 T1w {subjectid} surf rh.w-g.pct.mgh
 T1w {subjectid} surf rh.white
+T1w {subjectid} surf rh.white.deformed
 T1w {subjectid} surf rh.white.H
 T1w {subjectid} surf rh.white.K
 T1w {subjectid} surf rh.white.preaparc

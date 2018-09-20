@@ -218,6 +218,7 @@ def rm_dir_if_exists(full_path, verbose=False, output=sys.stdout):
 			print("Removing directory: '" + full_path + "' and all its contents", file=output)
 		shutil.rmtree(full_path)
 
+		
 def do_all_files_exist(file_name_list, verbose=False, output=sys.stdout, short_circuit=True):
 
 	all_files_exist = True
@@ -241,6 +242,104 @@ def do_all_files_exist(file_name_list, verbose=False, output=sys.stdout, short_c
 
 	# If we get here, we've cycled through all the files
 	return all_files_exist
+
+
+def build_filename_list_from_file(f, root_dir, **substitutions):
+	"""Create a list of file paths based on the contents of a specified file
+
+	Uses the contents of the specified file to build a list of full file paths
+	rooted at the specified root directory. 
+
+	Strings in the specified file should _not_ contain any file path 
+	separator characters (e.g. / or \). Instead whitespace should be used in 
+	place of file path separators.
+
+	Strings in the specified file may contain placeholders that are contained
+	in curly brackets. The substitutions parameter is used to specify which
+	placeholders in curly brackets are to be replaced and what they are to 
+	be replaced with.
+
+	Parameters
+	----------
+	f : file
+		The file object containing a list of file paths 
+	root_dir : str
+		The path to the root directory to be used for all the file paths in the returned list
+	subsitutions : variable number of dictionary values
+		Values in the strings in the file that look like {key} will be replaced
+		with the corresponding value.
+
+	Returns
+	-------
+	list
+		list of strings specifying file paths
+
+	Examples
+	--------
+
+	Suppose the file specified contains the following lines:
+
+		MNINonLinear fsaverage {subjectid}.L.sphere.164k_fs_L.surf.gii # this is a comment
+		MNINonLinear fsaverage {subjectid}.R.sphere.164k_fs_R.surf.gii
+		MNINonLinear Results {scan} brainmask_fs.2.nii.gz
+		MNINonLinear Results {scan} {scan}_Atlas.dtseries.nii
+
+	and root_dir is passed in as /mydir
+
+	and the specified substitutions are: subjectid=HCA6005242, scan=rfMRI_REST2_PA
+
+	So the call would look something like:
+
+	f = open(...text file contianing template list...)
+	l = build_filename_list_from_file(f, '/mydir', subjectid='HCA6005242', scan='rfMRI_REST2_PA')
+
+	Then, on a system for which the path separator is '/', the following list of strings 
+	would be returned.
+
+		/mydir/MNINonLinear/fsaverage/HCA6005242.L.sphere.164k_fs_L.surf.gii
+		/mydir/MNINonLinear/fsaverage/HCA6005242.R.sphere.164k_fs_L.surf.gii
+		/mydir/MNINonLinear/Results/rfMRI_REST2_PA/brainmask_fs.2.nii.gz
+		/mydir/MNINonLinear/Results/rfMRI_REST2_PA/rfMRI_REST2_PA_Atlas.dtseries.nii
+	
+	Notice that:
+
+	* the root_dir has been prepended
+	* the correct path separator, '/', has been put where internal whitespace was
+	* {subjectid} has been replaced with HCA6005242
+	* {scan} has been replaced with rfMRI_REST2_PA
+	* anything at or after a '#' in the original strings (including the # itself) 
+	  is treated as a comment and removed
+	"""
+	
+	list_from_file = f.readlines()
+
+	list_of_filenames = []
+
+	for name in list_from_file:
+		# remove any comments (anything at or after a # on a line)
+		filename = name.split('#', 1)[0]
+		
+		# remove leading and trailing whitespace
+		filename = filename.strip()
+
+		# if there is anything left after removing comments and leading and trailing whitespace
+		if filename:
+			# replace internal whitespace with separator '/' or '\'
+			filename = os.sep.join(filename.split())
+
+			# cycle through keys in substitutions and replace {key} with value
+			for substring in substitutions.keys():
+				str_to_replace = '{' + substring + '}'
+				replacement_str = substitutions[substring]
+
+				if replacement_str:
+					filename = filename.replace(str_to_replace, replacement_str)
+
+			# prepend root directory 
+			filename = os.sep.join([root_dir, filename])
+			list_of_filenames.append(filename)
+
+	return list_of_filenames
 
 
 if __name__ == '__main__':

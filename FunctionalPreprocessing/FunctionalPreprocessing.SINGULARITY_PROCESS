@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+# ${HCP_RUN_UTILS}/FunctionalPreprocessing/FunctionalPreprocessing.SINGULARITY_PROCESS
+# Run the HCP Functional Preprocessing pipeline scripts for a specified subject and scan
+# Copyright 2017-2018, The Connectome Coordination Facility
+#
+
 g_pipeline_name="FunctionalPreprocessing"
 g_script_name=$(basename "${0}")
 

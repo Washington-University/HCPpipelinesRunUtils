@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+# ${HCP_RUN_UTILS}/StructuralPreprocessing/StructuralPreprocessing.CHECK
+# Check specified data for completion of structural preprocessing.
+# Copyright 2017-2018, The Connectome Coordination Facility
+#
+
 g_script_name=$(basename "${0}")
 
 if [ -z "${HCP_RUN_UTILS}" ]; then
@@ -15,7 +21,7 @@ usage()
 {
 	cat <<EOF
 
-Check a created Structural Preprocessing resource for completeness
+Check specified subject data for Structural Preprocessing completeness
 
 Usage: ${g_script_name} PARAMETER..."
 

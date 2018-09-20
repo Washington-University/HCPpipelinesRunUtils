@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+# ${HCP_RUN_UTILS}/StructuralPreprocessing/StructuralPreprocessing.SINGULARITY_PROCESS
+# Run the HCP Structural Preprocessing pipeline scripts for a specified subject data
+# Copyright 2017-2018, The Connectome Coordination Facility
+#
+
 g_pipeline_name="StructuralPreprocessing"
 g_script_name=$(basename "${0}")
 
@@ -612,6 +618,7 @@ get_parameters_for_first_t1w_scan()
 		se_phase_pos_file=$(spin_echo_phase_pos_fullpath)
 		g_first_t1w_positive_dwell_time=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${se_phase_pos_file} -k EffectiveEchoSpacing)
 		log_Msg "g_first_t1w_positive_dwell_time: ${g_first_t1w_positive_dwell_time}"
+
 	fi
 }
 

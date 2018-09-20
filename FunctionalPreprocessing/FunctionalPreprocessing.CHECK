@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+# ${HCP_RUN_UTILS}/FunctionalPreprocessing/FunctionalPreprocessing.CHECK
+# Check specified data for completion of functional preprocessing.
+# Copyright 2017-2018, The Connectome Coordination Facility
+#
+
 g_script_name=$(basename "${0}")
 
 if [ -z "${HCP_RUN_UTILS}" ]; then
@@ -18,7 +24,7 @@ usage()
 {
 	cat <<EOF
 
-Check a created Functional Preprocessing resource for completeness
+Check specified subject and scan data for Functional Preprocessing completeness
 
 Usage: $(basename ${0}) PARAMETER..."
 

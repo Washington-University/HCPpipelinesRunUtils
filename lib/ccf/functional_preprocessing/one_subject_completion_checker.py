@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
-"""ccf/functional_preprocessing/one_subject_completion_checker.py
+"""${HCP_RUN_UTILS}/lib/ccf/functional_preprocessing/one_subject_completion_checker.py
 
-Defines the class used for completion checking of functional preprocessing
+Defines a class used for completion checking of functional preprocessing
 
 """
 
 # import of built-in modules
-import os
 import sys
 
 # import of third-party modules
@@ -16,7 +15,6 @@ import sys
 import ccf.one_subject_completion_checker as one_subject_completion_checker
 import ccf.subject as ccf_subject
 import utils.my_argparse as my_argparse
-import utils.os_utils as os_utils
 
 # authorship information
 __author__ = "The Connectome Coordination Facility"
@@ -24,36 +22,14 @@ __copyright__ = "Copyright 2017-2018, The Connectome Coordination Facility"
 
 
 class OneSubjectCompletionChecker(one_subject_completion_checker.OneSubjectCompletionChecker):
-	"""Used for completion checking of functional preprocessing
-
-	"""
+	"""Used for completion checking of functional preprocessing"""
 	
 	def __init__(self):
 		super().__init__()
 
-	def list_of_expected_files(self, working_dir, subject_info):
-
-		hcp_run_utils = os_utils.getenv_required('HCP_RUN_UTILS')
-		f = open(hcp_run_utils + os.sep + 'FunctionalPreprocessing' + os.sep + 'ExpectedOutputFiles.CCF.txt')
-		list_from_file = f.readlines()
-		
-		l = []
-
-		for name in list_from_file:
-			# remove any comments (anything after a # on a line)
-			filename = name.split('#', 1)[0]
-			# remove leading and trailing whitespace
-			filename = filename.strip()      
-			if filename:
-				# replace internal whitespace with separator '/' or '\'
-				filename = os.sep.join(filename.split())
-				# replace subject id placeholder with actual subject id
-				filename = filename.replace("{scan}", subject_info.extra)
-				# prepend working directory and subject id directory
-				filename = os.sep.join([working_dir, subject_info.subject_id, filename])
-				l.append(filename)
-		
-		return l
+	@property
+	def processing_name(self):
+		return 'FunctionalPreprocessing'
 
 
 if __name__ == "__main__":

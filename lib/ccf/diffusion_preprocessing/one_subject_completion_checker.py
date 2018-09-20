@@ -1,18 +1,19 @@
 #!/usr/bin/env python3
 
-"""ccf/diffusion_preprocessing/one_subject_completion_checker.py
+"""${HCP_RUN_UTILS}/lib/ccf/diffusion_preprocessing/one_subject_completion_checker.py
 
 Defines the class used for completion checking of diffusion preprocessing
 
 """
 
 # import of built-in modules
+import sys
 
 # import of third-party modules
 
 # import of local modules
 import ccf.one_subject_completion_checker as one_subject_completion_checker
-import ccf.diffusion_preprocessing.one_subject_job_submitter as one_subject_job_submitter
+import ccf.subject as ccf_subject
 import utils.my_argparse as my_argparse
 
 # authorship information
@@ -29,33 +30,17 @@ class OneSubjectCompletionChecker(one_subject_completion_checker.OneSubjectCompl
         super().__init__()
 
     @property
-    def PIPELINE_NAME(self):
-        return one_subject_job_submitter.OneSubjectJobSubmitter.MY_PIPELINE_NAME()
+	def processing_name(self):
+		return 'DiffusionPreprocessing'
 
-    def my_resource(self, archive, subject_info):
-        return archive.diffusion_preproc_dir_full_path(subject_info)
-
-    def my_prerequisite_dir_full_paths(self, archive, subject_info):
-        dirs = []
-        dirs.append(archive.diffusion_unproc_dir_full_path(subject_info))
-        dirs.append(archive.structural_preproc_dir_full_path(subject_info))
-        return dirs
-
-    def list_of_expected_files(self, archive, subject_info):
-
-        l = []
-
-        subj_dir = os.sep.join([self.my_resource(archive, subject_info), subject_info.subject_id])
-
-        return l
-
+	
 if __name__ == "__main__":
 
     parser = my_argparse.MyArgumentParser(
         description="Program to check for completion of Diffusion Preprocessing for a single subject.")
     
     # mandatory arguments
-    parser.add_argument('-p', '--project', dest='project', required=True, type=str)
+    parser.add_argument('-w', '--working-dir', dest='working_dir', required=True, type=str)
     parser.add_argument('-s', '--subject', dest='subject', required=True, type=str)
     parser.add_argument('-c', '--classifier', dest='classifier', required=True, type=str)
 
@@ -70,8 +55,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # check the specified subject for diffusion preprocessing completion
-    archive = ccf_archive.CcfArchive()
-    subject_info = ccf_subject.SubjectInfo(args.project, args.subject, args.classifier)
+    subject_info = ccf_subject.SubjectInfo(
+		project='irrelevant',
+		subject_id=args.subject,
+		classifier=args.classifier)
     completion_checker = OneSubjectCompletionChecker()
 
     if args.output:
@@ -80,7 +67,7 @@ if __name__ == "__main__":
         processing_output = sys.stdout
 
     if completion_checker.is_processing_complete(
-            archive=archive,
+            working_dir=args.working_dir,
             subject_info=subject_info,
             verbose=args.verbose,
             output=processing_output,

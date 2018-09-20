@@ -13,6 +13,7 @@ import sys
 
 # import of local modules
 import utils.file_utils as file_utils
+import utils.os_utils as os_utils
 
 # authorship information
 __author__ = "Timothy B. Brown"
@@ -25,10 +26,27 @@ class OneSubjectCompletionChecker(abc.ABC):
 	of pipeline processing for one subject
 	"""
 
-	@abc.abstractmethod
+	@property
+	def processing_name(self):
+		"""Name of processing type to check (e.g. StructuralPreprocessing, FunctionalPreprocessing, etc.)"""
+		raise NotImplementedError
+
+	@property
+	def expected_output_files_template_filename(self):
+		"""Name of the file containing a list of templates for expected output files"""
+		return 'ExpectedOutputFiles.CCF.txt'
+	
 	def list_of_expected_files(self, working_dir, subject_info):
-		pass
-				
+
+		hcp_run_utils = os_utils.getenv_required('HCP_RUN_UTILS')
+		f = open(hcp_run_utils + os.sep + self.processing_name + os.sep
+				 + self.expected_output_files_template_filename)
+		root_dir = os.sep.join([working_dir, subject_info.subject_id])
+		l = file_utils.build_filename_list_from_file(f, root_dir,
+													 subjectid=subject_info.subject_id,
+													 scan=subject_info.extra)
+		return l
+	
 	def do_all_files_exist(self, file_name_list, verbose=False, output=sys.stdout, short_circuit=True):
 		return file_utils.do_all_files_exist(file_name_list, verbose, output, short_circuit)
 	
