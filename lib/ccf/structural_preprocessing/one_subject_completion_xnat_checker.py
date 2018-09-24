@@ -24,7 +24,11 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_xnat_checker.OneSub
 
 	def __init__(self):
 		super().__init__()
-
+		
+	@property
+	def processing_name(self):
+		return 'StructuralPreprocessing'	
+		
 	@property
 	def PIPELINE_NAME(self):
 		return one_subject_job_submitter.OneSubjectJobSubmitter.MY_PIPELINE_NAME()
@@ -35,10 +39,6 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_xnat_checker.OneSub
 	def my_prerequisite_dir_full_paths(self, archive, subject_info):
 		return archive.available_structural_unproc_dir_full_paths(subject_info)
 	
-	def list_of_expected_files(self, subject_info):
-		import ccf.structural_preprocessing.one_subject_completion_checker as one_subject_completion_checker
-		return one_subject_completion_checker.OneSubjectCompletionChecker.list_of_expected_files(self, subject_info)
-
 if __name__ == "__main__":
 
 	parser = my_argparse.MyArgumentParser(

@@ -11,6 +11,8 @@ import sys
 # import of third-party modules
 
 # import of local modules
+import utils.file_utils as file_utils
+import utils.os_utils as os_utils
 import ccf.one_subject_completion_checker as one_subject_completion_checker
 
 # authorship information
@@ -35,6 +37,10 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 
 	def my_resource_time_stamp(self, archive, subject_info):
 		return os.path.getmtime(self.my_resource( subject_info))
+		
+	def does_processed_resource_exist(self, subject_info):
+		fullpath = self.my_resource(subject_info)
+		return os.path.isdir(fullpath)	
 
 	def latest_prereq_resource_time_stamp(self, archive, subject_info):
 		latest_time_stamp = 0
@@ -51,7 +57,7 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 
 		# If the processed resource does not exist, then the process is certainly not marked
 		# as complete. The file that marks completeness would be in that resource.
-		if not self.does_processed_resource_exist(subject_info):
+		if not self.does_processed_resource_exist( subject_info):
 			return False
 
 		resource_path = self.my_resource(subject_info)
@@ -102,7 +108,8 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 				print("resource: " + self.my_resource(subject_info) + " IS NOT NEWER THAN ALL PREREQUISITES", file=output)
 			return False
 
+		resource_file_path=self.my_resource(subject_info)
 		# If processed resource exists and is newer than all the prerequisite resources, then check
 		# to see if all the expected files exist
-		expected_file_list = self.list_of_expected_files(subject_info)
+		expected_file_list = self.list_of_expected_files(resource_file_path, subject_info)
 		return self.do_all_files_exist(expected_file_list, verbose, output, short_circuit)
