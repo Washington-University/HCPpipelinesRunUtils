@@ -263,7 +263,7 @@ main()
 	put_log_file_cmd+=" --use-http"
 	
 	log_Msg "put_log_file_cmd: ${put_log_file_cmd}"
-	{put_log_file_cmd}
+	${put_log_file_cmd}
 	
 	popd	
 
