@@ -31,7 +31,7 @@ from PyQt5.QtWidgets import qApp
 # import of local modules
 import ccf.archive as ccf_archive
 import ccf.functional_preprocessing.SubmitFunctionalPreprocessingBatch as SubmitFunctionalPreprocessingBatch
-import ccf.structural_preprocessing.one_subject_completion_xnat_checker as one_subject_completion_xnat_checker
+import ccf.functional_preprocessing.one_subject_completion_xnat_checker as one_subject_completion_xnat_checker
 import ccf.functional_preprocessing.one_subject_prereq_checker as one_subject_prereq_checker
 import ccf.functional_preprocessing.one_subject_run_status_checker as one_subject_run_status_checker
 import ccf.subject as ccf_subject
