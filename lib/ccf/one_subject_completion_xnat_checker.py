@@ -36,10 +36,10 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 		return self.PIPELINE_NAME + '.starttime'
 
 	def my_resource_time_stamp(self, archive, subject_info):
-		return os.path.getmtime(self.my_resource( subject_info))
+		return os.path.getmtime(self.my_resource(archive, subject_info))
 		
-	def does_processed_resource_exist(self, subject_info):
-		fullpath = self.my_resource(subject_info)
+	def does_processed_resource_exist(self, archive, subject_info):
+		fullpath = self.my_resource(archive,subject_info)
 		return os.path.isdir(fullpath)	
 
 	def latest_prereq_resource_time_stamp(self, archive, subject_info):
@@ -57,10 +57,10 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 
 		# If the processed resource does not exist, then the process is certainly not marked
 		# as complete. The file that marks completeness would be in that resource.
-		if not self.does_processed_resource_exist( subject_info):
+		if not self.does_processed_resource_exist(archive, subject_info):
 			return False
 
-		resource_path = self.my_resource(subject_info)
+		resource_path = self.my_resource(archive,subject_info)
 		completion_marker_file_path = resource_path + os.sep + self.completion_marker_file_name()
 		starttime_marker_file_path = resource_path + os.sep + self.starttime_marker_file_name()
 		
@@ -92,9 +92,9 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 	def is_processing_complete(self, archive, subject_info,
 							   verbose=False, output=sys.stdout, short_circuit=True):
 		# If the processed resource does not exist, then the processing is certainly not complete.
-		if not self.does_processed_resource_exist(subject_info):
+		if not self.does_processed_resource_exist(archive, subject_info):
 			if verbose:
-				print("resource: " + self.my_resource(subject_info) + " DOES NOT EXIST",
+				print("resource: " + self.my_resource(archive, subject_info) + " DOES NOT EXIST",
 					  file=output)
 			return False
 
@@ -105,10 +105,10 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 		
 		if resource_time_stamp <= latest_prereq_time_stamp:
 			if verbose:
-				print("resource: " + self.my_resource(subject_info) + " IS NOT NEWER THAN ALL PREREQUISITES", file=output)
+				print("resource: " + self.my_resource(archive, subject_info) + " IS NOT NEWER THAN ALL PREREQUISITES", file=output)
 			return False
 
-		resource_file_path=self.my_resource(subject_info)
+		resource_file_path=self.my_resource(archive, subject_info)
 		# If processed resource exists and is newer than all the prerequisite resources, then check
 		# to see if all the expected files exist
 		expected_file_list = self.list_of_expected_files(resource_file_path, subject_info)

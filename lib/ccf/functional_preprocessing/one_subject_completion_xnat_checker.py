@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 # import of built-in modules
-#import os
 import sys
 
 # import of third-party modules
@@ -32,7 +31,7 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_xnat_checker.OneSub
 	def PIPELINE_NAME(self):
 		return one_subject_job_submitter.OneSubjectJobSubmitter.MY_PIPELINE_NAME()
 
-	def my_resource(self, subject_info):
+	def my_resource(self, archive, subject_info):
 		return archive.functional_preproc_dir_full_path(subject_info)
 
 	def my_prerequisite_dir_full_paths(self, archive, subject_info):

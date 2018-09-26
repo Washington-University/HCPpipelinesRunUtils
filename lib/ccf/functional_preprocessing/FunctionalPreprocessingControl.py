@@ -31,7 +31,7 @@ from PyQt5.QtWidgets import qApp
 # import of local modules
 import ccf.archive as ccf_archive
 import ccf.functional_preprocessing.SubmitFunctionalPreprocessingBatch as SubmitFunctionalPreprocessingBatch
-import ccf.functional_preprocessing.one_subject_completion_checker as one_subject_completion_checker
+import ccf.structural_preprocessing.one_subject_completion_xnat_checker as one_subject_completion_xnat_checker
 import ccf.functional_preprocessing.one_subject_prereq_checker as one_subject_prereq_checker
 import ccf.functional_preprocessing.one_subject_run_status_checker as one_subject_run_status_checker
 import ccf.subject as ccf_subject
@@ -242,21 +242,26 @@ class ControlPanelWidget(QWidget):
 			error_dialog.show()
 			
 		else:
-			if self.open_config_file(): 
-				if self._login.exec_() == QDialog.Accepted:
-					for one_subject in launch_subject_list:
-						project,subject_id,classifier,extra = str(one_subject).split(":")
+			if self._login.exec_() == QDialog.Accepted:
+				SubmitFunctionalPreprocessingBatch.do_submissions(
+					self._login.username, self._login.password, launch_subject_list)
+				self.on_refresh_click()	
+		# else:
+			# if self.open_config_file(): 
+				# if self._login.exec_() == QDialog.Accepted:
+					# for one_subject in launch_subject_list:
+						# project,subject_id,classifier,extra = str(one_subject).split(":")
 					
-						clean_output_first = self.config.get_bool_value(subject_id, 'CleanOutputFirst')
-						processing_stage = self.config.get_value(subject_id, 'ProcessingStage')
-						walltime_limit_hrs = self.config.get_value(subject_id, 'WalltimeLimitHours')
-						vmem_limit_gbs = self.config.get_value(subject_id, 'VmemLimitGbs')
-						output_resource_suffix = self.config.get_value(subject_id, 'OutputResourceSuffix')
+						# clean_output_first = self.config.get_bool_value(subject_id, 'CleanOutputFirst')
+						# processing_stage = self.config.get_value(subject_id, 'ProcessingStage')
+						# walltime_limit_hrs = self.config.get_value(subject_id, 'WalltimeLimitHours')
+						# vmem_limit_gbs = self.config.get_value(subject_id, 'VmemLimitGbs')
+						# output_resource_suffix = self.config.get_value(subject_id, 'OutputResourceSuffix')
 
-						self.submitJob(self._login.username, self._login.password, project, subject_id, classifier, extra,
-												str(clean_output_first), processing_stage, walltime_limit_hrs, vmem_limit_gbs,
-												output_resource_suffix)			
-					self.on_refresh_click()	
+						# self.submitJob(self._login.username, self._login.password, project, subject_id, classifier, extra,
+												# str(clean_output_first), processing_stage, walltime_limit_hrs, vmem_limit_gbs,
+												# output_resource_suffix)			
+					# self.on_refresh_click()	
 			
 	@pyqtSlot()
 	def on_select_click(self):
@@ -394,11 +399,11 @@ class ControlPanelWidget(QWidget):
 			for status_info in status_list:
 				print(status_info, file=status_file)
 				
-	def submitJob(self, username, password, project, subject_id, classifier, scan, clean_output_first, processing_stage, walltime_limit_hrs, vmem_limit_gbs, output_resource_suffix):
-		result = subprocess.call([os.environ["XNAT_PBS_JOBS"] + "/lib/ccf/functional_preprocessing/submit_job.py", username, password, 
-									project, subject_id, classifier, scan, clean_output_first, processing_stage, 
-									walltime_limit_hrs, vmem_limit_gbs, output_resource_suffix])
-		print (result)
+	# def submitJob(self, username, password, project, subject_id, classifier, scan, clean_output_first, processing_stage, walltime_limit_hrs, vmem_limit_gbs, output_resource_suffix):
+		# result = subprocess.call([os.environ["XNAT_PBS_JOBS"] + "/lib/ccf/functional_preprocessing/submit_job.py", username, password, 
+									# project, subject_id, classifier, scan, clean_output_first, processing_stage, 
+									# walltime_limit_hrs, vmem_limit_gbs, output_resource_suffix])
+		# print (result)
 		
 class MyMainWindow(QMainWindow):
 
@@ -458,7 +463,7 @@ if __name__ == "__main__":
 	
 	archive = ccf_archive.CcfArchive()
 	prereq_checker = one_subject_prereq_checker.OneSubjectPrereqChecker()
-	completion_checker = one_subject_completion_checker.OneSubjectCompletionChecker()
+	completion_checker = one_subject_completion_xnat_checker.OneSubjectCompletionXnatChecker()
 	run_status_checker = one_subject_run_status_checker.OneSubjectRunStatusChecker()
 
 	app = QApplication(sys.argv)
