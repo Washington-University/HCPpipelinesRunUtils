@@ -440,6 +440,12 @@ class OneSubjectJobSubmitter(abc.ABC):
 		module_logger.debug(debug_utils.get_name())
 		starttime_file_name = self.working_directory_name
 		starttime_file_name += os.path.sep
+		
+		starttime_file_name +=self.subject
+		starttime_file_name += os.path.sep
+		starttime_file_name +='ProcessingInfo'
+		starttime_file_name += os.path.sep
+		
 		starttime_file_name += self.PIPELINE_NAME
 		starttime_file_name += '.starttime'
 		return starttime_file_name
