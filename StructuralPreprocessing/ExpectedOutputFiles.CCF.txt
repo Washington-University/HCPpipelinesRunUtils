@@ -771,10 +771,13 @@ T1w {subjectid} mri rh.ribbon.mgz
 T1w {subjectid} mri ribbon.mgz
 T1w {subjectid} mri segment.dat
 T1w {subjectid} mri T1.mgz
+T1w {subjectid} mri T1wMulT2w_hires.nii.gz
+T1w {subjectid} mri T1w_hires.nii.gz
 T1w {subjectid} mri T2.mgz
 T1w {subjectid} mri T2.norm.mgz
 T1w {subjectid} mri T2.prenorm.mean.dat
 T1w {subjectid} mri T2.prenorm.mgz
+T1w {subjectid} mri T2w_hires.nii.gz
 T1w {subjectid} mri talairach.label_intensities.txt
 T1w {subjectid} mri talairach.log
 T1w {subjectid} mri talairach_with_skull.log
