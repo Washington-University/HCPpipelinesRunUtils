@@ -118,12 +118,14 @@ get_options()
     unset g_dir
     unset g_force
     unset g_use_http
-
+	unset g_java_mem
+	
     # default values
     g_use_http="FALSE"
     g_reason="Unspecified"
     g_force="FALSE"
-    
+	g_java_mem="1024"
+	    
     # parse arguments
     local num_args=${#arguments[@]}
     local argument
@@ -169,6 +171,10 @@ get_options()
                 g_resource=${argument/*=/""}
                 index=$(( index + 1 ))
                 ;;
+			--mem=*)
+				g_java_mem=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
             --reason=*)
                 g_reason=${argument/*=/""}
                 index=$(( index + 1 ))
@@ -273,6 +279,7 @@ get_options()
         log_Msg "g_reason: ${g_reason}"
     fi
 
+	log_Msg "g_java_mem: ${g_java_mem}"
     log_Msg "g_force: ${g_force}"
     log_Msg "g_use_http: ${g_use_http}"
 
@@ -367,14 +374,14 @@ main()
             ${zip_cmd}
 
             java_cmd=""
-            java_cmd+="java -Xmx1024m -jar ${data_client_jar}"
+            java_cmd+="java -Xmx${g_java_mem}m -jar ${data_client_jar}"
             java_cmd+=" -u ${g_user}"
             java_cmd+=" -p ${g_password}"
             java_cmd+=" -m PUT"
             java_cmd+=" -r ${resource_uri}"
             java_cmd+=" -l ${zipped_file}"
 
-            log_Msg "Using java -Xmx1024m -jar ${data_client_jar} to PUT the file: ${zipped_file} into the resource: ${resource_uri}"
+            log_Msg "Using java -Xmx${g_java_mem}m -jar ${data_client_jar} to PUT the file: ${zipped_file} into the resource: ${resource_uri}"
             ${java_cmd}
 
             rm ${zipped_file}           
@@ -415,13 +422,13 @@ main()
 
         if [ "${put_it}" = "TRUE" ]; then
             java_cmd=""
-            java_cmd+="java -Xmx1024m -jar ${data_client_jar}"
+            java_cmd+="java -Xmx${g_java_mem}m -jar ${data_client_jar}"
             java_cmd+=" -u ${g_user}"
             java_cmd+=" -p ${g_password}"
             java_cmd+=" -m PUT"
             java_cmd+=" -r ${resource_uri}"
 
-            log_Msg "Using java -Xmx1024m -jar ${data_client_jar} to PUT the resource: ${resource_uri}"
+            log_Msg "Using java -Xmx${g_java_mem}m -jar ${data_client_jar} to PUT the resource: ${resource_uri}"
             ${java_cmd}
 
         else

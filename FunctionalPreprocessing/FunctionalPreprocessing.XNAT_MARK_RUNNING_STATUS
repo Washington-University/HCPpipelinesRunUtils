@@ -255,6 +255,7 @@ main()
 					--subject=${g_subject} \
 					--session=${g_subject}_${g_classifier} \
 					--resource=${g_resource} \
+					--mem="256" \
 					--reason=${g_reason} \
 					--dir=${directory} \
 					--use-http \

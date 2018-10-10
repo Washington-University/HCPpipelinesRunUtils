@@ -561,6 +561,29 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 		else:
 			module_logger.info("freesurfer assessor job not submitted because of requested processing stage")
 			return standard_process_data_jobno, all_process_data_jobs
+			
+	def mark_running_status(self, stage):
+		module_logger.debug(debug_utils.get_name())
+
+		if stage > ccf_processing_stage.ProcessingStage.PREPARE_SCRIPTS:
+			mark_cmd = self._xnat_pbs_jobs_home
+			mark_cmd += os.sep + self.PIPELINE_NAME 
+			mark_cmd += os.sep + self.PIPELINE_NAME
+			mark_cmd += '.XNAT_MARK_RUNNING_STATUS' 
+			mark_cmd += ' --user=' + self.username
+			mark_cmd += ' --password=' + self.password
+			mark_cmd += ' --server=' + str_utils.get_server_name(self.put_server)
+			mark_cmd += ' --project=' + self.project
+			mark_cmd += ' --subject=' + self.subject
+			mark_cmd += ' --classifier=' + self.classifier
+			mark_cmd += ' --resource=RunningStatus'
+			mark_cmd += ' --queued'
+
+			completed_mark_cmd_process = subprocess.run(
+				mark_cmd, shell=True, check=True, stdout=subprocess.PIPE, universal_newlines=True)
+			print(completed_mark_cmd_process.stdout)
+			
+			return
 
 if __name__ == "__main__":
 	import ccf.structural_preprocessing.one_subject_run_status_checker as one_subject_run_status_checker
