@@ -290,6 +290,13 @@ class OneSubjectJobSubmitter(abc.ABC):
 		return start_name
 
 	@property
+	def processing_info_directory_name(self):
+		processing_info_name = self.working_directory_name
+		processing_info_name += os.path.sep + self.subject
+		processing_info_name += os.path.sep + 'ProcessingInfo'
+		return processing_info_name 	
+		
+	@property
 	def get_data_job_script_name(self):
 		"""Name of the script to be submitted to perform the get data job"""
 		module_logger.debug(debug_utils.get_name())
@@ -438,8 +445,10 @@ class OneSubjectJobSubmitter(abc.ABC):
 		starttime_file_name += os.path.sep
 		starttime_file_name +='ProcessingInfo'
 		starttime_file_name += os.path.sep
-		
+		starttime_file_name += self.subject + '.'
 		starttime_file_name += self.PIPELINE_NAME
+		if self.scan:
+			starttime_file_name += '_' + self.scan		
 		starttime_file_name += '.starttime'
 		return starttime_file_name
 
@@ -464,6 +473,7 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write(os.linesep)
 		script.write('echo "Removing NOT newly created or modified files."' + os.linesep)
 		script.write('find ' + self.working_directory_name + os.path.sep + self.subject)
+		script.write(' -not -path "' + self.processing_info_directory_name + os.path.sep + '*"')
 		script.write(' -not -newer ' + self.starttime_file_name + ' -delete')
 		script.write(os.linesep)
 		script.write('echo "Removing any XNAT catalog files still around."' + os.linesep)
