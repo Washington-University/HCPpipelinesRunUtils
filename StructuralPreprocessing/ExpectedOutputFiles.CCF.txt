@@ -775,7 +775,8 @@ T1w {subjectid} mri T1wMulT2w_hires.nii.gz
 T1w {subjectid} mri T1w_hires.nii.gz
 T1w {subjectid} mri T2.mgz
 T1w {subjectid} mri T2.norm.mgz
-T1w {subjectid} mri T2.prenorm.mean.dat
+#This file is no longer produced after Doug Greve's changes to recon-all.v6.hires of 29 Sep 2018
+#T1w {subjectid} mri T2.prenorm.mean.dat
 T1w {subjectid} mri T2.prenorm.mgz
 T1w {subjectid} mri T2w_hires.nii.gz
 T1w {subjectid} mri talairach.label_intensities.txt
@@ -924,25 +925,26 @@ T1w {subjectid} surf rh.white.preaparc
 T1w {subjectid} surf rh.white.preaparc.H
 T1w {subjectid} surf rh.white.preaparc.K
 T1w {subjectid} surf rh.woT2.pial
-T1w {subjectid} tess1mm
-T1w {subjectid} tess1mm mri
-T1w {subjectid} tess1mm mri aseg.auto_noCCseg.mgz
-T1w {subjectid} tess1mm mri filled.mgz
-T1w {subjectid} tess1mm mri filled-pretess127.mgz
-T1w {subjectid} tess1mm mri filled-pretess255.mgz
-T1w {subjectid} tess1mm mri norm.mgz
-T1w {subjectid} tess1mm mri transforms
-T1w {subjectid} tess1mm mri transforms conform.lta
-T1w {subjectid} tess1mm mri transforms talairach.lta
-T1w {subjectid} tess1mm mri wm.mgz
-T1w {subjectid} tess1mm scripts
-T1w {subjectid} tess1mm scripts ponscc.cut.log
-T1w {subjectid} tess1mm surf
-T1w {subjectid} tess1mm surf lh.orig.nofix
-T1w {subjectid} tess1mm surf rh.orig.nofix
-# These file names are specific to the time that the tess1mm script was run
-# T1w {subjectid} tess1mm tess1mm.Y2018.M04.D13.H16.M04.lh.log
-# T1w {subjectid} tess1mm tess1mm.Y2018.M04.D13.H16.M05.rh.log
+#These files are no longer produced after Doug Greve's changes to recon-all.v6.hires of 29 Sep 2018
+#T1w {subjectid} tess1mm
+#T1w {subjectid} tess1mm mri
+#T1w {subjectid} tess1mm mri aseg.auto_noCCseg.mgz
+#T1w {subjectid} tess1mm mri filled.mgz
+#T1w {subjectid} tess1mm mri filled-pretess127.mgz
+#T1w {subjectid} tess1mm mri filled-pretess255.mgz
+#T1w {subjectid} tess1mm mri norm.mgz
+#T1w {subjectid} tess1mm mri transforms
+#T1w {subjectid} tess1mm mri transforms conform.lta
+#T1w {subjectid} tess1mm mri transforms talairach.lta
+#T1w {subjectid} tess1mm mri wm.mgz
+#T1w {subjectid} tess1mm scripts
+#T1w {subjectid} tess1mm scripts ponscc.cut.log
+#T1w {subjectid} tess1mm surf
+#T1w {subjectid} tess1mm surf lh.orig.nofix
+#T1w {subjectid} tess1mm surf rh.orig.nofix
+## These file names are specific to the time that the tess1mm script was run
+## T1w {subjectid} tess1mm tess1mm.Y2018.M04.D13.H16.M04.lh.log
+## T1w {subjectid} tess1mm tess1mm.Y2018.M04.D13.H16.M05.rh.log
 T1w {subjectid} tmp
 T1w {subjectid} touch
 T1w {subjectid} touch aparc.a2009s2aseg.touch
