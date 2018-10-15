@@ -29,12 +29,6 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 	def my_prerequisite_dir_full_paths(self, archive, subject_info):
 		pass
 
-	def completion_marker_file_name(self):
-		return self.PIPELINE_NAME + '.XNAT_CHECK.success'
-
-	def starttime_marker_file_name(self):
-		return self.PIPELINE_NAME + '.starttime'
-
 	def my_resource_time_stamp(self, archive, subject_info):
 		return os.path.getmtime(self.my_resource(archive, subject_info))
 		
@@ -60,9 +54,14 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 		if not self.does_processed_resource_exist(archive, subject_info):
 			return False
 
-		resource_path = self.my_resource(archive,subject_info)
-		completion_marker_file_path = resource_path + os.sep + self.completion_marker_file_name()
-		starttime_marker_file_path = resource_path + os.sep + self.starttime_marker_file_name()
+		resource_path = self.my_resource(archive,subject_info) + os.sep + subject_info.subject_id + os.sep +'ProcessingInfo'
+		
+		subject_pipeline_name = subject_info.subject_id + '.' + self.PIPELINE_NAME 
+		if (subject_info.extra.lower() != 'all' and subject_info.extra !=''):
+			subject_pipeline_name += '_' + subject_info.extra
+		
+		completion_marker_file_path = resource_path + os.sep + subject_pipeline_name + '.XNAT_CHECK.success'
+		starttime_marker_file_path = resource_path + os.sep + subject_pipeline_name + '.starttime'
 		
 		# If the completion marker file does not exist, the the processing is certainly not marked
 		# as complete.

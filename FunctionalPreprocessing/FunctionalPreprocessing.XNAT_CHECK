@@ -186,10 +186,10 @@ main()
 	set_g_python_environment
 	source activate ${g_python_environment} 2>&1
 
-	log_file_name="$(basename ${0}).log"
+	log_file_name="${g_subject}.$(basename ${0})_${g_scan}.log"
 	log_Msg "log_file_name: ${log_file_name}"
 	
-	success_file_name="$(basename ${0}).success"
+	success_file_name="${g_subject}.$(basename ${0})_${g_scan}.success"
 	log_Msg "success_file_name: ${success_file_name}"
 
 	check_cmd=""
@@ -227,7 +227,7 @@ main()
 		put_success_file_cmd+=" --session=${g_subject}_${g_classifier}"
 		put_success_file_cmd+=" --resource=${g_scan}_preproc"
 		put_success_file_cmd+=" --file=${success_file_name}"
-		put_success_file_cmd+=" --file-path-within-resource=${success_file_name}"
+		put_success_file_cmd+=" --file-path-within-resource=${g_subject}/ProcessingInfo/${success_file_name}"
 		put_success_file_cmd+=" --force"
 		put_success_file_cmd+=" --use-http"
 
@@ -241,7 +241,7 @@ main()
 		success_file_in_archive=""
 		success_file_in_archive+="${XNAT_PBS_JOBS_ARCHIVE_ROOT}/${g_project}"
 		success_file_in_archive+="/arc001/${g_subject}_${g_classifier}/RESOURCES"
-		success_file_in_archive+="/${g_scan}_preproc/${success_file_name}"
+		success_file_in_archive+="/${g_scan}_preproc/${g_subject}/ProcessingInfo/${success_file_name}"
 
 		if [ -e ${success_file_in_archive} ] ; then
 			remove_file_cmd=""
@@ -254,7 +254,7 @@ main()
 			remove_file_cmd+=" --subject=${g_subject}"
 			remove_file_cmd+=" --session=${g_subject}_${g_classifier}"
 			remove_file_cmd+=" --resource=${g_scan}_preproc"
-			remove_file_cmd+=" --file-path-within-resource=${success_file_name}"
+			remove_file_cmd+=" --file-path-within-resource=${g_subject}/ProcessingInfo/${success_file_name}"
 			
 			${remove_file_cmd}
 		fi
@@ -272,7 +272,7 @@ main()
 	put_log_file_cmd+=" --session=${g_subject}_${g_classifier}"
 	put_log_file_cmd+=" --resource=${g_scan}_preproc"
 	put_log_file_cmd+=" --file=${log_file_name}"
-	put_log_file_cmd+=" --file-path-within-resource=${log_file_name}"
+	put_log_file_cmd+=" --file-path-within-resource=${g_subject}/ProcessingInfo/${log_file_name}"
 	put_log_file_cmd+=" --force"
 	put_log_file_cmd+=" --use-http"
 
