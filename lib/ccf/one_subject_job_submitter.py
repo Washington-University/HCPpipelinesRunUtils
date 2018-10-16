@@ -408,6 +408,8 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version() + os.linesep)
 		script.write(os.linesep)
+		script.write('mv ' + self.working_directory_name + os.path.sep + '*' + self.PIPELINE_NAME + '* ' + self.working_directory_name + os.path.sep + self.subject + os.path.sep + 'ProcessingInfo' + os.linesep)
+		script.write(os.linesep)
 		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.xnat_pbs_jobs_home + os.sep + 'WorkingDirPut' + os.sep + 'XNAT_working_dir_put.sh \\' + os.linesep)
 		script.write('  --leave-subject-id-level \\' + os.linesep)
 		script.write('  --user="' + self.username + '" \\' + os.linesep)
