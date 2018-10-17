@@ -38,7 +38,7 @@ create_start_time_file()
 	if [ -z "${scan_id}" ]; then
 		local start_time_file="${processing_info_dir}/${subject_id}.${pipeline_name}.starttime"
 	else
-		local start_time_file="${processing_info_dir}/${subject_id}.${pipeline_name}_${scan_id}.starttime"
+		local start_time_file="${processing_info_dir}/${subject_id}_${scan_id}.${pipeline_name}.starttime"
 	fi
 
 	if [ -e "${start_time_file}" ]; then
@@ -103,7 +103,7 @@ log_execution_info()
 	if [ -z "${scan_id}" ]; then
 		local filename="${processing_info_dir}/${subject_id}.${process_name}.execinfo"
 	else
-		local filename="${processing_info_dir}/${subject_id}.${process_name}_${scan_id}.execinfo"
+		local filename="${processing_info_dir}/${subject_id}_${scan_id}.${process_name}.execinfo"
 	fi
 
 	if [ -n "${PBS_JOBID}" ]; then
