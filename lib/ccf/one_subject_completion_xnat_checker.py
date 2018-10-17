@@ -56,9 +56,10 @@ class OneSubjectCompletionXnatChecker(one_subject_completion_checker.OneSubjectC
 
 		resource_path = self.my_resource(archive,subject_info) + os.sep + subject_info.subject_id + os.sep +'ProcessingInfo'
 		
-		subject_pipeline_name = subject_info.subject_id + '.' + self.PIPELINE_NAME 
+		subject_pipeline_name = subject_info.subject_id  
 		if (subject_info.extra.lower() != 'all' and subject_info.extra !=''):
 			subject_pipeline_name += '_' + subject_info.extra
+		subject_pipeline_name += '.' + self.PIPELINE_NAME
 		
 		completion_marker_file_path = resource_path + os.sep + subject_pipeline_name + '.XNAT_CHECK.success'
 		starttime_marker_file_path = resource_path + os.sep + subject_pipeline_name + '.starttime'
