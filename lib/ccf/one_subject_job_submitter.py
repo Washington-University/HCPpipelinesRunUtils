@@ -282,9 +282,9 @@ class OneSubjectJobSubmitter(abc.ABC):
 	def scripts_start_name(self):
 		start_name = self.working_directory_name
 		start_name += os.sep + self.subject
-		start_name += '.' + self.PIPELINE_NAME
 		if self.scan:
 			start_name += '_' + self.scan
+		start_name += '.' + self.PIPELINE_NAME
 		start_name += '.' + self.project
 		start_name += '.' + self.session
 		return start_name
