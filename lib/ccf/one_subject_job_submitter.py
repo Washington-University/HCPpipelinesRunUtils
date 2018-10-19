@@ -508,9 +508,9 @@ class OneSubjectJobSubmitter(abc.ABC):
 		module_logger.debug(debug_utils.get_name())
 		name = self.check_data_directory_name
 		name += os.sep + self.subject
-		name += '.' + self.PIPELINE_NAME
 		if self.scan:
 			name += '_' + self.scan
+		name += '.' + self.PIPELINE_NAME
 		name += '.' + self.project
 		name += '.' + self.session
 		name += '.' + 'XNAT_CHECK_DATA_job.sh'
@@ -566,9 +566,9 @@ class OneSubjectJobSubmitter(abc.ABC):
 		module_logger.debug(debug_utils.get_name())
 		name = self.mark_completion_directory_name
 		name += os.sep + self.subject
-		name += '.' + self.PIPELINE_NAME
 		if self.scan:
 			name += '_' + self.scan
+		name += '.' + self.PIPELINE_NAME
 		name += '.' + self.project
 		name += '.' + 'MARK_COMPLETE_RUNNING_STATUS_job.sh'
 		return name
