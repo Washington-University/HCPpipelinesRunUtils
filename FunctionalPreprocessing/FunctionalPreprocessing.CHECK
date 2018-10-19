@@ -144,8 +144,8 @@ main()
 	source activate ${g_python_environment} 2>&1
 
 	mkdir -p ${g_working_dir}/${g_subject}/ProcessingInfo
-	log_file_name="${g_working_dir}/${g_subject}/ProcessingInfo/${g_subject}.${g_script_name}_${g_scan}.log"
-	success_file_name="${g_working_dir}/${g_subject}/ProcessingInfo/${g_subject}.${g_script_name}_${g_scan}.success"
+	log_file_name="${g_working_dir}/${g_subject}/ProcessingInfo/${g_subject}_${g_scan}.${g_script_name}.log"
+	success_file_name="${g_working_dir}/${g_subject}/ProcessingInfo/${g_subject}_${g_scan}.${g_script_name}.success"
 
 	check_cmd=""
 	check_cmd+="${HCP_RUN_UTILS}/lib/ccf/functional_preprocessing/one_subject_completion_checker.py"
