@@ -169,7 +169,7 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version() + os.linesep)
 		script.write(os.linesep)
-		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.get_data_program_path  + ' \\' + os.linesep)
+		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_xnat_path() + ' ' + self.get_data_program_path  + ' \\' + os.linesep)
 		script.write('  --project=' + self.project + ' \\' + os.linesep)
 		script.write('  --subject=' + self.subject + ' \\' + os.linesep)
 		script.write('  --classifier=' + self.classifier + ' \\' + os.linesep)
@@ -364,17 +364,20 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 		xnat_pbs_setup_line = 'source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name()
 		
 		xnat_pbs_setup_singularity_load = 'module load ' + self._get_xnat_pbs_setup_script_singularity_version()
+
 		xnat_pbs_setup_singularity_process = 'singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() \
 											+ ',' + self._get_xnat_pbs_setup_script_gradient_coefficient_path() + ':/export/HCP/gradient_coefficient_files' \
 											+ ',' + self._get_xnat_pbs_setup_script_freesurfer_license_path() + ':/export/freesurfer_license' \
 											+ ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + processing_script_source_path 
-		user_line	  = '  --user=' + self.username
-		password_line  = '  --password=' + self.password
-		server_line	= '  --server=' + str_utils.get_server_name(self.server)
-		project_line   = '  --project=' + self.project
+
+		# user_line	  = '  --user=' + self.username
+		# password_line  = '  --password=' + self.password
+		# server_line	= '  --server=' + str_utils.get_server_name(self.server)
+		# project_line   = '  --project=' + self.project
 		subject_line   = '  --subject=' + self.subject
-		session_line   = '  --session=' + self.session
-		session_classifier_line = '  --session-classifier=' + self.classifier
+		#session_line   = '  --session=' + self.session
+		#session_classifier_line = '  --session-classifier=' + self.classifier
+		session_classifier_line = '  --classifier=' + self.classifier
 
 		if self._has_spin_echo_field_maps(subject_info):
 			fieldmap_type_line = '  --fieldmap-type=' + 'SpinEcho'
@@ -382,11 +385,11 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 			fieldmap_type_line = '  --fieldmap-type=' + 'SiemensGradientEcho' 
 			
 		first_t1w_directory_name_line = '  --first-t1w-directory-name=' + self._get_first_t1w_directory_name(subject_info)
-		first_t1w_resource_name_line  = '  --first-t1w-resource-name=' + self._get_first_t1w_resource_name(subject_info)
+		#first_t1w_resource_name_line  = '  --first-t1w-resource-name=' + self._get_first_t1w_resource_name(subject_info)
 		first_t1w_file_name_line	  = '  --first-t1w-file-name=' + self._get_first_t1w_file_name(subject_info)
 		
 		first_t2w_directory_name_line = '  --first-t2w-directory-name=' + self._get_first_t2w_directory_name(subject_info)
-		first_t2w_resource_name_line  = '  --first-t2w-resource-name=' + self._get_first_t2w_resource_name(subject_info)
+		#first_t2w_resource_name_line  = '  --first-t2w-resource-name=' + self._get_first_t2w_resource_name(subject_info)
 		first_t2w_file_name_line	  = '  --first-t2w-file-name=' + self._get_first_t2w_file_name(subject_info)
 		
 		brain_size_line			   = '  --brainsize=' + str(self.brain_size)
@@ -433,19 +436,19 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 			script.write(xnat_pbs_setup_singularity_load + os.linesep)
 			script.write(os.linesep)
 			script.write(xnat_pbs_setup_singularity_process+ ' \\' + os.linesep)
-			script.write(user_line + ' \\' + os.linesep)
-			script.write(password_line + ' \\' + os.linesep)
-			script.write(server_line + ' \\' + os.linesep)
-			script.write(project_line + ' \\' + os.linesep)
+			# script.write(user_line + ' \\' + os.linesep)
+			# script.write(password_line + ' \\' + os.linesep)
+			# script.write(server_line + ' \\' + os.linesep)
+			# script.write(project_line + ' \\' + os.linesep)
 			script.write(subject_line + ' \\' + os.linesep)
-			script.write(session_line + ' \\' + os.linesep)
+			# script.write(session_line + ' \\' + os.linesep)
 			script.write(session_classifier_line + ' \\' + os.linesep)
 			script.write(fieldmap_type_line + ' \\' + os.linesep)
 			script.write(first_t1w_directory_name_line + ' \\' + os.linesep)
-			script.write(first_t1w_resource_name_line + ' \\' + os.linesep)
+			#script.write(first_t1w_resource_name_line + ' \\' + os.linesep)
 			script.write(first_t1w_file_name_line + ' \\' + os.linesep)
 			script.write(first_t2w_directory_name_line + ' \\' + os.linesep)
-			script.write(first_t2w_resource_name_line + ' \\' + os.linesep)
+			#script.write(first_t2w_resource_name_line + ' \\' + os.linesep)
 			script.write(first_t2w_file_name_line + ' \\' + os.linesep)
 			script.write(brain_size_line + ' \\' + os.linesep)
 			script.write(t1template_line + ' \\' + os.linesep)

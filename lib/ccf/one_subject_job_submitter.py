@@ -327,6 +327,12 @@ class OneSubjectJobSubmitter(abc.ABC):
 		xnat_pbs_setup_singularity_container = os_utils.getenv_required('SINGULARITY_CONTAINER_PATH')
 		return xnat_pbs_setup_singularity_container
 		
+		
+	def _get_xnat_pbs_setup_script_singularity_container_xnat_path(self):
+		xnat_pbs_setup_singularity_container_xnat = os_utils.getenv_required('SINGULARITY_CONTAINER_XNAT_PATH')
+		return xnat_pbs_setup_singularity_container_xnat
+		
+		
 	def _get_xnat_pbs_setup_script_singularity_bind_path(self):
 		xnat_pbs_setup_singularity_bind = os_utils.getenv_required('SINGULARITY_BIND_PATH')
 		return xnat_pbs_setup_singularity_bind
@@ -373,7 +379,7 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version()  + os.linesep)
 		script.write(os.linesep)
-		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.get_data_program_path + ' \\' + os.linesep)
+		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_xnat_path() + ' ' + self.get_data_program_path + ' \\' + os.linesep)
 		script.write('  --project=' + self.project + ' \\' + os.linesep)
 		script.write('  --subject=' + self.subject + ' \\' + os.linesep)
 		script.write('  --classifier=' + self.classifier + ' \\' + os.linesep)
@@ -410,7 +416,7 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write(os.linesep)
 		script.write('mv ' + self.working_directory_name + os.path.sep + '*' + self.PIPELINE_NAME + '* ' + self.working_directory_name + os.path.sep + self.subject + os.path.sep + 'ProcessingInfo' + os.linesep)
 		script.write(os.linesep)
-		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.xnat_pbs_jobs_home + os.sep + 'WorkingDirPut' + os.sep + 'XNAT_working_dir_put.sh \\' + os.linesep)
+		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_xnat_path() + ' ' + self.xnat_pbs_jobs_home + os.sep + 'WorkingDirPut' + os.sep + 'XNAT_working_dir_put.sh \\' + os.linesep)
 		script.write('  --leave-subject-id-level \\' + os.linesep)
 		script.write('  --user="' + self.username + '" \\' + os.linesep)
 		script.write('  --password="' + self.password + '" \\' + os.linesep)
@@ -547,7 +553,7 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version() + os.linesep)
 		script.write(os.linesep)
-		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.check_data_program_path  + ' \\' + os.linesep)
+		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_xnat_path() + ' ' + self.check_data_program_path  + ' \\' + os.linesep)
 		script.write('  --user="' + self.username + '" \\' + os.linesep)
 		script.write('  --password="' + self.password + '" \\' + os.linesep)
 		script.write('  --server="' + str_utils.get_server_name(self.put_server) + '" \\' + os.linesep)
@@ -601,7 +607,7 @@ class OneSubjectJobSubmitter(abc.ABC):
 		script.write('source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name() + os.linesep)
 		script.write('module load ' + self._get_xnat_pbs_setup_script_singularity_version()  + os.linesep)
 		script.write(os.linesep)
-		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + self.mark_running_status_program_path   + ' \\' + os.linesep)
+		script.write('singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() + ' ' + self._get_xnat_pbs_setup_script_singularity_container_xnat_path() + ' ' + self.mark_running_status_program_path   + ' \\' + os.linesep)
 		script.write('  --user="' + self.username + '" \\' + os.linesep)
 		script.write('  --password="' + self.password + '" \\' + os.linesep)
 		script.write('  --server="' + str_utils.get_server_name(self.put_server) + '" \\' + os.linesep)

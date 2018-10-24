@@ -93,20 +93,26 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 
 		xnat_pbs_setup_line = 'source ' + self._get_xnat_pbs_setup_script_path() + ' ' + self._get_db_name()
 		xnat_pbs_setup_singularity_load = 'module load ' + self._get_xnat_pbs_setup_script_singularity_version()
+		# xnat_pbs_setup_singularity_process = 'singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() \
+											# + ',' + self._get_xnat_pbs_setup_script_gradient_coefficient_path() + ':/export/HCP/gradient_coefficient_files' \
+											# + ',' + self._get_xnat_pbs_setup_script_freesurfer_license_path() + ':/export/freesurfer_license' \
+											# + ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + processing_script_source_path 
 		xnat_pbs_setup_singularity_process = 'singularity exec -B ' + self._get_xnat_pbs_setup_script_archive_root() + ',' + self._get_xnat_pbs_setup_script_singularity_bind_path() \
 											+ ',' + self._get_xnat_pbs_setup_script_gradient_coefficient_path() + ':/export/HCP/gradient_coefficient_files' \
 											+ ',' + self._get_xnat_pbs_setup_script_freesurfer_license_path() + ':/export/freesurfer_license' \
 											+ ' ' + self._get_xnat_pbs_setup_script_singularity_container_path() + ' ' + processing_script_source_path 
 	
 		#script_line	  = processing_script_dest_path
-		user_line		= '  --user=' + self.username
-		password_line	= '  --password=' + self.password
-		server_line	  = '  --server=' + str_utils.get_server_name(self.server)
-		project_line	 = '  --project=' + self.project
+		
+		# user_line		= '  --user=' + self.username
+		# password_line	= '  --password=' + self.password
+		# server_line	  = '  --server=' + str_utils.get_server_name(self.server)
+		# project_line	 = '  --project=' + self.project
 		subject_line	 = '  --subject=' + self.subject
-		session_line	 = '  --session=' + self.session
+		#session_line	 = '  --session=' + self.session
 		scan_line		= '  --scan=' + self.scan
-		session_classifier_line = '  --session-classifier=' + self.classifier
+		#session_classifier_line = '  --session-classifier=' + self.classifier
+		session_classifier_line = '  --classifier=' + self.classifier
 		dcmethod_line	= '  --dcmethod=TOPUP'
 		topupconfig_line = '  --topupconfig=b02b0.cnf'
 		gdcoeffs_line	= '  --gdcoeffs=Prisma_3T_coeff_AS82.grad'
@@ -121,12 +127,12 @@ class OneSubjectJobSubmitter(one_subject_job_submitter.OneSubjectJobSubmitter):
 			script.write(xnat_pbs_setup_singularity_load + os.linesep)
 			script.write(os.linesep)	
 			script.write(xnat_pbs_setup_singularity_process+ ' \\' + os.linesep)
-			script.write(user_line +		' \\' + os.linesep)
-			script.write(password_line +	' \\' + os.linesep)
-			script.write(server_line +	  ' \\' + os.linesep)
-			script.write(project_line +	 ' \\' + os.linesep)
+			# script.write(user_line +		' \\' + os.linesep)
+			# script.write(password_line +	' \\' + os.linesep)
+			# script.write(server_line +	  ' \\' + os.linesep)
+			# script.write(project_line +	 ' \\' + os.linesep)
 			script.write(subject_line +	 ' \\' + os.linesep)
-			script.write(session_line +	 ' \\' + os.linesep)
+			# script.write(session_line +	 ' \\' + os.linesep)
 			script.write(scan_line +		' \\' + os.linesep)
 			script.write(session_classifier_line + ' \\' + os.linesep)
 			script.write(dcmethod_line +	' \\' + os.linesep)
