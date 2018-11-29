@@ -777,7 +777,7 @@ T1w {subjectid} mri T2.mgz
 T1w {subjectid} mri T2.norm.mgz
 #This file is no longer produced after Doug Greve's changes to recon-all.v6.hires of 29 Sep 2018
 #T1w {subjectid} mri T2.prenorm.mean.dat
-T1w {subjectid} mri T2.prenorm.mgz
+T1w {subjectid} mri rawavg.T2.prenorm.mgz
 T1w {subjectid} mri T2w_hires.nii.gz
 T1w {subjectid} mri talairach.label_intensities.txt
 T1w {subjectid} mri talairach.log
