@@ -751,6 +751,7 @@ T1w {subjectid} mri brain.finalsurfs.mgz
 T1w {subjectid} mri brainmask.auto.mgz
 T1w {subjectid} mri brainmask.mgz
 T1w {subjectid} mri brain.mgz
+T1w {subjectid} mri conf.T2.mgz
 T1w {subjectid} mri c_ras.mat
 T1w {subjectid} mri ctrl_pts.mgz
 T1w {subjectid} mri extern.emreg.mask.mgz
@@ -766,18 +767,26 @@ T1w {subjectid} mri orig T2raw.mgz
 T1w {subjectid} mri orig.mgz
 T1w {subjectid} mri orig_nu.mgz
 T1w {subjectid} mri Q.lta~
+T1w {subjectid} mri rawavg.aseg.presurf.mgz
+T1w {subjectid} mri rawavg.brain.finalsurfs.conf.mgz
+T1w {subjectid} mri rawavg.brain.finalsurfs.mgz
+T1w {subjectid} mri rawavg.brain.mgz
+T1w {subjectid} mri rawavg.cmdc0.mgz
+T1w {subjectid} mri rawavg.cmdc.mgz
+T1w {subjectid} mri rawavg.filled.mgz
 T1w {subjectid} mri rawavg.mgz
+T1w {subjectid} mri rawavg.norm.mgz
+T1w {subjectid} mri rawavg.T2.mgz
+T1w {subjectid} mri rawavg.T2.norm.mgz
+T1w {subjectid} mri rawavg.T2.prenorm.mgz
+T1w {subjectid} mri rawavg.wm.mgz
 T1w {subjectid} mri rh.ribbon.mgz
 T1w {subjectid} mri ribbon.mgz
 T1w {subjectid} mri segment.dat
 T1w {subjectid} mri T1.mgz
-T1w {subjectid} mri T1wMulT2w_hires.nii.gz
 T1w {subjectid} mri T1w_hires.nii.gz
+T1w {subjectid} mri T1wMulT2w_hires.nii.gz
 T1w {subjectid} mri T2.mgz
-T1w {subjectid} mri T2.norm.mgz
-#This file is no longer produced after Doug Greve's changes to recon-all.v6.hires of 29 Sep 2018
-#T1w {subjectid} mri T2.prenorm.mean.dat
-T1w {subjectid} mri rawavg.T2.prenorm.mgz
 T1w {subjectid} mri T2w_hires.nii.gz
 T1w {subjectid} mri talairach.label_intensities.txt
 T1w {subjectid} mri talairach.log
@@ -785,15 +794,20 @@ T1w {subjectid} mri talairach_with_skull.log
 T1w {subjectid} mri transforms
 T1w {subjectid} mri transforms bak
 T1w {subjectid} mri transforms cc_up.lta
+T1w {subjectid} mri transforms conf2rawavg.dat
+T1w {subjectid} mri transforms conf2rawavg.lta
 T1w {subjectid} mri transforms eye.dat
-T1w {subjectid} mri transforms T2raw.auto.dat
-T1w {subjectid} mri transforms T2raw.auto.dat~
-T1w {subjectid} mri transforms T2raw.auto.dat.log
-T1w {subjectid} mri transforms T2raw.auto.dat.mincost
-T1w {subjectid} mri transforms T2raw.auto.dat.param
-T1w {subjectid} mri transforms T2raw.auto.dat.sum
-T1w {subjectid} mri transforms T2raw.auto.lta
+T1w {subjectid} mri transforms orig-to-rawavg.lta
+T1w {subjectid} mri transforms rawavg2conf.dat
+T1w {subjectid} mri transforms rawavg2conf.lta
+T1w {subjectid} mri transforms T2raw.dat
+T1w {subjectid} mri transforms T2raw.dat~
+T1w {subjectid} mri transforms T2raw.dat.log
+T1w {subjectid} mri transforms T2raw.dat.mincost
+T1w {subjectid} mri transforms T2raw.dat.param
+T1w {subjectid} mri transforms T2raw.dat.sum
 T1w {subjectid} mri transforms T2raw.lta
+T1w {subjectid} mri transforms T2raw.rawavg.lta
 T1w {subjectid} mri transforms T2wtoT1w.mat
 T1w {subjectid} mri transforms talairach.auto.xfm
 T1w {subjectid} mri transforms talairach.auto.xfm.lta
@@ -810,6 +824,8 @@ T1w {subjectid} mri wmparc.mgz
 T1w {subjectid} mri wm.seg.mgz
 T1w {subjectid} scripts
 T1w {subjectid} scripts build-stamp.txt
+T1w {subjectid} scripts conf2hires.log
+T1w {subjectid} scripts DoConf2Hires
 T1w {subjectid} scripts lastcall.build-stamp.txt
 T1w {subjectid} scripts patchdir.txt
 T1w {subjectid} scripts pctsurfcon.log
@@ -845,6 +861,7 @@ T1w {subjectid} surf lh.area
 T1w {subjectid} surf lh.area.mid
 T1w {subjectid} surf lh.area.pial
 T1w {subjectid} surf lh.avg_curv
+T1w {subjectid} surf lh.bak.thickness
 T1w {subjectid} surf lh.curv
 T1w {subjectid} surf lh.curv.pial
 T1w {subjectid} surf lh.defect_borders
@@ -858,6 +875,8 @@ T1w {subjectid} surf lh.jacobian_white
 T1w {subjectid} surf lh.orig
 T1w {subjectid} surf lh.orig.nofix
 T1w {subjectid} surf lh.pial
+T1w {subjectid} surf lh.pial.rawavg
+T1w {subjectid} surf lh.pial.rawavg.conf
 T1w {subjectid} surf lh.qsphere.nofix
 T1w {subjectid} surf lh.smoothwm
 T1w {subjectid} surf lh.smoothwm.BE.crv
@@ -882,11 +901,17 @@ T1w {subjectid} surf lh.white.K
 T1w {subjectid} surf lh.white.preaparc
 T1w {subjectid} surf lh.white.preaparc.H
 T1w {subjectid} surf lh.white.preaparc.K
+T1w {subjectid} surf lh.white.preaparc.rawavg
+T1w {subjectid} surf lh.white.rawavg
+T1w {subjectid} surf lh.white.rawavg.conf
 T1w {subjectid} surf lh.woT2.pial
+T1w {subjectid} surf lh.woT2.pial.rawavg
+T1w {subjectid} surf lh.woT2.pial.rawavg.conf
 T1w {subjectid} surf rh.area
 T1w {subjectid} surf rh.area.mid
 T1w {subjectid} surf rh.area.pial
 T1w {subjectid} surf rh.avg_curv
+T1w {subjectid} surf rh.bak.thickness
 T1w {subjectid} surf rh.curv
 T1w {subjectid} surf rh.curv.pial
 T1w {subjectid} surf rh.defect_borders
@@ -900,6 +925,8 @@ T1w {subjectid} surf rh.jacobian_white
 T1w {subjectid} surf rh.orig
 T1w {subjectid} surf rh.orig.nofix
 T1w {subjectid} surf rh.pial
+T1w {subjectid} surf rh.pial.rawavg
+T1w {subjectid} surf rh.pial.rawavg.conf
 T1w {subjectid} surf rh.qsphere.nofix
 T1w {subjectid} surf rh.smoothwm
 T1w {subjectid} surf rh.smoothwm.BE.crv
@@ -924,27 +951,12 @@ T1w {subjectid} surf rh.white.K
 T1w {subjectid} surf rh.white.preaparc
 T1w {subjectid} surf rh.white.preaparc.H
 T1w {subjectid} surf rh.white.preaparc.K
-T1w {subjectid} surf rh.woT2.pial
-#These files are no longer produced after Doug Greve's changes to recon-all.v6.hires of 29 Sep 2018
-#T1w {subjectid} tess1mm
-#T1w {subjectid} tess1mm mri
-#T1w {subjectid} tess1mm mri aseg.auto_noCCseg.mgz
-#T1w {subjectid} tess1mm mri filled.mgz
-#T1w {subjectid} tess1mm mri filled-pretess127.mgz
-#T1w {subjectid} tess1mm mri filled-pretess255.mgz
-#T1w {subjectid} tess1mm mri norm.mgz
-#T1w {subjectid} tess1mm mri transforms
-#T1w {subjectid} tess1mm mri transforms conform.lta
-#T1w {subjectid} tess1mm mri transforms talairach.lta
-#T1w {subjectid} tess1mm mri wm.mgz
-#T1w {subjectid} tess1mm scripts
-#T1w {subjectid} tess1mm scripts ponscc.cut.log
-#T1w {subjectid} tess1mm surf
-#T1w {subjectid} tess1mm surf lh.orig.nofix
-#T1w {subjectid} tess1mm surf rh.orig.nofix
-## These file names are specific to the time that the tess1mm script was run
-## T1w {subjectid} tess1mm tess1mm.Y2018.M04.D13.H16.M04.lh.log
-## T1w {subjectid} tess1mm tess1mm.Y2018.M04.D13.H16.M05.rh.log
+T1w {subjectid} surf rh.white.preaparc.rawavg
+T1w {subjectid} surf rh.white.rawavg
+T1w {subjectid} surf rh.white.rawavg.conf
+T1w {subjectid} surf rh.woT2.pial -> rh.woT2.pial.rwavg.conf
+T1w {subjectid} surf rh.woT2.pial.rawavg
+T1w {subjectid} surf rh.woT2.pial.rawavg.conf
 T1w {subjectid} tmp
 T1w {subjectid} touch
 T1w {subjectid} touch aparc.a2009s2aseg.touch
@@ -954,6 +966,7 @@ T1w {subjectid} touch asegmerge.touch
 T1w {subjectid} touch ca_label.touch
 T1w {subjectid} touch ca_normalize.touch
 T1w {subjectid} touch ca_register.touch
+T1w {subjectid} touch conf2hires
 T1w {subjectid} touch conform.touch
 T1w {subjectid} touch cortical_ribbon.touch
 T1w {subjectid} touch em_register.touch
@@ -973,14 +986,13 @@ T1w {subjectid} touch lh.inflate2.touch
 T1w {subjectid} touch lh.inflate.H.K.touch
 T1w {subjectid} touch lh.jacobian_white.touch
 T1w {subjectid} touch lh.pctsurfcon.touch
-T1w {subjectid} touch lh.pial_refine.touch
-T1w {subjectid} touch lh.pial_surface.touch
 T1w {subjectid} touch lh.qsphere.touch
 T1w {subjectid} touch lh.smoothwm1.touch
 T1w {subjectid} touch lh.smoothwm2.touch
 T1w {subjectid} touch lh.sphmorph.touch
 T1w {subjectid} touch lh.sphreg.touch
 T1w {subjectid} touch lh.surfvolume.touch
+T1w {subjectid} touch lh.tessellate.touch
 T1w {subjectid} touch lh.topofix.touch
 T1w {subjectid} touch lh.white.H.K.touch
 T1w {subjectid} touch lh.white_surface.touch
@@ -999,14 +1011,13 @@ T1w {subjectid} touch rh.inflate2.touch
 T1w {subjectid} touch rh.inflate.H.K.touch
 T1w {subjectid} touch rh.jacobian_white.touch
 T1w {subjectid} touch rh.pctsurfcon.touch
-T1w {subjectid} touch rh.pial_refine.touch
-T1w {subjectid} touch rh.pial_surface.touch
 T1w {subjectid} touch rh.qsphere.touch
 T1w {subjectid} touch rh.smoothwm1.touch
 T1w {subjectid} touch rh.smoothwm2.touch
 T1w {subjectid} touch rh.sphmorph.touch
 T1w {subjectid} touch rh.sphreg.touch
 T1w {subjectid} touch rh.surfvolume.touch
+T1w {subjectid} touch rh.tessellate.touch
 T1w {subjectid} touch rh.topofix.touch
 T1w {subjectid} touch rh.white.H.K.touch
 T1w {subjectid} touch rh.white_surface.touch
