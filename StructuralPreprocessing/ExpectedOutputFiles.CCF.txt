@@ -954,7 +954,7 @@ T1w {subjectid} surf rh.white.preaparc.K
 T1w {subjectid} surf rh.white.preaparc.rawavg
 T1w {subjectid} surf rh.white.rawavg
 T1w {subjectid} surf rh.white.rawavg.conf
-T1w {subjectid} surf rh.woT2.pial -> rh.woT2.pial.rwavg.conf
+T1w {subjectid} surf rh.woT2.pial
 T1w {subjectid} surf rh.woT2.pial.rawavg
 T1w {subjectid} surf rh.woT2.pial.rawavg.conf
 T1w {subjectid} tmp
