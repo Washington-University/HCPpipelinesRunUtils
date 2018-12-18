@@ -89,9 +89,9 @@ main()
 		for subject in ${subjects} ; do
 
 		compare_subject_cmd="${HCP_RUN_UTILS}/StructuralPreprocessing/Testing/CompareSubjectSurfaces.sh"
-		compare_subject_cmd=" --study1=${g_study1_dir}"
-		compare_subject_cmd=" --study2=${g_study2_dir}"
-		compare_subject_cmd=" --subject=${subject}"
+		compare_subject_cmd+=" --study1=${g_study1_dir}"
+		compare_subject_cmd+=" --study2=${g_study2_dir}"
+		compare_subject_cmd+=" --subject=${subject}"
 
 		if ! ${compare_subject_cmd} ; then
 			log_Err_Abort "Subject surfaces are different for subject: ${subject}"
