@@ -16,7 +16,6 @@ get_options()
 	# initialize global output variables
 	unset g_study1_dir
 	unset g_study2_dir
-	unset g_subject
 
 	# parse arguments
 	local num_args=${#arguments[@]}
@@ -33,10 +32,6 @@ get_options()
 				;;
 			--study2=*) # e.g. /study/FreeSurfer6_v6/HCPYA
 				g_study2_dir=${argument#*=}
-				index=$(( index + 1 ))
-				;;
-			--subject=*) # e.g. 100307
-				g_subject=${argument#*=}
 				index=$(( index + 1 ))
 				;;
 			*)
@@ -63,13 +58,6 @@ get_options()
 	else
 		log_Msg "study2: ${g_study2_dir}"
 	fi
-	
-	if [ -z "${g_subject}" ]; then
-		log_Err "subject (--subject=) required"
-		error_count=$(( error_count + 1 ))
-	else
-		log_Msg "subject: ${g_subject}"
-	fi
 
 	if (( ${error_count} > 0 )); then
 		log_Err_Abort "Required parameter(s) not specified."
@@ -80,24 +68,36 @@ main()
 {
 	get_options "$@"
 
-	local freesurfer_study1_dir="${g_study1_dir}/${g_subject}/T1w"
-	local freesurfer_study2_dir="${g_study2_dir}/${g_subject}/T1w"
+	local subjects=$(ls ${g_study1_dir})
+	
+	for subject in ${subjects} ; do
 
-	for surface in pial white ; do
-		for hemisphere in rh lh ; do
-			mris_diff_cmd="mris_diff"
-			mris_diff_cmd+=" --sd1 ${freesurfer_study1_dir}"
-			mris_diff_cmd+=" --s1  ${g_subject}"
-			mris_diff_cmd+=" --sd2 ${freesurfer_study2_dir}"
-			mris_diff_cmd+=" --s2  ${g_subject}"
-			mris_diff_cmd+=" --hemi ${hemisphere}"
-			mris_diff_cmd+=" --surf ${surface}"
+		compare_subject_cmd="${HCP_RUN_UTILS}/StructuralPreprocessing/Testing/CompareSubjectSurfaces.sh"
+		compare_subject_cmd=" --study1=${g_study1_dir}"
+		compare_subject_cmd=" --study2=${g_study2_dir}"
+		compare_subject_cmd=" --subject=${subject}"
 
-			if ! ${mris_diff_cmd} ; then
-				log_Err_Abort "Surfaces are different"
-			fi
-		done # hemisphere
-	done # surface
+		if ! ${compare_subject_cmd} ; then
+			log_Err_Abort "Subject surfaces are different for subject: ${subject}"
+		fi
+		
+	done
+	
+
+	local subjects=$(ls ${g_study2_dir})
+
+		for subject in ${subjects} ; do
+
+		compare_subject_cmd="${HCP_RUN_UTILS}/StructuralPreprocessing/Testing/CompareSubjectSurfaces.sh"
+		compare_subject_cmd=" --study1=${g_study1_dir}"
+		compare_subject_cmd=" --study2=${g_study2_dir}"
+		compare_subject_cmd=" --subject=${subject}"
+
+		if ! ${compare_subject_cmd} ; then
+			log_Err_Abort "Subject surfaces are different for subject: ${subject}"
+		fi
+		
+	done
 }
 
 # Invoke the main function to get things started
