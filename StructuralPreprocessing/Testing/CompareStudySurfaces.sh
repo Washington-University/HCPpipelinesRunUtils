@@ -16,7 +16,8 @@ get_options()
 	# initialize global output variables
 	unset g_study1_dir
 	unset g_study2_dir
-
+	unset g_output
+	
 	# parse arguments
 	local num_args=${#arguments[@]}
 	local argument
@@ -32,6 +33,10 @@ get_options()
 				;;
 			--study2=*) # e.g. /study/FreeSurfer6_v6/HCPYA
 				g_study2_dir=${argument#*=}
+				index=$(( index + 1 ))
+				;;
+			--output=*)
+				g_output=${argument#*=}
 				index=$(( index + 1 ))
 				;;
 			*)
@@ -59,6 +64,13 @@ get_options()
 		log_Msg "study2: ${g_study2_dir}"
 	fi
 
+	if [ -z "${g_output}" ]; then
+		log_Err "output (--output=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "output: ${g_output}"
+	fi
+
 	if (( ${error_count} > 0 )); then
 		log_Err_Abort "Required parameter(s) not specified."
 	fi
@@ -78,7 +90,9 @@ main()
 		compare_subject_cmd+=" --subject=${subject}"
 
 		if ! ${compare_subject_cmd} ; then
-			log_Err_Abort "Subject surfaces are different for subject: ${subject}"
+			echo "Subject: ${subject} -- ERROR: Surfaces are different --" >> ${g_output}
+		else
+			echo "Subject: ${subject} Surfaces match" >> ${g_output}
 		fi
 		
 	done
@@ -94,7 +108,9 @@ main()
 		compare_subject_cmd+=" --subject=${subject}"
 
 		if ! ${compare_subject_cmd} ; then
-			log_Err_Abort "Subject surfaces are different for subject: ${subject}"
+			echo "Subject: ${subject} -- ERROR: Surfaces are different --" >> ${g_output}
+		else
+			echo "Subject: ${subject} Surfaces match" >> ${g_output}
 		fi
 		
 	done
