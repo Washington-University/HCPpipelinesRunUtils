@@ -584,10 +584,39 @@ get_parameters_for_first_t1w_scan()
 	g_first_t1w_sample_spacing=""
 	g_first_t1w_deltaTE=""
 	g_first_t1w_positive_dwell_time=""
-
+	g_first_t1w_unwarp_direction=""
+	
 	local first_t1w_file
 	first_t1w_file=$(first_t1w_scan_fullpath)
 
+	local readout_direction
+	readout_direction=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${first_t1w_file} -k ReadoutDirection)
+	log_Msg "readout_direction: ${readout_direction}"
+
+	case ${readout_direction} in
+		k)
+			g_first_t1w_unwarp_direction="z"
+			;;
+		k-)
+			g_first_t1w_unwarp_direction="-z"
+			;;
+		j)
+			g_first_t1w_unwarp_direction="y"
+			;;
+		j-)
+			g_first_t1w_unwarp_direction="-y"
+			;;
+		i)
+			g_first_t1w_unwarp_direction="x"
+			;;
+		i-)
+			g_first_t1w_unwarp_direction="-x"
+			;;
+		*)
+			log_Err_Abort "Unrecognized readout_direction: ${readout_direction}"
+			;;
+	esac
+	
 	g_first_t1w_sample_spacing=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${first_t1w_file} -k DwellTime)
 	log_Msg "g_first_t1w_sample_spacing: ${g_first_t1w_sample_spacing}"
 	
@@ -618,7 +647,7 @@ get_parameters_for_first_t1w_scan()
 		se_phase_pos_file=$(spin_echo_phase_pos_fullpath)
 		g_first_t1w_positive_dwell_time=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${se_phase_pos_file} -k EffectiveEchoSpacing)
 		log_Msg "g_first_t1w_positive_dwell_time: ${g_first_t1w_positive_dwell_time}"
-
+		
 	fi
 }
 
@@ -667,9 +696,6 @@ main()
 {
 	log_Debug_On
 
-	local UNWARPDIR="z"
-	local SEUNWARPDIR="y"
-	
 	show_job_start
 
 	show_platform_info
@@ -784,7 +810,8 @@ main()
 			PreFreeSurfer_cmd+=" --topupconfig=NONE"
 			PreFreeSurfer_cmd+=" --fmapmag=$(siemens_mag_fieldmap_fullpath)"
 			PreFreeSurfer_cmd+=" --fmapphase=$(siemens_phase_fieldmap_fullpath)"
-			PreFreeSurfer_cmd+=" --unwarpdir=${UNWARPDIR}"
+			PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
+
 		else
 			log_Msg "adding parameters for when Siemens gradient echo fieldmaps should be used but do NOT exist"
 			PreFreeSurfer_cmd+=" --echodiff=NONE"
@@ -794,7 +821,7 @@ main()
 			PreFreeSurfer_cmd+=" --topupconfig=NONE"
 			PreFreeSurfer_cmd+=" --fmapmag=$(siemens_mag_fieldmap_fullpath)"
 			PreFreeSurfer_cmd+=" --fmapphase=$(siemens_phase_fieldmap_fullpath)"
-			PreFreeSurfer_cmd+=" --unwarpdir=${UNWARPDIR}"
+			PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
 		fi
 	elif [[ ("${g_fieldmap_type}" == "SE") || ("${g_fieldmap_type}" == "SpinEcho") ]] ; then
 		# add parameters for SpinEcho fieldmap usage
@@ -806,8 +833,16 @@ main()
 		PreFreeSurfer_cmd+=" --SEPhasePos=$(spin_echo_phase_pos_fullpath)"
 		PreFreeSurfer_cmd+=" --seechospacing=${g_first_t1w_positive_dwell_time}"
 		PreFreeSurfer_cmd+=" --topupconfig=${HCPPIPEDIR}/global/config/${g_topupconfig}"
-		PreFreeSurfer_cmd+=" --seunwarpdir=${SEUNWARPDIR}"
-		PreFreeSurfer_cmd+=" --unwarpdir=${UNWARPDIR}"
+
+		local pos_file
+		pos_file=$(spin_echo_phase_pos_fullpath)
+		
+		local seunwarp_dir
+		seunwarp_dir=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${pos_file} -k PhaseEncodingDirection)
+				
+		PreFreeSurfer_cmd+=" --seunwarpdir=${seunwarp_dir}"
+
+		PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
 	else
 		log_Err_Abort "Unrecognized g_fieldmap_type: ${g_fieldmap_type}"
 	fi

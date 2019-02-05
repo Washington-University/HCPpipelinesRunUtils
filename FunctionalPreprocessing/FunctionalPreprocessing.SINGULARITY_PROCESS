@@ -245,7 +245,39 @@ main()
 
 	# Need to check to see if these can be extracted or derived from the JSON
 	vol_cmd+=" --echodiff=NONE"
-	vol_cmd+=" --unwarpdir=-x"
+
+	local phase_encoding_dir
+	phase_encoding_dir=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh \
+										 -f ${full_path_to_nifti_file} \
+										 -k PhaseEncodingDirection)
+	log_Msg "phase_encoding_dir: ${phase_encoding_dir}"
+
+	case ${phase_encoding_dir} in
+		k)
+			unwarp_direction="z"
+			;;
+		k-)
+			unwarp_direction="-z"
+			;;
+		j)
+			unwarp_direction="y"
+			;;
+		j-)
+			unwarp_direction="-y"
+			;;
+		i)
+			unwarp_direction="x"
+			;;
+		i-)
+			unwarp_direction="-x"
+			;;
+		*)
+			log_Err_Abort "Unrecognized phase_encoding_dir: ${phase_encoding_dir}"
+			;;
+	esac
+
+	vol_cmd+=" --unwarpdir=${unwarp_direction}"
+	
 	vol_cmd+=" --fmrires=2"
 
 	
