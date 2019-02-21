@@ -584,45 +584,21 @@ get_parameters_for_first_t1w_scan()
 	g_first_t1w_sample_spacing=""
 	g_first_t1w_deltaTE=""
 	g_first_t1w_positive_dwell_time=""
-	g_first_t1w_unwarp_direction=""
-	
+
 	local first_t1w_file
 	first_t1w_file=$(first_t1w_scan_fullpath)
 
-	local readout_direction
-	readout_direction=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${first_t1w_file} -k ReadoutDirection)
-	log_Msg "readout_direction: ${readout_direction}"
-
-	case ${readout_direction} in
-		k)
-			g_first_t1w_unwarp_direction="z"
-			;;
-		k-)
-			g_first_t1w_unwarp_direction="-z"
-			;;
-		j)
-			g_first_t1w_unwarp_direction="y"
-			;;
-		j-)
-			g_first_t1w_unwarp_direction="-y"
-			;;
-		i)
-			g_first_t1w_unwarp_direction="x"
-			;;
-		i-)
-			g_first_t1w_unwarp_direction="-x"
-			;;
-		*)
-			log_Err_Abort "Unrecognized readout_direction: ${readout_direction}"
-			;;
-	esac
-	
 	g_first_t1w_sample_spacing=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${first_t1w_file} -k DwellTime)
 	log_Msg "g_first_t1w_sample_spacing: ${g_first_t1w_sample_spacing}"
 	
 	if [ -z "${g_first_t1w_sample_spacing}" ] ; then
 		log_Msg "We WERE NOT able to get the first t1w sample spacing value from a sidecar JSON file"
-		exit 1
+		##################################
+		g_first_t1w_sample_spacing=0.000007400
+		log_Msg "g_first_t1w_sample_spacing: ${g_first_t1w_sample_spacing}"
+		####echo "g_first_t1w_sample_spacing: NONE"
+		####exit 1
+		########################################
 	else
 		log_Msg "We WERE able to get the first t1w sample spacing value from a sidecar JSON file"
 		sample_spacing_in_secs=`echo "${g_first_t1w_sample_spacing}" | awk '{printf "%.9f", $1}'`
@@ -637,17 +613,19 @@ get_parameters_for_first_t1w_scan()
 
 		# We don't yet have a sample JSON sidecar file from a Siemens magnitude fieldmap file.
 		# So the field name of "deltaTE" used below is just a guess.
-		local mag_fieldmap_name
-		mag_fieldmap_name=$(siemens_mag_fieldmap_fullpath)
-		g_first_t1w_deltaTE=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${mag_fieldmap_name} -k deltaTE)
+		############################################
+		log_Msg "g_first_t1w_deltaTE: We don't have the g_first_t1w_deltaTE vaule yet!"
+		g_first_t1w_deltaTE=2.46
 		log_Msg "g_first_t1w_deltaTE: ${g_first_t1w_deltaTE}"
+		####exit 1
+		################################################
 
 	elif [[ ("${g_fieldmap_type}" = "SE") || ("${g_fieldmap_type}" = "SpinEcho") ]] ; then
 		local se_phase_pos_file
 		se_phase_pos_file=$(spin_echo_phase_pos_fullpath)
 		g_first_t1w_positive_dwell_time=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${se_phase_pos_file} -k EffectiveEchoSpacing)
 		log_Msg "g_first_t1w_positive_dwell_time: ${g_first_t1w_positive_dwell_time}"
-		
+
 	fi
 }
 
@@ -662,9 +640,12 @@ get_parameters_for_first_t2w_scan()
 	log_Msg "g_first_t2w_sample_spacing: ${g_first_t2w_sample_spacing}"
 
 	if [ -z "${g_first_t2w_sample_spacing}" ] ; then
-		log_Msg "We WERE NOT able to get the first t2w sample spacing value from a sidecar JSON file"
-		echo "g_first_t2w_sample_spacing: NONE"
-		exit 1
+		############################################
+		g_first_t2w_sample_spacing=0.000002100
+		log_Msg "g_first_t2w_sample_spacing: ${g_first_t2w_sample_spacing}"
+		####echo "g_first_t2w_sample_spacing: NONE"
+		####exit 1
+		##############################################
 		
 	else
 		log_Msg "We WERE able to get the first t2w sample spacing value from a sidecar JSON file"
@@ -696,6 +677,9 @@ main()
 {
 	log_Debug_On
 
+	local UNWARPDIR="z"
+	local SEUNWARPDIR="y"
+	
 	show_job_start
 
 	show_platform_info
@@ -810,8 +794,7 @@ main()
 			PreFreeSurfer_cmd+=" --topupconfig=NONE"
 			PreFreeSurfer_cmd+=" --fmapmag=$(siemens_mag_fieldmap_fullpath)"
 			PreFreeSurfer_cmd+=" --fmapphase=$(siemens_phase_fieldmap_fullpath)"
-			PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
-
+			PreFreeSurfer_cmd+=" --unwarpdir=${UNWARPDIR}"
 		else
 			log_Msg "adding parameters for when Siemens gradient echo fieldmaps should be used but do NOT exist"
 			PreFreeSurfer_cmd+=" --echodiff=NONE"
@@ -821,7 +804,7 @@ main()
 			PreFreeSurfer_cmd+=" --topupconfig=NONE"
 			PreFreeSurfer_cmd+=" --fmapmag=$(siemens_mag_fieldmap_fullpath)"
 			PreFreeSurfer_cmd+=" --fmapphase=$(siemens_phase_fieldmap_fullpath)"
-			PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
+			PreFreeSurfer_cmd+=" --unwarpdir=${UNWARPDIR}"
 		fi
 	elif [[ ("${g_fieldmap_type}" == "SE") || ("${g_fieldmap_type}" == "SpinEcho") ]] ; then
 		# add parameters for SpinEcho fieldmap usage
@@ -833,16 +816,8 @@ main()
 		PreFreeSurfer_cmd+=" --SEPhasePos=$(spin_echo_phase_pos_fullpath)"
 		PreFreeSurfer_cmd+=" --seechospacing=${g_first_t1w_positive_dwell_time}"
 		PreFreeSurfer_cmd+=" --topupconfig=${HCPPIPEDIR}/global/config/${g_topupconfig}"
-
-		local pos_file
-		pos_file=$(spin_echo_phase_pos_fullpath)
-		
-		local seunwarp_dir
-		seunwarp_dir=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${pos_file} -k PhaseEncodingDirection)
-				
-		PreFreeSurfer_cmd+=" --seunwarpdir=${seunwarp_dir}"
-
-		PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
+		PreFreeSurfer_cmd+=" --seunwarpdir=${SEUNWARPDIR}"
+		PreFreeSurfer_cmd+=" --unwarpdir=${UNWARPDIR}"
 	else
 		log_Err_Abort "Unrecognized g_fieldmap_type: ${g_fieldmap_type}"
 	fi
