@@ -1,16 +1,13 @@
 #!/bin/bash
 
-SCRIPT_NAME="SubmitDiffusionPreprocessingTest.sh"
-HCP_RUN_UTILS="/home/tbbrown/pipeline_tools/HCPpipelinesRunUtils"
-HCPPIPEDIR="/home/tbbrown/pipeline_tools/HCPpipelines"
-RUN_DIR="${HCP_RUN_UTILS}/DiffusionPreprocessing"
-SUBJECT="HCA6002236"
-WORKING_DIR="/home/tbbrown/data/LifeSpanAging"
-INTERACTIVE="FALSE"
-#SUBMIT_SCRIPTS_DIR=${HOME}/submit_scripts
-#JOB_LOGS_DIR=${HOME}/joblogs
-SUBMIT_SCRIPTS_DIR="${WORKING_DIR}/${SUBJECT}/ProcessingInfo"
-JOB_LOGS_DIR="${WORKING_DIR}/${SUBJECT}/ProcessingInfo"
+SCRIPT_NAME=$(basename "${0}")
+
+DEFAULT_SUBJECT="HCA6002236"
+DEFAULT_WORKING_DIR="/HCP/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanAging"
+DEFAULT_HCP_RUN_UTILS="${HOME}/pipeline_tools/HCPpipelinesRunUtils"
+DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
+DEFAULT_FSL_DIR="/export/fsl-6.0.0_OpenBLAS"
+DEFAULT_FREESURFER_DIR="/export/HCP/freesurfer-6.0-custom-20190130"
 
 inform()
 {
@@ -18,29 +15,152 @@ inform()
 	echo "${SCRIPT_NAME}: ${msg}"
 }
 
+get_options()
+{
+	local arguments=($@)
+
+	# initialize global output variables
+
+	# set default values
+	g_hcp_run_utils="${DEFAULT_HCP_RUN_UTILS}"
+	g_hcp_pipelines_dir="${DEFAULT_HCP_PIPELINES_DIR}"
+	g_subject="${DEFAULT_SUBJECT}"
+	g_working_dir="${DEFAULT_WORKING_DIR}"
+	g_fsl_dir="${DEFAULT_FSL_DIR}"
+	g_freesurfer_dir="${DEFAULT_FREESURFER_DIR}"
+	
+	# parse arguments
+	local num_args=${#arguments[@]}
+	local argument
+	local index=0
+
+	while [ ${index} -lt ${num_args} ]; do
+		argument=${arguments[index]}
+
+		case ${argument} in
+			--hcp-run-utils=*)
+				g_hcp_run_utils=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--hcp-pipelines-dir=*)
+				g_hcp_pipelines_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--subject=*)
+				g_subject=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--working-dir=*)
+				g_working_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--study-dir=*)
+				g_working_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--fsl-dir=*)
+				g_fsl_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--freesurfer-dir=*)
+				g_freesurfer_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			*)
+				inform "Unrecognized option: ${argument}"
+				exit 1
+				;;
+		esac
+
+	done
+
+	local error_count=0
+
+	# check parameters
+
+	if [ -z "${g_hcp_run_utils}" ]; then
+		inform "--hcp-run-utils= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "HCP pipeline run utilities: ${g_hcp_run_utils}"
+	fi
+
+	if [ -z "${g_hcp_pipelines_dir}" ]; then
+		inform "--hcp-pipelines-dir= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "HCP pipelines: ${g_hcp_pipelines_dir}"
+	fi
+	
+	if [ -z "${g_subject}" ]; then
+		inform "--subject= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "subject: ${g_subject}"
+	fi
+
+	if [ -z "${g_working_dir}" ]; then
+		inform "--working-dir= or --study-dir= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "working/study dir: ${g_working_dir}"
+	fi
+	
+	if [ -z "${g_fsl_dir}" ]; then
+		inform "--fsl-dir= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "FSL dir: ${g_fsl_dir}"
+	fi
+
+	if [ -z "${g_freesurfer_dir}" ]; then
+		inform "--freesurfer-dir= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "FreeSurfer dir: ${g_freesurfer_dir}"
+	fi
+
+	if [ ${error_count} -gt 0 ]; then
+		inform "ABORTING"
+		exit 1
+	fi
+
+	g_run_dir="${g_hcp_run_utils}/DiffusionPreprocessing" 
+	g_submit_scripts_dir="${g_working_dir}/${g_subject}/ProcessingInfo"
+	g_job_logs_dir="${g_working_dir}/${g_subject}/ProcessingInfo"
+}
+
 main()
 {
+	get_options "$@"
+
 	local script_file_to_submit
 	local submit_cmd
 	local job_no
 	local date_string
  
-	mkdir -p ${SUBMIT_SCRIPTS_DIR}
+	mkdir -p ${g_submit_scripts_dir}
 	date_string=$(date +%s)
-	script_file_to_submit="${SUBMIT_SCRIPTS_DIR}/TestRunDiffusionPreprocessing-${SUBJECT}-${date_string}.sh"
+	script_file_to_submit="${g_submit_scripts_dir}/TestRunDiffusionPreprocessing-${g_subject}-${date_string}.sh"
 	cat > ${script_file_to_submit} <<EOF
 #PBS -l nodes=1:ppn=3:gpus=1,walltime=24:00:00
-#PBS -o ${JOB_LOGS_DIR}
-#PBS -e ${JOB_LOGS_DIR}
+#PBS -o ${g_job_logs_dir}
+#PBS -e ${g_job_logs_dir}
 
-export HCP_RUN_UTILS=${HCP_RUN_UTILS}
-export HCPPIPEDIR=${HCPPIPEDIR}
-export HCPPIPEDIR_dMRI=${HCPPIPEDIR}/DiffusionPreprocessing/scripts
-export HCPPIPEDIR_Config=${HCPPIPEDIR}/global/config
-export HCPPIPEDIR_Global=${HCPPIPEDIR}/global/scripts
-export FSLDIR=/export/fsl-6.0.0_OpenBLAS
+module load cuda-7.5
+module load gcc-4.7.2
+
+export HCP_RUN_UTILS=${g_hcp_run_utils}
+export HCPPIPEDIR=${g_hcp_pipelines_dir}
+export HCPPIPEDIR_dMRI=${g_hcp_pipelines_dir}/DiffusionPreprocessing/scripts
+export HCPPIPEDIR_Config=${g_hcp_pipelines_dir}/global/config
+export HCPPIPEDIR_Global=${g_hcp_pipelines_dir}/global/scripts
+export FSLDIR=${g_fsl_dir}
 source \${FSLDIR}/etc/fslconf/fsl.sh
 export PATH=\${FSLDIR}/bin:\${PATH}
+
+export FREESURFER_HOME=${g_freesurfer_dir}
+source \${FREESURFER_HOME}/SetUpFreeSurfer.sh
 
 export EPD_PYTHON_HOME=/export/HCP/epd-7.3.2
 export PATH=\${EPD_PYTHON_HOME}/bin:\${PATH}
@@ -50,8 +170,6 @@ export PATH=\${EPD_PYTHON_HOME}/bin:\${PATH}
 # has https protocol disabled (as opposed to http protocol)
 export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${EPD_PYTHON_HOME}/lib
 
-module load cuda-7.5
-module load gcc-4.7.2
 export LD_LIBRARY_PATH=\${FSLDIR}/lib:\${LD_LIBRARY_PATH}
 
 echo PATH=\${PATH}
@@ -59,26 +177,23 @@ echo HCPPIPEDIR=\${HCPPIPEDIR}
 echo FSLDIR=\${FSLDIR}
 echo LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}
 
-${RUN_DIR}/DiffusionPreprocessingWrapper.sh \\
-  --working-dir=${WORKING_DIR} \\
-  --subject=${SUBJECT} \\
+${g_run_dir}/DiffusionPreprocessingWrapper.sh \\
+  --working-dir=${g_working_dir} \\
+  --subject=${g_subject} \\
   --classifier=V1_MR \\
-  --gdcoeffs=${HCPPIPEDIR_Config}/Prisma_3T_coeff_AS82.grad \\
+  --gdcoeffs=\${HCPPIPEDIR_Config}/Prisma_3T_coeff_AS82.grad \\
   --phase=POSTEDDY
 EOF
+#  --phase=PREEDDY
+#  --phase=EDDY
+#  --phase=POSTEDDY
 	
 	chmod +x ${script_file_to_submit}
 
-	if [ "${INTERACTIVE}" = "TRUE" ]; then
-		submit_cmd="${script_file_to_submit}"
-		inform "submit_cmd: ${submit_cmd}"
-		${submit_cmd} > ${script_file_to_submit}.stdout 2> ${script_file_to_submit}.stderr
-	else
-		submit_cmd="qsub ${script_file_to_submit}"
-		inform "submit_cmd: ${submit_cmd}"
-		job_no=$(${submit_cmd})
-		inform "job_no: ${job_no}"
-	fi
+	submit_cmd="qsub ${script_file_to_submit}"
+	inform "submit_cmd: ${submit_cmd}"
+	job_no=$(${submit_cmd})
+	inform "job_no: ${job_no}"
 }
 
 # Invoke the main function to get things started
