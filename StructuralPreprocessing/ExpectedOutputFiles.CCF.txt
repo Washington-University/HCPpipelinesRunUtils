@@ -453,7 +453,35 @@ T1w fsaverage label rh.Yeo_Brainmap_12Comp_PrActGivenComp.mgz
 T1w fsaverage label rh.Yeo_Brainmap_13Comp_PrActGivenComp.mgz
 T1w fsaverage label rh.Yeo_Brainmap_14Comp_PrActGivenComp.mgz
 T1w fsaverage label Yeo_Brainmap_fsaverage_README
+T1w fsaverage_LR32k
+T1w fsaverage_LR32k {subjectid}.32k_fs_LR.wb.spec
+T1w fsaverage_LR32k {subjectid}.L.inflated.32k_fs_LR.surf.gii
+T1w fsaverage_LR32k {subjectid}.L.midthickness.32k_fs_LR.surf.gii
+T1w fsaverage_LR32k {subjectid}.L.midthickness_va.32k_fs_LR.shape.gii
+T1w fsaverage_LR32k {subjectid}.L.pial.32k_fs_LR.surf.gii
+T1w fsaverage_LR32k {subjectid}.L.very_inflated.32k_fs_LR.surf.gii
+T1w fsaverage_LR32k {subjectid}.L.white.32k_fs_LR.surf.gii
+T1w fsaverage_LR32k {subjectid}.midthickness_va.32k_fs_LR.dscalar.nii
+T1w fsaverage_LR32k {subjectid}.midthickness_va_norm.32k_fs_LR.dscalar.nii
+T1w fsaverage_LR32k {subjectid}.R.inflated.32k_fs_LR.surf.gii
+T1w fsaverage_LR32k {subjectid}.R.midthickness.32k_fs_LR.surf.gii
+T1w fsaverage_LR32k {subjectid}.R.midthickness_va.32k_fs_LR.shape.gii
+T1w fsaverage_LR32k {subjectid}.R.pial.32k_fs_LR.surf.gii
+T1w fsaverage_LR32k {subjectid}.R.very_inflated.32k_fs_LR.surf.gii
+T1w fsaverage_LR32k {subjectid}.R.white.32k_fs_LR.surf.gii
 T1w fsaverage mri
+T1w fsaverage mri.2mm
+T1w fsaverage mri.2mm aseg.mgz
+T1w fsaverage mri.2mm brainmask.mgz
+T1w fsaverage mri.2mm brain.mgz
+T1w fsaverage mri.2mm mni305.cor.mgz
+T1w fsaverage mri.2mm orig.mgz
+T1w fsaverage mri.2mm README
+T1w fsaverage mri.2mm reg.2mm.dat
+T1w fsaverage mri.2mm reg.2mm.mni152.dat
+T1w fsaverage mri.2mm subcort.mask.mgz
+T1w fsaverage mri.2mm subcort.prob.mgz
+T1w fsaverage mri.2mm T1.mgz
 T1w fsaverage mri aparc.a2005s+aseg.mgz
 T1w fsaverage mri aparc.a2009s+aseg.mgz
 T1w fsaverage mri aparc+aseg.mgz
@@ -476,18 +504,6 @@ T1w fsaverage mri transforms
 T1w fsaverage mri transforms bak
 T1w fsaverage mri transforms reg.mni152.2mm.dat
 T1w fsaverage mri transforms talairach.xfm
-T1w fsaverage mri.2mm
-T1w fsaverage mri.2mm aseg.mgz
-T1w fsaverage mri.2mm brainmask.mgz
-T1w fsaverage mri.2mm brain.mgz
-T1w fsaverage mri.2mm mni305.cor.mgz
-T1w fsaverage mri.2mm orig.mgz
-T1w fsaverage mri.2mm README
-T1w fsaverage mri.2mm reg.2mm.dat
-T1w fsaverage mri.2mm reg.2mm.mni152.dat
-T1w fsaverage mri.2mm subcort.mask.mgz
-T1w fsaverage mri.2mm subcort.prob.mgz
-T1w fsaverage mri.2mm T1.mgz
 T1w fsaverage scripts
 T1w fsaverage scripts build-stamp.txt
 T1w fsaverage scripts cvs_log_pre_31May2011.txt
@@ -646,22 +662,6 @@ T1w fsaverage xhemi touch talairach.touch
 T1w fsaverage xhemi trash
 T1w fsaverage xhemi xhemireg.lh.log
 T1w fsaverage xhemi xhemireg.rh.log
-T1w fsaverage_LR32k
-T1w fsaverage_LR32k {subjectid}.32k_fs_LR.wb.spec
-T1w fsaverage_LR32k {subjectid}.L.inflated.32k_fs_LR.surf.gii
-T1w fsaverage_LR32k {subjectid}.L.midthickness.32k_fs_LR.surf.gii
-T1w fsaverage_LR32k {subjectid}.L.midthickness_va.32k_fs_LR.shape.gii
-T1w fsaverage_LR32k {subjectid}.L.pial.32k_fs_LR.surf.gii
-T1w fsaverage_LR32k {subjectid}.L.very_inflated.32k_fs_LR.surf.gii
-T1w fsaverage_LR32k {subjectid}.L.white.32k_fs_LR.surf.gii
-T1w fsaverage_LR32k {subjectid}.midthickness_va.32k_fs_LR.dscalar.nii
-T1w fsaverage_LR32k {subjectid}.midthickness_va_norm.32k_fs_LR.dscalar.nii
-T1w fsaverage_LR32k {subjectid}.R.inflated.32k_fs_LR.surf.gii
-T1w fsaverage_LR32k {subjectid}.R.midthickness.32k_fs_LR.surf.gii
-T1w fsaverage_LR32k {subjectid}.R.midthickness_va.32k_fs_LR.shape.gii
-T1w fsaverage_LR32k {subjectid}.R.pial.32k_fs_LR.surf.gii
-T1w fsaverage_LR32k {subjectid}.R.very_inflated.32k_fs_LR.surf.gii
-T1w fsaverage_LR32k {subjectid}.R.white.32k_fs_LR.surf.gii
 T1w {subjectid}
 T1w {subjectid} label
 T1w {subjectid} label aparc.annot.a2009s.ctab
@@ -763,14 +763,14 @@ T1w {subjectid} mri norm.mgz
 T1w {subjectid} mri nu.mgz
 T1w {subjectid} mri orig
 T1w {subjectid} mri orig 001.mgz
-T1w {subjectid} mri orig T2raw.mgz
 T1w {subjectid} mri orig.mgz
 T1w {subjectid} mri orig_nu.mgz
+T1w {subjectid} mri orig T2raw.mgz
 T1w {subjectid} mri Q.lta~
 T1w {subjectid} mri rawavg.aseg.presurf.mgz
 T1w {subjectid} mri rawavg.brain.finalsurfs.conf.mgz
 T1w {subjectid} mri rawavg.brain.finalsurfs.mgz
-T1w {subjectid} mri rawavg.brain.mgz
+T1w {subjectid} mri rawavg.brain.fs.mgz
 T1w {subjectid} mri rawavg.cmdc0.mgz
 T1w {subjectid} mri rawavg.cmdc.mgz
 T1w {subjectid} mri rawavg.filled.mgz
@@ -800,12 +800,13 @@ T1w {subjectid} mri transforms eye.dat
 T1w {subjectid} mri transforms orig-to-rawavg.lta
 T1w {subjectid} mri transforms rawavg2conf.dat
 T1w {subjectid} mri transforms rawavg2conf.lta
-T1w {subjectid} mri transforms T2raw.dat
-T1w {subjectid} mri transforms T2raw.dat~
-T1w {subjectid} mri transforms T2raw.dat.log
-T1w {subjectid} mri transforms T2raw.dat.mincost
-T1w {subjectid} mri transforms T2raw.dat.param
-T1w {subjectid} mri transforms T2raw.dat.sum
+T1w {subjectid} mri transforms T2raw.auto.dat
+T1w {subjectid} mri transforms T2raw.auto.dat~
+T1w {subjectid} mri transforms T2raw.auto.dat.log
+T1w {subjectid} mri transforms T2raw.auto.dat.mincost
+T1w {subjectid} mri transforms T2raw.auto.dat.param
+T1w {subjectid} mri transforms T2raw.auto.dat.sum
+T1w {subjectid} mri transforms T2raw.auto.lta
 T1w {subjectid} mri transforms T2raw.lta
 T1w {subjectid} mri transforms T2raw.rawavg.lta
 T1w {subjectid} mri transforms T2wtoT1w.mat
@@ -1125,6 +1126,14 @@ T2w T2w_acpc.nii.gz
 T2w T2w.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg
 T2w T2wToT1wDistortionCorrectAndReg FieldMap
+T2w T2wToT1wDistortionCorrectAndReg Fieldmap2T1w_acpc.mat
+T2w T2wToT1wDistortionCorrectAndReg FieldMap2T1w_acpc.nii.gz
+T2w T2wToT1wDistortionCorrectAndReg FieldMap2T1w_acpc_ShiftMap.nii.gz
+T2w T2wToT1wDistortionCorrectAndReg FieldMap2T1w_acpc_Warp.nii.gz
+T2w T2wToT1wDistortionCorrectAndReg Fieldmap2T2w_acpc.mat
+T2w T2wToT1wDistortionCorrectAndReg FieldMap2T2w_acpc.nii.gz
+T2w T2wToT1wDistortionCorrectAndReg FieldMap2T2w_acpc_ShiftMap.nii.gz
+T2w T2wToT1wDistortionCorrectAndReg FieldMap2T2w_acpc_Warp.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap acqparams.txt
 T2w T2wToT1wDistortionCorrectAndReg FieldMap BothPhases.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap BothPhases.topup_log
@@ -1142,6 +1151,7 @@ T2w T2wToT1wDistortionCorrectAndReg FieldMap Magnitudes.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap Mask.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap MotionMatrix_01.mat
 T2w T2wToT1wDistortionCorrectAndReg FieldMap MotionMatrix_02.mat
+T2w T2wToT1wDistortionCorrectAndReg FieldMap.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap PhaseOne_gdc_dc_jac.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap PhaseOne_gdc_dc.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap PhaseOne_gdc.nii.gz
@@ -1167,22 +1177,13 @@ T2w T2wToT1wDistortionCorrectAndReg FieldMap SBRef2WarpField.mat
 T2w T2wToT1wDistortionCorrectAndReg FieldMap SBRef_dc_jac.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap SBRef_dc.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap SBRef.nii.gz
+T2w T2wToT1wDistortionCorrectAndReg FieldMap_ShiftMapT1w.nii.gz
+T2w T2wToT1wDistortionCorrectAndReg FieldMap_ShiftMapT2w.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap TopupField.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap trilinear.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap WarpField_01.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap WarpField_02.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap WarpField.nii.gz
-T2w T2wToT1wDistortionCorrectAndReg Fieldmap2T1w_acpc.mat
-T2w T2wToT1wDistortionCorrectAndReg FieldMap2T1w_acpc.nii.gz
-T2w T2wToT1wDistortionCorrectAndReg FieldMap2T1w_acpc_ShiftMap.nii.gz
-T2w T2wToT1wDistortionCorrectAndReg FieldMap2T1w_acpc_Warp.nii.gz
-T2w T2wToT1wDistortionCorrectAndReg Fieldmap2T2w_acpc.mat
-T2w T2wToT1wDistortionCorrectAndReg FieldMap2T2w_acpc.nii.gz
-T2w T2wToT1wDistortionCorrectAndReg FieldMap2T2w_acpc_ShiftMap.nii.gz
-T2w T2wToT1wDistortionCorrectAndReg FieldMap2T2w_acpc_Warp.nii.gz
-T2w T2wToT1wDistortionCorrectAndReg FieldMap.nii.gz
-T2w T2wToT1wDistortionCorrectAndReg FieldMap_ShiftMapT1w.nii.gz
-T2w T2wToT1wDistortionCorrectAndReg FieldMap_ShiftMapT2w.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap_WarpT1w.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg FieldMap_WarpT2w.nii.gz
 T2w T2wToT1wDistortionCorrectAndReg Jacobian.nii.gz
