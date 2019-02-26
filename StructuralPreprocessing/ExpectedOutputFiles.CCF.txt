@@ -790,7 +790,7 @@ T1w {subjectid} mri T2.mgz
 T1w {subjectid} mri T2w_hires.nii.gz
 T1w {subjectid} mri talairach.label_intensities.txt
 T1w {subjectid} mri talairach.log
-T1w {subjectid} mri talairach_with_skull.log
+T1w {subjectid} mri talairach_with_externmask.log
 T1w {subjectid} mri transforms
 T1w {subjectid} mri transforms bak
 T1w {subjectid} mri transforms cc_up.lta
@@ -816,7 +816,7 @@ T1w {subjectid} mri transforms talairach_avi.log
 T1w {subjectid} mri transforms talairach_avi_QA.log
 T1w {subjectid} mri transforms talairach.lta
 T1w {subjectid} mri transforms talairach.m3z
-T1w {subjectid} mri transforms talairach_with_skull.lta
+T1w {subjectid} mri transforms talairach_with_externmask.lta
 T1w {subjectid} mri transforms talairach.xfm
 T1w {subjectid} mri transforms talsrcimg_to_711-2C_as_mni_average_305_t4_vox2vox.txt
 T1w {subjectid} mri wm.asegedit.mgz
@@ -1023,8 +1023,6 @@ T1w {subjectid} touch rh.topofix.touch
 T1w {subjectid} touch rh.white.H.K.touch
 T1w {subjectid} touch rh.white_surface.touch
 T1w {subjectid} touch rusage.mri_ca_register.dat
-T1w {subjectid} touch rusage.mri_em_register.dat
-T1w {subjectid} touch rusage.mri_em_register.skull.dat
 T1w {subjectid} touch rusage.mris_fix_topology.lh.dat
 T1w {subjectid} touch rusage.mris_fix_topology.rh.dat
 T1w {subjectid} touch rusage.mris_inflate.lh.dat
@@ -1033,7 +1031,6 @@ T1w {subjectid} touch rusage.mris_register.lh.dat
 T1w {subjectid} touch rusage.mris_register.rh.dat
 T1w {subjectid} touch rusage.mris_sphere.lh.dat
 T1w {subjectid} touch rusage.mris_sphere.rh.dat
-T1w {subjectid} touch rusage.mri_watershed.dat
 T1w {subjectid} touch segstats.touch
 T1w {subjectid} touch skull.lta.touch
 T1w {subjectid} touch skull_strip.touch
