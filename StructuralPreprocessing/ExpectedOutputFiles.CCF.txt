@@ -1079,8 +1079,10 @@ T1w xfms
 T1w xfms acpc.mat
 T1w xfms OrigT1w2standard.nii.gz
 T1w xfms OrigT1w2T1w.nii.gz
+T1w xfms OrigT1w2T1w_PreFS.nii.gz
 T1w xfms OrigT2w2standard.nii.gz
 T1w xfms OrigT2w2T1w.nii.gz
+T1w xfms OrigT2w2T1w_PreFS.nii.gz
 T1w xfms T1w1_gdc_warp_jacobian.nii.gz
 T1w xfms T1w1_gdc_warp.nii.gz
 T1w xfms T1w_dc.nii.gz
