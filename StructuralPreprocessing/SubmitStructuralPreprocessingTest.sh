@@ -8,6 +8,7 @@ DEFAULT_HCP_RUN_UTILS="${HOME}/pipeline_tools/HCPpipelinesRunUtils"
 DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
 DEFAULT_FSL_DIR="/export/HCP/fsl-6.0.1b0"
 DEFAULT_FREESURFER_DIR="/export/freesurfer-6.0"
+DEFAULT_WORKBENCH_DIR="/export/HCP/workbench-v1.3.2"
 
 inform()
 {
@@ -28,7 +29,8 @@ get_options()
 	g_working_dir="${DEFAULT_WORKING_DIR}"
 	g_fsl_dir="${DEFAULT_FSL_DIR}"
 	g_freesurfer_dir="${DEFAULT_FREESURFER_DIR}"
-	
+	g_workbench_dir="${DEFAULT_WORKBENCH_DIR}"
+
 	# parse arguments
 	local num_args=${#arguments[@]}
 	local argument
@@ -64,6 +66,10 @@ get_options()
 				;;
 			--freesurfer-dir=*)
 				g_freesurfer_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--workbench-dir=*)
+				g_workbench_dir=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
 			*)
@@ -120,6 +126,13 @@ get_options()
 		inform "FreeSurfer dir: ${g_freesurfer_dir}"
 	fi
 
+	if [ -z " ${g_workbench_dir}" ]; then
+		inform "--workbench-dir= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "Workbench dir: ${g_workbench_dir}"
+	fi
+
 	if [ ${error_count} -gt 0 ]; then
 		inform "ABORTING"
 		exit 1
@@ -174,6 +187,7 @@ export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${EPD_PYTHON_HOME}/lib
 export LD_LIBRARY_PATH=\${FSLDIR}/lib:\${LD_LIBRARY_PATH}
 
 export PATH=${g_hcp_pipelines_dir}/FreeSurfer/custom:\${PATH}
+export CARET7DIR=${g_workbench_dir}/bin_rh_linux64
 
 echo PATH=\${PATH}
 echo HCPPIPEDIR=\${HCPPIPEDIR}
