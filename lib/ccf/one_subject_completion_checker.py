@@ -41,9 +41,9 @@ class OneSubjectCompletionChecker(abc.ABC):
 		hcp_run_utils = os_utils.getenv_required('HCP_RUN_UTILS')
 		f = open(hcp_run_utils + os.sep + self.processing_name + os.sep
 				 + self.expected_output_files_template_filename)
-		root_dir = os.sep.join([working_dir, subject_info.subject_id])
+		root_dir = os.sep.join([working_dir, subject_info.subject_id + '_' + subject_info.classifier])
 		l = file_utils.build_filename_list_from_file(f, root_dir,
-													 subjectid=subject_info.subject_id,
+													 subjectid=subject_info.subject_id + '_' + subject_info.classifier,
 													 scan=subject_info.extra)
 		return l
 	
