@@ -477,42 +477,42 @@ PHASE_FIELDMAP_NAME="FieldMap_Phase"
 
 first_t1w_scan_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_first_t1w_file_name}"
+	echo "${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/${g_first_t1w_directory_name}/${g_first_t1w_file_name}"
 }
 
 second_t1w_scan_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_second_t1w_directory_name}/${g_second_t1w_file_name}"
+	echo "${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/${g_second_t1w_directory_name}/${g_second_t1w_file_name}"
 }
 
 first_t2w_scan_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t2w_directory_name}/${g_first_t2w_file_name}"
+	echo "${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/${g_first_t2w_directory_name}/${g_first_t2w_file_name}"
 }
 
 second_t2w_scan_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_second_t2w_directory_name}/${g_second_t2w_file_name}"
+	echo "${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/${g_second_t2w_directory_name}/${g_second_t2w_file_name}"
 }
 
 siemens_mag_fieldmap_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_subject}_${g_classifier}_${MAG_FIELDMAP_NAME}${COMPRESSED_NIFTI_EXTENSION}"
+	echo "${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/${g_first_t1w_directory_name}/${g_subject}_${g_classifier}_${MAG_FIELDMAP_NAME}${COMPRESSED_NIFTI_EXTENSION}"
 }
 
 siemens_phase_fieldmap_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_subject}_${g_classifier}_${PHASE_FIELDMAP_NAME}${COMPRESSED_NIFTI_EXTENSION}"
+	echo "${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/${g_first_t1w_directory_name}/${g_subject}_${g_classifier}_${PHASE_FIELDMAP_NAME}${COMPRESSED_NIFTI_EXTENSION}"
 }
 
 spin_echo_phase_pos_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_se_phase_pos}"
+	echo "${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/${g_first_t1w_directory_name}/${g_se_phase_pos}"
 }
 
 spin_echo_phase_neg_fullpath()
 {
-	echo "${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/${g_first_t1w_directory_name}/${g_se_phase_neg}"
+	echo "${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/${g_first_t1w_directory_name}/${g_se_phase_neg}"
 }
 
 does_first_t1w_scan_exist()
@@ -584,45 +584,21 @@ get_parameters_for_first_t1w_scan()
 	g_first_t1w_sample_spacing=""
 	g_first_t1w_deltaTE=""
 	g_first_t1w_positive_dwell_time=""
-	g_first_t1w_unwarp_direction=""
-	
+
 	local first_t1w_file
 	first_t1w_file=$(first_t1w_scan_fullpath)
 
-	local readout_direction
-	readout_direction=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${first_t1w_file} -k ReadoutDirection)
-	log_Msg "readout_direction: ${readout_direction}"
-
-	case ${readout_direction} in
-		k)
-			g_first_t1w_unwarp_direction="z"
-			;;
-		k-)
-			g_first_t1w_unwarp_direction="-z"
-			;;
-		j)
-			g_first_t1w_unwarp_direction="y"
-			;;
-		j-)
-			g_first_t1w_unwarp_direction="-y"
-			;;
-		i)
-			g_first_t1w_unwarp_direction="x"
-			;;
-		i-)
-			g_first_t1w_unwarp_direction="-x"
-			;;
-		*)
-			log_Err_Abort "Unrecognized readout_direction: ${readout_direction}"
-			;;
-	esac
-	
 	g_first_t1w_sample_spacing=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${first_t1w_file} -k DwellTime)
 	log_Msg "g_first_t1w_sample_spacing: ${g_first_t1w_sample_spacing}"
 	
 	if [ -z "${g_first_t1w_sample_spacing}" ] ; then
 		log_Msg "We WERE NOT able to get the first t1w sample spacing value from a sidecar JSON file"
-		exit 1
+		##################################
+		g_first_t1w_sample_spacing=0.000007400
+		log_Msg "g_first_t1w_sample_spacing: ${g_first_t1w_sample_spacing}"
+		####echo "g_first_t1w_sample_spacing: NONE"
+		####exit 1
+		########################################
 	else
 		log_Msg "We WERE able to get the first t1w sample spacing value from a sidecar JSON file"
 		sample_spacing_in_secs=`echo "${g_first_t1w_sample_spacing}" | awk '{printf "%.9f", $1}'`
@@ -637,17 +613,19 @@ get_parameters_for_first_t1w_scan()
 
 		# We don't yet have a sample JSON sidecar file from a Siemens magnitude fieldmap file.
 		# So the field name of "deltaTE" used below is just a guess.
-		local mag_fieldmap_name
-		mag_fieldmap_name=$(siemens_mag_fieldmap_fullpath)
-		g_first_t1w_deltaTE=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${mag_fieldmap_name} -k deltaTE)
+		############################################
+		log_Msg "g_first_t1w_deltaTE: We don't have the g_first_t1w_deltaTE vaule yet!"
+		g_first_t1w_deltaTE=2.46
 		log_Msg "g_first_t1w_deltaTE: ${g_first_t1w_deltaTE}"
+		####exit 1
+		################################################
 
 	elif [[ ("${g_fieldmap_type}" = "SE") || ("${g_fieldmap_type}" = "SpinEcho") ]] ; then
 		local se_phase_pos_file
 		se_phase_pos_file=$(spin_echo_phase_pos_fullpath)
 		g_first_t1w_positive_dwell_time=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${se_phase_pos_file} -k EffectiveEchoSpacing)
 		log_Msg "g_first_t1w_positive_dwell_time: ${g_first_t1w_positive_dwell_time}"
-		
+
 	fi
 }
 
@@ -662,9 +640,12 @@ get_parameters_for_first_t2w_scan()
 	log_Msg "g_first_t2w_sample_spacing: ${g_first_t2w_sample_spacing}"
 
 	if [ -z "${g_first_t2w_sample_spacing}" ] ; then
-		log_Msg "We WERE NOT able to get the first t2w sample spacing value from a sidecar JSON file"
-		echo "g_first_t2w_sample_spacing: NONE"
-		exit 1
+		############################################
+		g_first_t2w_sample_spacing=0.000002100
+		log_Msg "g_first_t2w_sample_spacing: ${g_first_t2w_sample_spacing}"
+		####echo "g_first_t2w_sample_spacing: NONE"
+		####exit 1
+		##############################################
 		
 	else
 		log_Msg "We WERE able to get the first t2w sample spacing value from a sidecar JSON file"
@@ -679,8 +660,8 @@ get_parameters_for_first_t2w_scan()
 
 do_gradient_echo_field_maps_exist()
 {
-	magnitude_fieldmaps=`find ${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/T[1-2]w* -maxdepth 1 -name "*${MAG_FIELDMAP_NAME}*"`
-	phase_fieldmaps=`find ${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/T[1-2]w* -maxdepth 1 -name "*${PHASE_FIELDMAP_NAME}*"`
+	magnitude_fieldmaps=`find ${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/T[1-2]w* -maxdepth 1 -name "*${MAG_FIELDMAP_NAME}*"`
+	phase_fieldmaps=`find ${g_working_dir}/${g_subject}_${g_classifier}/unprocessed/T[1-2]w* -maxdepth 1 -name "*${PHASE_FIELDMAP_NAME}*"`
 
 	if [ -z "${magnitude_fieldmaps}" ] ; then
 		echo "FALSE"
@@ -696,6 +677,9 @@ main()
 {
 	log_Debug_On
 
+	local UNWARPDIR="z"
+	local SEUNWARPDIR="y"
+	
 	show_job_start
 
 	show_platform_info
@@ -775,7 +759,7 @@ main()
  	PreFreeSurfer_cmd=""
  	PreFreeSurfer_cmd+="${HCPPIPEDIR}/PreFreeSurfer/PreFreeSurferPipeline.sh"
  	PreFreeSurfer_cmd+=" --path=${g_working_dir}"
- 	PreFreeSurfer_cmd+=" --subject=${g_subject}"
+ 	PreFreeSurfer_cmd+=" --subject=${g_subject}_${g_classifier}"
  	PreFreeSurfer_cmd+=" --t1=${t1_spec}"
  	PreFreeSurfer_cmd+=" --t2=${t2_spec}"
 	PreFreeSurfer_cmd+=" --t1template=${HCPPIPEDIR}/global/templates/${g_t1template}"
@@ -810,8 +794,7 @@ main()
 			PreFreeSurfer_cmd+=" --topupconfig=NONE"
 			PreFreeSurfer_cmd+=" --fmapmag=$(siemens_mag_fieldmap_fullpath)"
 			PreFreeSurfer_cmd+=" --fmapphase=$(siemens_phase_fieldmap_fullpath)"
-			PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
-
+			PreFreeSurfer_cmd+=" --unwarpdir=${UNWARPDIR}"
 		else
 			log_Msg "adding parameters for when Siemens gradient echo fieldmaps should be used but do NOT exist"
 			PreFreeSurfer_cmd+=" --echodiff=NONE"
@@ -821,7 +804,7 @@ main()
 			PreFreeSurfer_cmd+=" --topupconfig=NONE"
 			PreFreeSurfer_cmd+=" --fmapmag=$(siemens_mag_fieldmap_fullpath)"
 			PreFreeSurfer_cmd+=" --fmapphase=$(siemens_phase_fieldmap_fullpath)"
-			PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
+			PreFreeSurfer_cmd+=" --unwarpdir=${UNWARPDIR}"
 		fi
 	elif [[ ("${g_fieldmap_type}" == "SE") || ("${g_fieldmap_type}" == "SpinEcho") ]] ; then
 		# add parameters for SpinEcho fieldmap usage
@@ -833,16 +816,8 @@ main()
 		PreFreeSurfer_cmd+=" --SEPhasePos=$(spin_echo_phase_pos_fullpath)"
 		PreFreeSurfer_cmd+=" --seechospacing=${g_first_t1w_positive_dwell_time}"
 		PreFreeSurfer_cmd+=" --topupconfig=${HCPPIPEDIR}/global/config/${g_topupconfig}"
-
-		local pos_file
-		pos_file=$(spin_echo_phase_pos_fullpath)
-		
-		local seunwarp_dir
-		seunwarp_dir=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${pos_file} -k PhaseEncodingDirection)
-				
-		PreFreeSurfer_cmd+=" --seunwarpdir=${seunwarp_dir}"
-
-		PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
+		PreFreeSurfer_cmd+=" --seunwarpdir=${SEUNWARPDIR}"
+		PreFreeSurfer_cmd+=" --unwarpdir=${UNWARPDIR}"
 	else
 		log_Err_Abort "Unrecognized g_fieldmap_type: ${g_fieldmap_type}"
 	fi
@@ -862,11 +837,11 @@ main()
 	# Run FreeSurferPipeline.sh script
  	FreeSurfer_cmd=""
 	FreeSurfer_cmd+="${HCPPIPEDIR}/FreeSurfer/FreeSurferPipeline.sh"
-	FreeSurfer_cmd+=" --subject=${g_subject}"
-	FreeSurfer_cmd+=" --subjectDIR=${g_working_dir}/${g_subject}/T1w"
-	FreeSurfer_cmd+=" --t1=${g_working_dir}/${g_subject}/T1w/T1w_acpc_dc_restore.nii.gz"
-	FreeSurfer_cmd+=" --t1brain=${g_working_dir}/${g_subject}/T1w/T1w_acpc_dc_restore_brain.nii.gz"
-	FreeSurfer_cmd+=" --t2=${g_working_dir}/${g_subject}/T1w/T2w_acpc_dc_restore.nii.gz"
+	FreeSurfer_cmd+=" --subject=${g_subject}_${g_classifier}"
+	FreeSurfer_cmd+=" --subjectDIR=${g_working_dir}/${g_subject}_${g_classifier}/T1w"
+	FreeSurfer_cmd+=" --t1=${g_working_dir}/${g_subject}_${g_classifier}/T1w/T1w_acpc_dc_restore.nii.gz"
+	FreeSurfer_cmd+=" --t1brain=${g_working_dir}/${g_subject}_${g_classifier}/T1w/T1w_acpc_dc_restore_brain.nii.gz"
+	FreeSurfer_cmd+=" --t2=${g_working_dir}/${g_subject}_${g_classifier}/T1w/T2w_acpc_dc_restore.nii.gz"
 
 	if [ ! -z "${g_seed}" ]; then
 		FreeSurfer_cmd+=" --seed=${g_seed}"
@@ -888,7 +863,7 @@ main()
  	PostFreeSurfer_cmd=""
 	PostFreeSurfer_cmd+="${HCPPIPEDIR}/PostFreeSurfer/PostFreeSurferPipeline.sh"
 	PostFreeSurfer_cmd+=" --path=${g_working_dir}"
-	PostFreeSurfer_cmd+=" --subject=${g_subject}"
+	PostFreeSurfer_cmd+=" --subject=${g_subject}_${g_classifier}"
 	PostFreeSurfer_cmd+=" --surfatlasdir=${HCPPIPEDIR}/global/templates/standard_mesh_atlases/"
 	PostFreeSurfer_cmd+=" --grayordinatesdir=${HCPPIPEDIR}/global/templates/91282_Greyordinates"
 	PostFreeSurfer_cmd+=" --grayordinatesres=2"
@@ -911,9 +886,9 @@ main()
 	fi
 	popd
 
-	cp -rL ${g_working_dir}/${g_subject}/T1w/fsaverage ${g_working_dir}/${g_subject}/T1w/fsaverage1
-	rm ${g_working_dir}/${g_subject}/T1w/fsaverage
-	mv ${g_working_dir}/${g_subject}/T1w/fsaverage1 ${g_working_dir}/${g_subject}/T1w/fsaverage
+	cp -rL ${g_working_dir}/${g_subject}_${g_classifier}/T1w/fsaverage ${g_working_dir}/${g_subject}_${g_classifier}/T1w/fsaverage1
+	rm ${g_working_dir}/${g_subject}_${g_classifier}/T1w/fsaverage
+	mv ${g_working_dir}/${g_subject}_${g_classifier}/T1w/fsaverage1 ${g_working_dir}/${g_subject}_${g_classifier}/T1w/fsaverage
 	
 	
 	log_Msg "Complete"
