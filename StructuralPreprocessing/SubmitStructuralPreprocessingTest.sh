@@ -2,13 +2,11 @@
 
 SCRIPT_NAME=$(basename "${0}")
 
-DEFAULT_SUBJECT="HCA6002236"
-DEFAULT_WORKING_DIR="/HCP/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanAging"
+DEFAULT_SUBJECT="HCD0102210"
+DEFAULT_WORKING_DIR="/HCP/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanDevelopment"
 DEFAULT_HCP_RUN_UTILS="${HOME}/pipeline_tools/HCPpipelinesRunUtils"
 DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
-#DEFAULT_FSL_DIR="/export/fsl-6.0.0_OpenBLAS"
 DEFAULT_FSL_DIR="/export/HCP/fsl-6.0.1b0"
-#DEFAULT_FREESURFER_DIR="/export/HCP/freesurfer-6.0-custom-20190130"
 DEFAULT_FREESURFER_DIR="/export/freesurfer-6.0"
 
 inform()
@@ -127,7 +125,7 @@ get_options()
 		exit 1
 	fi
 
-	g_run_dir="${g_hcp_run_utils}/DiffusionPreprocessing" 
+	g_run_dir="${g_hcp_run_utils}/StructuralPreprocessing" 
 	g_submit_scripts_dir="${g_working_dir}/${g_subject}/ProcessingInfo"
 	g_job_logs_dir="${g_working_dir}/${g_subject}/ProcessingInfo"
 }
@@ -143,20 +141,21 @@ main()
  
 	mkdir -p ${g_submit_scripts_dir}
 	date_string=$(date +%s)
-	script_file_to_submit="${g_submit_scripts_dir}/TestRunDiffusionPreprocessing-${g_subject}-${date_string}.sh"
+	script_file_to_submit="${g_submit_scripts_dir}/TestRunStructuralPreprocessing-${g_subject}-${date_string}.sh"
 	cat > ${script_file_to_submit} <<EOF
-#PBS -l nodes=1:ppn=3:gpus=1,walltime=24:00:00
+#PBS -l nodes=1:ppn=1:haswell,walltime=48:00:00,mem=32gb
 #PBS -o ${g_job_logs_dir}
 #PBS -e ${g_job_logs_dir}
 
-module load cuda-8.0
-module load gcc-4.7.2
-
 export HCP_RUN_UTILS=${g_hcp_run_utils}
 export HCPPIPEDIR=${g_hcp_pipelines_dir}
-export HCPPIPEDIR_dMRI=${g_hcp_pipelines_dir}/DiffusionPreprocessing/scripts
 export HCPPIPEDIR_Config=${g_hcp_pipelines_dir}/global/config
 export HCPPIPEDIR_Global=${g_hcp_pipelines_dir}/global/scripts
+export HCPPIPEDIR_Templates=${g_hcp_pipelines_dir}/global/templates
+export HCPPIPEDIR_PreFS=${g_hcp_pipelines_dir}/PreFreeSurfer/scripts
+export HCPPIPEDIR_FS=${g_hcp_pipelines_dir}/FreeSurfer/scripts
+export HCPPIPEDIR_PostFS=${g_hcp_pipelines_dir}/PostFreeSurfer/scripts
+
 export FSLDIR=${g_fsl_dir}
 source \${FSLDIR}/etc/fslconf/fsl.sh
 export PATH=\${FSLDIR}/bin:\${PATH}
@@ -174,21 +173,37 @@ export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${EPD_PYTHON_HOME}/lib
 
 export LD_LIBRARY_PATH=\${FSLDIR}/lib:\${LD_LIBRARY_PATH}
 
+export PATH=${g_hcp_pipelines_dir}/FreeSurfer/custom:\${PATH}
+
 echo PATH=\${PATH}
 echo HCPPIPEDIR=\${HCPPIPEDIR}
 echo FSLDIR=\${FSLDIR}
 echo LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}
 
-${g_run_dir}/DiffusionPreprocessingWrapper.sh \\
-  --working-dir=${g_working_dir} \\
+${g_run_dir}/StructuralPreprocessing.SINGULARITY_PROCESS \\
   --subject=${g_subject} \\
   --classifier=V1_MR \\
-  --gdcoeffs=\${HCPPIPEDIR_Config}/Prisma_3T_coeff_AS82.grad \\
-
+  --working-dir=${g_working_dir} \\
+  --fieldmap-type=SpinEcho \\
+  --first-t1w-directory-name=T1w_MPR_vNav_4e_RMS \\
+  --first-t1w-file-name=HCD0102210_V1_MR_T1w_MPR_vNav_4e_RMS.nii.gz \\
+  --first-t2w-directory-name=T2w_SPC_vNav \\
+  --first-t2w-file-name=HCD0102210_V1_MR_T2w_SPC_vNav.nii.gz \\
+  --brainsize=150 \\
+  --t1template=MNI152_T1_0.8mm.nii.gz \\
+  --t1templatebrain=MNI152_T1_0.8mm_brain.nii.gz \\
+  --t1template2mm=MNI152_T1_2mm.nii.gz \\
+  --t2template=MNI152_T2_0.8mm.nii.gz \\
+  --t2templatebrain=MNI152_T2_0.8mm_brain.nii.gz \\
+  --t2template2mm=MNI152_T2_2mm.nii.gz \\
+  --templatemask=MNI152_T1_0.8mm_brain_mask.nii.gz \\
+  --template2mmmask=MNI152_T1_2mm_brain_mask_dil.nii.gz \\
+  --fnirtconfig=T1_2_MNI152_2mm.cnf \\
+  --gdcoeffs=Prisma_3T_coeff_AS82.grad \\
+  --topupconfig=b02b0.cnf \\
+  --se-phase-pos=HCD0102210_V1_MR_SpinEchoFieldMap1_PA.nii.gz \\
+  --se-phase-neg=HCD0102210_V1_MR_SpinEchoFieldMap1_AP.nii.gz \\
 EOF
-#  --phase=PREEDDY
-#  --phase=EDDY
-#  --phase=POSTEDDY
 	
 	chmod +x ${script_file_to_submit}
 
@@ -200,3 +215,5 @@ EOF
 
 # Invoke the main function to get things started
 main $@
+
+
