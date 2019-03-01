@@ -31,7 +31,6 @@ log_Msg()
 	fi
 
 	echo ${dateTime} "-" ${toolname} "-" "${msg}"
-	(>&2 echo ${dateTime} "-" ${toolname} "-" "${msg}")
 }
 
 #
@@ -56,7 +55,6 @@ log_Err_Abort()
 	fi
 
 	echo -e ${dateTime} "-" ${toolname} "-" "ABORTING:" "${msg}"
-	(>&2 echo -e ${dateTime} "-" ${toolname} "-" "ABORTING:" "${msg}")
 	exit 1
 }
 
@@ -74,7 +72,6 @@ log_Err()
 	fi
 
 	echo ${dateTime} "-" ${toolname} "-" "ERROR:" "${msg}"
-	(>&2 echo ${dateTime} "-" ${toolname} "-" "ERROR:" "${msg}")
 }
 
 #
