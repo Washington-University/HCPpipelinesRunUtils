@@ -186,7 +186,7 @@ export LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}:\${EPD_PYTHON_HOME}/lib
 
 export LD_LIBRARY_PATH=\${FSLDIR}/lib:\${LD_LIBRARY_PATH}
 
-export PATH=${g_hcp_pipelines_dir}/FreeSurfer/custom:\${PATH}
+#export PATH=${g_hcp_pipelines_dir}/FreeSurfer/custom:\${PATH}
 export CARET7DIR=${g_workbench_dir}/bin_rh_linux64
 
 echo PATH=\${PATH}
@@ -218,6 +218,9 @@ ${g_run_dir}/StructuralPreprocessing.SINGULARITY_PROCESS \\
   --se-phase-pos=HCD0102210_V1_MR_SpinEchoFieldMap1_PA.nii.gz \\
   --se-phase-neg=HCD0102210_V1_MR_SpinEchoFieldMap1_AP.nii.gz \\
 EOF
+# --processing-phase=PreFreeSurfer
+# --processing-phase=FreeSurfer
+# --processing-phase=PostFreeSurfer
 	
 	chmod +x ${script_file_to_submit}
 

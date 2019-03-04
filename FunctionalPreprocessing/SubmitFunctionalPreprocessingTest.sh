@@ -179,6 +179,7 @@ export HCPPIPEDIR=${g_hcp_pipelines_dir}
 export HCPPIPEDIR_Global=${g_hcp_pipelines_dir}/global/scripts
 export HCPPIPEDIR_Config=${g_hcp_pipelines_dir}/global/config
 export HCPPIPEDIR_fMRIVol=${g_hcp_pipelines_dir}/fMRIVolume/scripts
+export HCPPIPEDIR_fMRISurf=${g_hcp_pipelines_dir}/fMRISurface/scripts
 export FSLDIR=${g_fsl_dir}
 source \${FSLDIR}/etc/fslconf/fsl.sh
 export PATH=\{FSLDIR}/bin:\${PATH}
