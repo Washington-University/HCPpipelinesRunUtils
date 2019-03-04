@@ -217,6 +217,7 @@ ${g_run_dir}/StructuralPreprocessing.SINGULARITY_PROCESS \\
   --topupconfig=b02b0.cnf \\
   --se-phase-pos=HCD0102210_V1_MR_SpinEchoFieldMap1_PA.nii.gz \\
   --se-phase-neg=HCD0102210_V1_MR_SpinEchoFieldMap1_AP.nii.gz \\
+
 EOF
 # --processing-phase=PreFreeSurfer
 # --processing-phase=FreeSurfer
