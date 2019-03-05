@@ -2,14 +2,15 @@
 
 SCRIPT_NAME=$(basename "${0}")
 
-DEFAULT_SUBJECT="HCA6002236"
-DEFAULT_WORKING_DIR="/HCP/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanAging"
+DEFAULT_SUBJECT="HCD0311118"
+DEFAULT_SCAN="tfMRI_GUESSING_AP"
+DEFAULT_WORKING_DIR="/HCP/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanDevelopment"
 DEFAULT_HCP_RUN_UTILS="${HOME}/pipeline_tools/HCPpipelinesRunUtils"
 DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
-#DEFAULT_FSL_DIR="/export/fsl-6.0.0_OpenBLAS"
 DEFAULT_FSL_DIR="/export/HCP/fsl-6.0.1b0"
 #DEFAULT_FREESURFER_DIR="/export/HCP/freesurfer-6.0-custom-20190130"
 DEFAULT_FREESURFER_DIR="/export/freesurfer-6.0"
+DEFAULT_WORKBENCH_DIR="/export/HCP/workbench-v1.3.2"
 
 inform()
 {
@@ -27,9 +28,11 @@ get_options()
 	g_hcp_run_utils="${DEFAULT_HCP_RUN_UTILS}"
 	g_hcp_pipelines_dir="${DEFAULT_HCP_PIPELINES_DIR}"
 	g_subject="${DEFAULT_SUBJECT}"
+	g_scan="${DEFAULT_SCAN}"
 	g_working_dir="${DEFAULT_WORKING_DIR}"
 	g_fsl_dir="${DEFAULT_FSL_DIR}"
 	g_freesurfer_dir="${DEFAULT_FREESURFER_DIR}"
+	g_workbench_dir="${DEFAULT_WORKBENCH_DIR}"
 	
 	# parse arguments
 	local num_args=${#arguments[@]}
@@ -52,6 +55,10 @@ get_options()
 				g_subject=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
+			--scan=*)
+				g_scan=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
 			--working-dir=*)
 				g_working_dir=${argument/*=/""}
 				index=$(( index + 1 ))
@@ -66,6 +73,10 @@ get_options()
 				;;
 			--freesurfer-dir=*)
 				g_freesurfer_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--workbench-dir=*)
+				g_workbench_dir=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
 			*)
@@ -101,6 +112,13 @@ get_options()
 		inform "subject: ${g_subject}"
 	fi
 
+	if [ -z "${g_scan}" ]; then
+		inform "--scan= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "scan: ${g_scan}"
+	fi
+	
 	if [ -z "${g_working_dir}" ]; then
 		inform "--working-dir= or --study-dir= required"
 		error_count=$(( error_count + 1 ))
@@ -122,12 +140,19 @@ get_options()
 		inform "FreeSurfer dir: ${g_freesurfer_dir}"
 	fi
 
+	if [ -z " ${g_workbench_dir}" ]; then
+		inform "--workbench-dir= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "Workbench dir: ${g_workbench_dir}"
+	fi
+	
 	if [ ${error_count} -gt 0 ]; then
 		inform "ABORTING"
 		exit 1
 	fi
 
-	g_run_dir="${g_hcp_run_utils}/DiffusionPreprocessing" 
+	g_run_dir="${g_hcp_run_utils}/FunctionalPreprocessing" 
 	g_submit_scripts_dir="${g_working_dir}/${g_subject}/ProcessingInfo"
 	g_job_logs_dir="${g_working_dir}/${g_subject}/ProcessingInfo"
 }
@@ -140,32 +165,31 @@ main()
 	local submit_cmd
 	local job_no
 	local date_string
- 
+
 	mkdir -p ${g_submit_scripts_dir}
 	date_string=$(date +%s)
-	script_file_to_submit="${g_submit_scripts_dir}/TestRunDiffusionPreprocessing-${g_subject}-${date_string}.sh"
+	script_file_to_submit="${g_submit_scripts_dir}/TestRunFunctionalPreprocessing-${g_subject}-${g_scan}-${date_string}.sh"
 	cat > ${script_file_to_submit} <<EOF
-#PBS -l nodes=1:ppn=3:gpus=1,walltime=24:00:00
+#PBS -l nodes=1:ppn=1,walltime=36:00:00,vmem=32gb
 #PBS -o ${g_job_logs_dir}
 #PBS -e ${g_job_logs_dir}
 
-module load cuda-8.0
-module load gcc-4.7.2
-
 export HCP_RUN_UTILS=${g_hcp_run_utils}
 export HCPPIPEDIR=${g_hcp_pipelines_dir}
-export HCPPIPEDIR_dMRI=${g_hcp_pipelines_dir}/DiffusionPreprocessing/scripts
-export HCPPIPEDIR_Config=${g_hcp_pipelines_dir}/global/config
 export HCPPIPEDIR_Global=${g_hcp_pipelines_dir}/global/scripts
+export HCPPIPEDIR_Config=${g_hcp_pipelines_dir}/global/config
+export HCPPIPEDIR_fMRIVol=${g_hcp_pipelines_dir}/fMRIVolume/scripts
+export HCPPIPEDIR_fMRISurf=${g_hcp_pipelines_dir}/fMRISurface/scripts
 export FSLDIR=${g_fsl_dir}
 source \${FSLDIR}/etc/fslconf/fsl.sh
-export PATH=\${FSLDIR}/bin:\${PATH}
+export PATH=\{FSLDIR}/bin:\${PATH}
 
 export FREESURFER_HOME=${g_freesurfer_dir}
 source \${FREESURFER_HOME}/SetUpFreeSurfer.sh
-
 export EPD_PYTHON_HOME=/export/HCP/epd-7.3.2
 export PATH=\${EPD_PYTHON_HOME}/bin:\${PATH}
+
+export CARET7DIR=${g_workbench_dir}/bin_rh_linux64
 
 # it is important that the ${EPD_PYTHON_HOME}/lib come late in the LD_LIBRARY_PATH so that the right
 # libcurl file is found by curl commands.  The libcurl that is part of this EPD_PYTHON distribution
@@ -179,17 +203,16 @@ echo HCPPIPEDIR=\${HCPPIPEDIR}
 echo FSLDIR=\${FSLDIR}
 echo LD_LIBRARY_PATH=\${LD_LIBRARY_PATH}
 
-${g_run_dir}/DiffusionPreprocessingWrapper.sh \\
+${g_run_dir}/FunctionalPreprocessing.SINGULARITY_PROCESS \\
   --working-dir=${g_working_dir} \\
   --subject=${g_subject} \\
+  --scan=${g_scan} \\
   --classifier=V1_MR \\
-  --gdcoeffs=\${HCPPIPEDIR_Config}/Prisma_3T_coeff_AS82.grad \\
-
+  --dcmethod=TOPUP \\
+  --topupconfig=b02b0.cnf \\
+  --gdcoeffs=Prisma_3T_coeff_AS82.grad
 EOF
-#  --phase=PREEDDY
-#  --phase=EDDY
-#  --phase=POSTEDDY
-	
+
 	chmod +x ${script_file_to_submit}
 
 	submit_cmd="qsub ${script_file_to_submit}"
