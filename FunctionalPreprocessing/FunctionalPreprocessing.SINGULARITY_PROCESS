@@ -183,9 +183,8 @@ main()
 	
 	# get names and full paths to files
 	local path_to_files="${g_working_dir}"
-	path_to_files+="/${g_subject}"
+	path_to_files+="/${g_subject}_${g_classifier}"
 	path_to_files+="/unprocessed"
-	path_to_files+="/${g_classifier}"
 	path_to_files+="/${g_scan}"
 	log_Debug_Msg "path_to_files: ${path_to_files}"
 
@@ -235,7 +234,7 @@ main()
 	local vol_cmd=""
 	vol_cmd+="${HCPPIPEDIR}/fMRIVolume/GenericfMRIVolumeProcessingPipeline.sh"
 	vol_cmd+=" --path=${g_working_dir}"
-	vol_cmd+=" --subject=${g_subject}"
+	vol_cmd+=" --subject=${g_subject}_${g_classifier}"
 	vol_cmd+=" --fmriname=${g_scan}"
 	vol_cmd+=" --fmritcs=${full_path_to_nifti_file}"
 	vol_cmd+=" --fmriscout=${full_path_to_sbref_file}"
@@ -309,7 +308,7 @@ main()
 	local surf_cmd=""
 	surf_cmd+="${HCPPIPEDIR}/fMRISurface/GenericfMRISurfaceProcessingPipeline.sh"
 	surf_cmd+=" --path=${g_working_dir}"
-	surf_cmd+=" --subject=${g_subject}"
+	surf_cmd+=" --subject=${g_subject}_${g_classifier}"
 	surf_cmd+=" --fmriname=${g_scan}"
 	surf_cmd+=" --lowresmesh=32"
 	surf_cmd+=" --fmrires=2"

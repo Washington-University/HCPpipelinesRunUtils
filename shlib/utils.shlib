@@ -34,7 +34,7 @@ create_start_time_file()
 		log_Err_Abort "create_start_time_file: classifier_id must be specified"
 	fi
 	
-	local processing_info_dir="${working_dir}/${subject_id}/ProcessingInfo"
+	local processing_info_dir="${working_dir}/${subject_id}_${classifier_id}/ProcessingInfo"
 
 	log_Msg "Checking/Creating processing information directory: ${processing_info_dir}"
 	mkdir -p ${processing_info_dir}
@@ -105,7 +105,7 @@ log_execution_info()
 		log_Err_Abort "log_execution_info: classifier_id must be specified"
 	fi
 	
-	local processing_info_dir="${working_dir}/${subject_id}/ProcessingInfo"
+	local processing_info_dir="${working_dir}/${subject_id}_${classifier_id}/ProcessingInfo"
 
 	log_Msg "Checking/Creating processing information directory: ${processing_info_dir}"
 	mkdir -p ${processing_info_dir}
