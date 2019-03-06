@@ -546,7 +546,6 @@ spin_echo_phase_neg_fullpath()
 does_first_t1w_scan_exist()
 {
 	local first_t1w_scan_file=$(first_t1w_scan_fullpath)
-	log_Dbg "first_t1w_scan_file: ${first_t1w_scan_file}"
 
 	if [ -z "${g_first_t1w_directory_name}" ]; then
 		echo "FALSE"

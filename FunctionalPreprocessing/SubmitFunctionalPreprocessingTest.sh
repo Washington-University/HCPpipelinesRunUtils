@@ -3,12 +3,12 @@
 SCRIPT_NAME=$(basename "${0}")
 
 DEFAULT_SUBJECT="HCD0311118"
+DEFAULT_SESSION_CLASSIFIER="V1_MR"
 DEFAULT_SCAN="tfMRI_GUESSING_AP"
 DEFAULT_WORKING_DIR="/HCP/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanDevelopment"
 DEFAULT_HCP_RUN_UTILS="${HOME}/pipeline_tools/HCPpipelinesRunUtils"
 DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
 DEFAULT_FSL_DIR="/export/HCP/fsl-6.0.1b0"
-#DEFAULT_FREESURFER_DIR="/export/HCP/freesurfer-6.0-custom-20190130"
 DEFAULT_FREESURFER_DIR="/export/freesurfer-6.0"
 DEFAULT_WORKBENCH_DIR="/export/HCP/workbench-v1.3.2"
 
@@ -28,6 +28,7 @@ get_options()
 	g_hcp_run_utils="${DEFAULT_HCP_RUN_UTILS}"
 	g_hcp_pipelines_dir="${DEFAULT_HCP_PIPELINES_DIR}"
 	g_subject="${DEFAULT_SUBJECT}"
+	g_session_classifier="${DEFAULT_SESSION_CLASSIFIER}"
 	g_scan="${DEFAULT_SCAN}"
 	g_working_dir="${DEFAULT_WORKING_DIR}"
 	g_fsl_dir="${DEFAULT_FSL_DIR}"
@@ -53,6 +54,10 @@ get_options()
 				;;
 			--subject=*)
 				g_subject=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--session-classifier=*)
+				g_session_classifier=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
 			--scan=*)
@@ -112,6 +117,13 @@ get_options()
 		inform "subject: ${g_subject}"
 	fi
 
+	if [ -z "${g_session_classifier}" ]; then
+		inform "--session-classifier= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "session classifier: ${g_session_classifier}"
+	fi
+	
 	if [ -z "${g_scan}" ]; then
 		inform "--scan= required"
 		error_count=$(( error_count + 1 ))
@@ -152,9 +164,11 @@ get_options()
 		exit 1
 	fi
 
+	g_session="${g_subject}_${g_session_classifier}"
+
 	g_run_dir="${g_hcp_run_utils}/FunctionalPreprocessing" 
-	g_submit_scripts_dir="${g_working_dir}/${g_subject}/ProcessingInfo"
-	g_job_logs_dir="${g_working_dir}/${g_subject}/ProcessingInfo"
+	g_submit_scripts_dir="${g_working_dir}/${g_session}/ProcessingInfo"
+	g_job_logs_dir="${g_working_dir}/${g_session}/ProcessingInfo"
 }
 
 main()
@@ -168,7 +182,7 @@ main()
 
 	mkdir -p ${g_submit_scripts_dir}
 	date_string=$(date +%s)
-	script_file_to_submit="${g_submit_scripts_dir}/TestRunFunctionalPreprocessing-${g_subject}-${g_scan}-${date_string}.sh"
+	script_file_to_submit="${g_submit_scripts_dir}/${g_session}-${g_scan}-TestRunFunctionalPreprocessing-${date_string}.sh"
 	cat > ${script_file_to_submit} <<EOF
 #PBS -l nodes=1:ppn=1,walltime=36:00:00,vmem=32gb
 #PBS -o ${g_job_logs_dir}
@@ -207,7 +221,7 @@ ${g_run_dir}/FunctionalPreprocessing.SINGULARITY_PROCESS \\
   --working-dir=${g_working_dir} \\
   --subject=${g_subject} \\
   --scan=${g_scan} \\
-  --classifier=V1_MR \\
+  --classifier=${g_session_classifier} \\
   --dcmethod=TOPUP \\
   --topupconfig=b02b0.cnf \\
   --gdcoeffs=Prisma_3T_coeff_AS82.grad

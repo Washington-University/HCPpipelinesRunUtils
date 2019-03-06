@@ -68,6 +68,7 @@ get_options()
 	unset g_classifier
 	unset g_gdcoeffs
 	unset g_phase
+	unset g_session
 	
 	# set default values
 	g_gdcoeffs="NONE"
@@ -162,6 +163,9 @@ get_options()
  	if [ ${error_count} -gt 0 ]; then
  		log_Err_Abort "For usage information, use --help"
  	fi
+
+	g_session="${g_subject}_${g_classifier}"
+
 }
 
 RLLR_PHASE_ENCODING_SPEC="RLLR"
@@ -181,18 +185,18 @@ get_pe_scan_arrays()
 	#         g_PA_scans_array - array of paths to diffusion scans with phase encoding PA
 	#         g_AP_scans_array - array of paths to diffusion scans with phase encoding AP
 	
-	local unprocessed_diffusion_data_dir="${g_working_dir}/${g_subject}/unprocessed/${g_classifier}/Diffusion"
+	local unprocessed_diffusion_data_dir="${g_working_dir}/${g_session}/unprocessed/Diffusion"
 
-	local RL_scans=$(find ${unprocessed_diffusion_data_dir} -maxdepth 1 -name "${g_subject}_${g_classifier}*RL.nii.gz" | sort) 
+	local RL_scans=$(find ${unprocessed_diffusion_data_dir} -maxdepth 1 -name "${g_session}*RL.nii.gz" | sort) 
 	g_RL_scans_array=(${RL_scans})
 
-	local LR_scans=$(find ${unprocessed_diffusion_data_dir} -maxdepth 1 -name "${g_subject}_${g_classifier}*LR.nii.gz" | sort) 
+	local LR_scans=$(find ${unprocessed_diffusion_data_dir} -maxdepth 1 -name "${g_session}*LR.nii.gz" | sort) 
 	g_LR_scans_array=(${LR_scans})
 
-	local PA_scans=$(find ${unprocessed_diffusion_data_dir} -maxdepth 1 -name "${g_subject}_${g_classifier}*PA.nii.gz" | sort) 
+	local PA_scans=$(find ${unprocessed_diffusion_data_dir} -maxdepth 1 -name "${g_session}*PA.nii.gz" | sort) 
 	g_PA_scans_array=(${PA_scans})
 
-	local AP_scans=$(find ${unprocessed_diffusion_data_dir} -maxdepth 1 -name "${g_subject}_${g_classifier}*AP.nii.gz" | sort) 
+	local AP_scans=$(find ${unprocessed_diffusion_data_dir} -maxdepth 1 -name "${g_session}*AP.nii.gz" | sort) 
 	g_AP_scans_array=(${AP_scans})
 }
 
@@ -364,7 +368,7 @@ main()
 		PreEddy_cmd=""
 		PreEddy_cmd+="${HCPPIPEDIR}/DiffusionPreprocessing/DiffPreprocPipeline_PreEddy.sh"
 		PreEddy_cmd+=" --path=${g_working_dir}"
-		PreEddy_cmd+=" --subject=${g_subject}"
+		PreEddy_cmd+=" --subject=${g_session}"
 
 		if [[ "${g_phase_encoding_spec}" = "${RLLR_PHASE_ENCODING_SPEC}" ]]; then
 			PreEddy_cmd+=" --PEdir=1"
@@ -395,7 +399,7 @@ main()
 		Eddy_cmd=""
 		Eddy_cmd+="${HCPPIPEDIR}/DiffusionPreprocessing/DiffPreprocPipeline_Eddy.sh"
 		Eddy_cmd+=" --path=${g_working_dir}"
-		Eddy_cmd+=" --subject=${g_subject}"
+		Eddy_cmd+=" --subject=${g_session}"
 		Eddy_cmd+=" --detailed-outlier-stats=True"
 		Eddy_cmd+=" --replace-outliers=True"
 		Eddy_cmd+=" --nvoxhp=2000"
@@ -426,7 +430,7 @@ main()
 		PostEddy_cmd=""
 		PostEddy_cmd+="${HCPPIPEDIR}/DiffusionPreprocessing/DiffPreprocPipeline_PostEddy.sh"
 		PostEddy_cmd+=" --path=${g_working_dir}"
-		PostEddy_cmd+=" --subject=${g_subject}"
+		PostEddy_cmd+=" --subject=${g_session}"
 		PostEddy_cmd+=" --gdcoeffs=${g_gdcoeffs}"
 		
 		log_Msg ""
