@@ -10,6 +10,7 @@ DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
 DEFAULT_FSL_DIR="/export/HCP/fsl-6.0.1b0"
 DEFAULT_FREESURFER_DIR="/export/freesurfer-6.0"
 DEFAULT_WORKBENCH_DIR="/export/HCP/workbench-v1.3.2"
+DEFAULT_FIELDMAP_NUMBER=1
 
 inform()
 {
@@ -32,7 +33,8 @@ get_options()
 	g_fsl_dir="${DEFAULT_FSL_DIR}"
 	g_freesurfer_dir="${DEFAULT_FREESURFER_DIR}"
 	g_workbench_dir="${DEFAULT_WORKBENCH_DIR}"
-
+	g_fieldmap_number="${DEFAULT_FIELDMAP_NUMBER}"
+	
 	# parse arguments
 	local num_args=${#arguments[@]}
 	local argument
@@ -76,6 +78,10 @@ get_options()
 				;;
 			--workbench-dir=*)
 				g_workbench_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--fieldmap-number=*)
+				g_fieldmap_number=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
 			*)
@@ -146,6 +152,13 @@ get_options()
 		inform "Workbench dir: ${g_workbench_dir}"
 	fi
 
+	if [ -z " ${g_fieldmap_number}" ]; then
+		inform "--fieldmap-number= required"
+		error_count=$(( error_count + 1 ))
+	else
+		inform "Fieldmap number: ${g_fieldmap_number}"
+	fi
+	
 	if [ ${error_count} -gt 0 ]; then
 		inform "ABORTING"
 		exit 1
@@ -233,8 +246,8 @@ ${g_run_dir}/StructuralPreprocessing.SINGULARITY_PROCESS \\
   --fnirtconfig=T1_2_MNI152_2mm.cnf \\
   --gdcoeffs=Prisma_3T_coeff_AS82.grad \\
   --topupconfig=b02b0.cnf \\
-  --se-phase-pos=${g_session}_SpinEchoFieldMap1_PA.nii.gz \\
-  --se-phase-neg=${g_session}_SpinEchoFieldMap1_AP.nii.gz \\
+  --se-phase-pos=${g_session}_SpinEchoFieldMap${g_fieldmap_number}_PA.nii.gz \\
+  --se-phase-neg=${g_session}_SpinEchoFieldMap${g_fieldmap_number}_AP.nii.gz \\
 
 EOF
 # --processing-phase=PreFreeSurfer
