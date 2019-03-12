@@ -9,6 +9,7 @@ DEFAULT_HCP_RUN_UTILS="${HOME}/pipeline_tools/HCPpipelinesRunUtils"
 DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
 DEFAULT_FSL_DIR="/export/HCP/fsl-6.0.1b0"
 DEFAULT_FREESURFER_DIR="/export/freesurfer-6.0"
+DEFAULT_AFTER_JOB_NUMBER=""
 
 inform()
 {
@@ -30,6 +31,7 @@ get_options()
 	g_working_dir="${DEFAULT_WORKING_DIR}"
 	g_fsl_dir="${DEFAULT_FSL_DIR}"
 	g_freesurfer_dir="${DEFAULT_FREESURFER_DIR}"
+	g_after_job_number="${DEFAULT_AFTER_JOB_NUMBER}"
 	
 	# parse arguments
 	local num_args=${#arguments[@]}
@@ -70,6 +72,10 @@ get_options()
 				;;
 			--freesurfer-dir=*)
 				g_freesurfer_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--after-job-number=*)
+				g_after_job_number=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
 			*)
@@ -132,7 +138,11 @@ get_options()
 	else
 		inform "FreeSurfer dir: ${g_freesurfer_dir}"
 	fi
-
+	
+	if [ ! -z "${g_after_job_number}" ]; then
+		inform "After Job Number: ${g_after_job_number}"
+	fi
+	
 	if [ ${error_count} -gt 0 ]; then
 		inform "ABORTING"
 		exit 1
@@ -205,7 +215,12 @@ EOF
 	
 	chmod +x ${script_file_to_submit}
 
-	submit_cmd="qsub ${script_file_to_submit}"
+	submit_cmd="qsub"
+	if [ ! -z "${g_after_job_number}" ]; then
+		submit_cmd+=" -W depend=afterok:${g_after_job_number}"
+	fi
+	submit_cmd+=" ${script_file_to_submit}"
+
 	inform "submit_cmd: ${submit_cmd}"
 	job_no=$(${submit_cmd})
 	inform "job_no: ${job_no}"
