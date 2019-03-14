@@ -217,7 +217,7 @@ export LD_LIBRARY_PATH=\${FSLDIR}/lib:\${LD_LIBRARY_PATH}
 #export PATH=${g_hcp_pipelines_dir}/FreeSurfer/custom:\${PATH}
 export CARET7DIR=${g_workbench_dir}/bin_rh_linux64
 
-export MSMBINDIR=/export/HCP/MSM_HOCR_v2/Centos
+export MSMBINDIR=/export/HCP/MSM_HOCR_v3/Centos
 export MSMCONFIGDIR=${g_hcp_pipelines_dir}/MSMConfig
 
 echo PATH=\${PATH}
