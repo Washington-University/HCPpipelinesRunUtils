@@ -42,6 +42,7 @@ get_options()
 	# initialize global output variables
 	unset g_subject
 	unset g_classifier
+	unset g_fieldmap
 	unset g_working_dir
 	unset g_verbose
 
@@ -66,6 +67,10 @@ get_options()
 				;;
 			--classifier=*)
 				g_classifier=${argument#*=}
+				index=$(( index + 1 ))
+				;;
+			--fieldmap=*)
+				g_fieldmap=${argument#*=}
 				index=$(( index + 1 ))
 				;;
 			--working-dir=*)
@@ -98,6 +103,13 @@ get_options()
 		error_count=$(( error_count + 1 ))
 	else
 		log_Msg "classifier: ${g_classifier}"
+	fi
+
+	if [ -z "${g_fieldmap}" ]; then
+		log_Err "fieldmap (--fieldmap=) required"
+		error_count=$(( error_count + 1 ))
+	else
+		log_Msg "fieldmap: ${g_fieldmap}"
 	fi
 
 	if [ -z "${g_working_dir}" ]; then
@@ -135,6 +147,7 @@ main()
 	check_cmd+=" --working-dir=${g_working_dir}"
 	check_cmd+=" --subject=${g_subject}"
 	check_cmd+=" --classifier=${g_classifier}"
+	check_cmd+=" --fieldmap=${g_fieldmap}"
 	check_cmd+=" --verbose"
 	check_cmd+=" --output=${log_file_name}"
 	check_cmd+=" --check-all"
