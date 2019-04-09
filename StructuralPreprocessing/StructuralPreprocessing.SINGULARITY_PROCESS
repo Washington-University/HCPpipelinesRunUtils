@@ -874,6 +874,15 @@ main()
 			PreFreeSurfer_cmd+=" --seunwarpdir=${seunwarp_dir}"
 			
 			PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
+
+		elif [[ ("${g_fieldmap_type}" == "NONE") ]] ; then
+			# add parameters for SpinEcho fieldmap usage
+			PreFreeSurfer_cmd+=" --echodiff=NONE"
+			PreFreeSurfer_cmd+=" --t1samplespacing=${g_first_t1w_sample_spacing}"
+			PreFreeSurfer_cmd+=" --t2samplespacing=${g_first_t2w_sample_spacing}"
+			PreFreeSurfer_cmd+=" --avgrdcmethod=NONE"
+			PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
+
 		else
 			log_Err_Abort "Unrecognized g_fieldmap_type: ${g_fieldmap_type}"
 		fi
