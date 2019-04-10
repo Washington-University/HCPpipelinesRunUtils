@@ -47,6 +47,7 @@ get_options()
 	unset g_subject
 	unset g_classifier
 	unset g_scan
+	unset g_fieldmap
 	unset g_working_dir
 	unset g_verbose
 	
@@ -75,6 +76,10 @@ get_options()
 				;;
 			--scan=*)
 				g_scan=${argument#*=}
+				index=$(( index + 1 ))
+				;;
+			--fieldmap=*)
+				g_fieldmap=${argument#*=}
 				index=$(( index + 1 ))
 				;;
 			--working-dir=*)
@@ -116,6 +121,8 @@ get_options()
 		log_Msg "scan: ${g_scan}"
 	fi
 	
+	log_Msg "fieldmap: ${g_fieldmap}"
+	
 	if [ -z "${g_working_dir}" ]; then
 		log_Err "working directory (--working-dir=) required"
 		error_count=$(( error_count + 1 ))
@@ -153,6 +160,13 @@ main()
 	check_cmd+=" --subject=${g_subject}"
 	check_cmd+=" --classifier=${g_classifier}"
 	check_cmd+=" --scan=${g_scan}"
+	
+	if [ -z "${g_fieldmap}" ]; then
+		check_cmd+=" --fieldmap=SpinEcho"
+	else
+		check_cmd+=" --fieldmap=${g_fieldmap}"
+	fi
+	
 	check_cmd+=" --verbose"
 	check_cmd+=" --output=${log_file_name}"
 	check_cmd+=" --check-all"
