@@ -32,11 +32,8 @@ class OneSubjectCompletionChecker(abc.ABC):
 		raise NotImplementedError
 
 	def expected_output_files_template_filename(self, fieldmap):
-		"""Name of the file containing a list of templates for expected output files"""
-		if fieldmap == "NONE":
-			return 'ExpectedOutputFilesNoFieldMap.CCF.txt'
-		else:		
-			return 'ExpectedOutputFiles.CCF.txt'
+		"""Name of the file containing a list of templates for expected output files"""	
+		return 'ExpectedOutputFiles-FieldMap-' + fieldmap + '.CCF.txt'
 	
 	def list_of_expected_files(self, working_dir, fieldmap, subject_info):
 
