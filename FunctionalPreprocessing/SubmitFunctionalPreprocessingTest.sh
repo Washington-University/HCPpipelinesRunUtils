@@ -8,7 +8,7 @@ DEFAULT_SCAN="tfMRI_GUESSING_AP"
 DEFAULT_WORKING_DIR="/HCP/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanDevelopment"
 DEFAULT_HCP_RUN_UTILS="${HOME}/pipeline_tools/HCPpipelinesRunUtils"
 DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
-DEFAULT_FSL_DIR="/export/HCP/fsl-6.0.1b0"
+DEFAULT_FSL_DIR="/export/fsl-6.0.1"
 DEFAULT_FREESURFER_DIR="/export/freesurfer-6.0"
 DEFAULT_WORKBENCH_DIR="/export/HCP/workbench-v1.3.2"
 DEFAULT_AFTER_JOB_NUMBER=""
@@ -206,7 +206,7 @@ export HCPPIPEDIR_fMRIVol=${g_hcp_pipelines_dir}/fMRIVolume/scripts
 export HCPPIPEDIR_fMRISurf=${g_hcp_pipelines_dir}/fMRISurface/scripts
 export FSLDIR=${g_fsl_dir}
 source \${FSLDIR}/etc/fslconf/fsl.sh
-export PATH=\{FSLDIR}/bin:\${PATH}
+export PATH=\${FSLDIR}/bin:\${PATH}
 
 export FREESURFER_HOME=${g_freesurfer_dir}
 source \${FREESURFER_HOME}/SetUpFreeSurfer.sh
