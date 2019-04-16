@@ -797,6 +797,7 @@ T1w {subjectid} mri transforms cc_up.lta
 T1w {subjectid} mri transforms conf2rawavg.dat
 T1w {subjectid} mri transforms conf2rawavg.lta
 T1w {subjectid} mri transforms eye.dat
+T1w {subjectid} mri transforms orig2rawavg.dat
 T1w {subjectid} mri transforms orig-to-rawavg.lta
 T1w {subjectid} mri transforms rawavg2conf.dat
 T1w {subjectid} mri transforms rawavg2conf.lta
