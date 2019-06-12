@@ -412,6 +412,7 @@ main()
 		Eddy_cmd+=" --extra-eddy-arg=--with_outliers"
 		Eddy_cmd+=" --extra-eddy-arg=--initrand"
 		Eddy_cmd+=" --extra-eddy-arg=--very_verbose"
+		Eddy_cmd+=" --cuda-version=9.1"
 		
 		log_Msg ""
 		log_Msg "Eddy_cmd: ${Eddy_cmd}"
@@ -431,7 +432,7 @@ main()
 		PostEddy_cmd+="${HCPPIPEDIR}/DiffusionPreprocessing/DiffPreprocPipeline_PostEddy.sh"
 		PostEddy_cmd+=" --path=${g_working_dir}"
 		PostEddy_cmd+=" --subject=${g_session}"
-		PostEddy_cmd+=" --gdcoeffs=${g_gdcoeffs}"
+		PostEddy_cmd+=" --gdcoeffs=${HCPPIPEDIR}/global/config/${g_gdcoeffs}"
 		
 		log_Msg ""
 		log_Msg "PostEddy_cmd: ${PostEddy_cmd}"

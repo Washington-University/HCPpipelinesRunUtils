@@ -1,0 +1,185 @@
+Diffusion
+Diffusion data
+Diffusion data avg_data.idxs
+Diffusion data bvals
+Diffusion data bvals_noRot
+Diffusion data bvecs
+Diffusion data bvecs_noRot
+Diffusion data data.nii.gz
+Diffusion data fullWarp_jacobian.nii.gz
+Diffusion data grad_dev.nii.gz
+Diffusion data log.txt
+Diffusion data nodif_brain_mask.nii.gz
+Diffusion data nodif_brain.nii.gz
+Diffusion data nodif.nii.gz
+Diffusion data qa.txt
+Diffusion data warped
+Diffusion data warped data_warped.nii.gz
+Diffusion data warped fullWarp_abs.nii.gz
+Diffusion data warped fullWarp.nii.gz
+Diffusion eddy
+Diffusion eddy acqparams.txt
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration00.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration00.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration00.MeanDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration00.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration00.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration00.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration00.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration01.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration01.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration01.MeanDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration01.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration01.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration01.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration01.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration02.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration02.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration02.MeanDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration02.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration02.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration02.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration02.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration03.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration03.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration03.MeanDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration03.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration03.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration03.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration03.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration04.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration04.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration04.MeanDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration04.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration04.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration04.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.Eddyb0SliceStatsIteration04.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.eddy_command_txt
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration00.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration00.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration00.MeanDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration00.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration00.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration00.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration00.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration01.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration01.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration01.MeanDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration01.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration01.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration01.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration01.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration02.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration02.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration02.MeanDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration02.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration02.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration02.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration02.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration03.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration03.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration03.MeanDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration03.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration03.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration03.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration03.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration04.GroupWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration04.GroupWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration04.MeanDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration04.MeanSquaredDifference
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration04.NoOfVoxels
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration04.SliceWiseNoOfStdevMap
+Diffusion eddy eddy_unwarped_images.EddyDwiSliceStatsIteration04.SliceWiseOutlierMap
+Diffusion eddy eddy_unwarped_images.eddy_movement_rms
+Diffusion eddy eddy_unwarped_images.eddy_outlier_free_data.nii.gz
+Diffusion eddy eddy_unwarped_images.eddy_outlier_map
+Diffusion eddy eddy_unwarped_images.eddy_outlier_n_sqr_stdev_map
+Diffusion eddy eddy_unwarped_images.eddy_outlier_n_stdev_map
+Diffusion eddy eddy_unwarped_images.eddy_outlier_report
+Diffusion eddy eddy_unwarped_images.eddy_parameters
+Diffusion eddy eddy_unwarped_images.eddy_post_eddy_shell_alignment_parameters
+Diffusion eddy eddy_unwarped_images.eddy_post_eddy_shell_PE_translation_parameters
+Diffusion eddy eddy_unwarped_images.eddy_restricted_movement_rms
+Diffusion eddy eddy_unwarped_images.eddy_results_with_outliers_retained.nii.gz
+Diffusion eddy eddy_unwarped_images.eddy_rotated_bvecs
+Diffusion eddy eddy_unwarped_images.eddy_values_of_all_input_parameters
+Diffusion eddy eddy_unwarped_images.nii.gz
+Diffusion eddy index.txt
+Diffusion eddy Neg.bval
+Diffusion eddy Neg.bvec
+Diffusion eddy Neg_rotated.bvec
+Diffusion eddy Neg_SeriesVolNum.txt
+Diffusion eddy nodif_brain_mask.nii.gz
+Diffusion eddy Pos.bval
+Diffusion eddy Pos.bvec
+Diffusion eddy Pos_Neg.bvals
+Diffusion eddy Pos_Neg.bvecs
+Diffusion eddy Pos_Neg.nii.gz
+Diffusion eddy Pos_rotated.bvec
+Diffusion eddy Pos_SeriesVolNum.txt
+Diffusion eddy series_index.txt
+Diffusion rawdata
+Diffusion rawdata Neg_1.bval
+Diffusion rawdata Neg_1.bvec
+Diffusion rawdata Neg_1.nii.gz
+Diffusion rawdata Neg_2.bval
+Diffusion rawdata Neg_2.bvec
+Diffusion rawdata Neg_2.nii.gz
+Diffusion rawdata Neg_SeriesCorrespVolNum.txt
+Diffusion rawdata Pos_1.bval
+Diffusion rawdata Pos_1.bvec
+Diffusion rawdata Pos_1.nii.gz
+Diffusion rawdata Pos_2.bval
+Diffusion rawdata Pos_2.bvec
+Diffusion rawdata Pos_2.nii.gz
+Diffusion rawdata Pos_SeriesCorrespVolNum.txt
+Diffusion reg
+Diffusion reg diff2str_fs.mat
+Diffusion reg diff2str.mat
+Diffusion reg EPItoT1w.dat
+Diffusion reg EPItoT1w.dat~
+Diffusion reg EPItoT1w.dat.log
+Diffusion reg EPItoT1w.dat.mincost
+Diffusion reg EPItoT1w.dat.param
+Diffusion reg EPItoT1w.dat.sum
+Diffusion reg grad_unwarp_diff2str.nii.gz
+Diffusion reg nodif2T1w_initII_fast_wmedge.nii.gz
+Diffusion reg nodif2T1w_initII_fast_wmseg.nii.gz
+Diffusion reg nodif2T1w_initII_init.mat
+Diffusion reg nodif2T1w_initII.mat
+Diffusion reg nodif2T1w_initII.nii.gz
+Diffusion reg nodif2T1w_init.nii.gz
+Diffusion reg nodif2T1w.nii.gz
+Diffusion reg nodif2T1w_restore_initII.nii.gz
+Diffusion reg nodif2T1w_restore.nii.gz
+Diffusion reg Scout2T1w.nii.gz
+Diffusion reg str2diff.mat
+Diffusion reg T1w_acpc_dc_restore_brain.nii.gz
+Diffusion reg T1wMulEPI_nodif.nii.gz
+Diffusion topup
+Diffusion topup acqparams.txt
+Diffusion topup extractedb0.txt
+Diffusion topup hifib0.nii.gz
+Diffusion topup nodif_brain_mask.nii.gz
+Diffusion topup nodif_brain.nii.gz
+Diffusion topup Pos_Neg_b0.nii.gz
+Diffusion topup Pos_Neg_b0.topup_log
+Diffusion topup topup_Pos_Neg_b0_fieldcoef.nii.gz
+Diffusion topup topup_Pos_Neg_b0_movpar.txt
+T1w
+T1w Diffusion
+T1w Diffusion bvals
+T1w Diffusion bvecs
+T1w Diffusion data.nii.gz
+T1w Diffusion eddylogs
+T1w Diffusion eddylogs eddy_unwarped_images.eddy_movement_rms
+T1w Diffusion eddylogs eddy_unwarped_images.eddy_outlier_map
+T1w Diffusion eddylogs eddy_unwarped_images.eddy_outlier_n_sqr_stdev_map
+T1w Diffusion eddylogs eddy_unwarped_images.eddy_outlier_n_stdev_map
+T1w Diffusion eddylogs eddy_unwarped_images.eddy_outlier_report
+T1w Diffusion eddylogs eddy_unwarped_images.eddy_parameters
+T1w Diffusion eddylogs eddy_unwarped_images.eddy_post_eddy_shell_alignment_parameters
+T1w Diffusion eddylogs eddy_unwarped_images.eddy_restricted_movement_rms
+T1w Diffusion grad_dev.nii.gz
+T1w Diffusion nodif_brain_mask.nii.gz
+T1w T1w_acpc_dc_restore_1.50.nii.gz
