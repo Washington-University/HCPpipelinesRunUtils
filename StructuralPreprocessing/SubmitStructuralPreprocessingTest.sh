@@ -4,10 +4,10 @@ SCRIPT_NAME=$(basename "${0}")
 
 DEFAULT_SUBJECT="HCD0102210"
 DEFAULT_SESSION_CLASSIFIER="V1_MR"
-DEFAULT_WORKING_DIR="/HCP/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanDevelopment"
+DEFAULT_WORKING_DIR="/NRG-data/NRG/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanDevelopment"
 DEFAULT_HCP_RUN_UTILS="${HOME}/pipeline_tools/HCPpipelinesRunUtils"
 DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
-DEFAULT_FSL_DIR="/export/HCP/fsl-6.0.1b0"
+DEFAULT_FSL_DIR="/export/fsl-6.0.1"
 DEFAULT_FREESURFER_DIR="/export/freesurfer-6.0"
 DEFAULT_WORKBENCH_DIR="/export/HCP/workbench-v1.3.2"
 DEFAULT_FIELDMAP_NUMBER=1

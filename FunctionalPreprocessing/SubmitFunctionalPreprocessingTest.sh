@@ -2,10 +2,20 @@
 
 SCRIPT_NAME=$(basename "${0}")
 
+# Root directory at which NRG/HCP data can be found from the CHPC
+#NRG_DATA_ROOT="/HCP"
+NRG_DATA_ROOT="/NGR-data/NRG"
+
+# Processing parameters that are likely to be specified/changed by the command line
+# invocation of this script, i.e. Subject, session classifier, scan, and working directory.
 DEFAULT_SUBJECT="HCD0311118"
 DEFAULT_SESSION_CLASSIFIER="V1_MR"
 DEFAULT_SCAN="tfMRI_GUESSING_AP"
-DEFAULT_WORKING_DIR="/HCP/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanDevelopment"
+DEFAULT_WORKING_DIR="${NRG_DATA_ROOT}/hcpdb/build_ssd/chpc/BUILD/${USER}/LifeSpanDevelopment"
+
+# Processing parameters that are less likely to be specified/changed by the command line
+# invocation of this script, i.e. locations of tools and a processing job to wait on
+# completion of before running the specified functional preprocessing
 DEFAULT_HCP_RUN_UTILS="${HOME}/pipeline_tools/HCPpipelinesRunUtils"
 DEFAULT_HCP_PIPELINES_DIR="${HOME}/pipeline_tools/HCPpipelines"
 DEFAULT_FSL_DIR="/export/fsl-6.0.1"
@@ -46,18 +56,10 @@ get_options()
 		argument=${arguments[index]}
 
 		case ${argument} in
-			--hcp-run-utils=*)
-				g_hcp_run_utils=${argument/*=/""}
-				index=$(( index + 1 ))
-				;;
-			--hcp-pipelines-dir=*)
-				g_hcp_pipelines_dir=${argument/*=/""}
-				index=$(( index + 1 ))
-				;;
 			--subject=*)
 				g_subject=${argument/*=/""}
 				index=$(( index + 1 ))
-				;;
+ 				;;
 			--session-classifier=*)
 				g_session_classifier=${argument/*=/""}
 				index=$(( index + 1 ))
@@ -72,6 +74,14 @@ get_options()
 				;;
 			--study-dir=*)
 				g_working_dir=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--hcp-run-utils=*)
+				g_hcp_run_utils=${argument/*=/""}
+				index=$(( index + 1 ))
+				;;
+			--hcp-pipelines-dir=*)
+				g_hcp_pipelines_dir=${argument/*=/""}
 				index=$(( index + 1 ))
 				;;
 			--fsl-dir=*)
