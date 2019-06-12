@@ -34,4 +34,3 @@ for subject in ${subject_list} ; do
 
 done
 
-popd
