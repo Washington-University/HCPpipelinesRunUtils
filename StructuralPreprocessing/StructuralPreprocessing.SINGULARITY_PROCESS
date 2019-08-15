@@ -857,23 +857,15 @@ main()
 		elif [[ ("${g_fieldmap_type}" == "SE") || ("${g_fieldmap_type}" == "SpinEcho") ]] ; then
 			# add parameters for SpinEcho fieldmap usage
 			PreFreeSurfer_cmd+=" --echodiff=NONE"
-			PreFreeSurfer_cmd+=" --t1samplespacing=${g_first_t1w_sample_spacing}"
-			PreFreeSurfer_cmd+=" --t2samplespacing=${g_first_t2w_sample_spacing}"
-			PreFreeSurfer_cmd+=" --avgrdcmethod=TOPUP"
-			PreFreeSurfer_cmd+=" --SEPhaseNeg=$(spin_echo_phase_neg_fullpath)"
-			PreFreeSurfer_cmd+=" --SEPhasePos=$(spin_echo_phase_pos_fullpath)"
-			PreFreeSurfer_cmd+=" --seechospacing=${g_first_t1w_positive_dwell_time}"
-			PreFreeSurfer_cmd+=" --topupconfig=${HCPPIPEDIR}/global/config/${g_topupconfig}"
-			
-			local pos_file
-			pos_file=$(spin_echo_phase_pos_fullpath)
-			
-			local seunwarp_dir
-			seunwarp_dir=$(${HCP_RUN_UTILS}/lib/utils/get_json_meta_data.sh -f ${pos_file} -k PhaseEncodingDirection)
-			
-			PreFreeSurfer_cmd+=" --seunwarpdir=${seunwarp_dir}"
-			
-			PreFreeSurfer_cmd+=" --unwarpdir=${g_first_t1w_unwarp_direction}"
+			PreFreeSurfer_cmd+=" --t1samplespacing=NONE"
+			PreFreeSurfer_cmd+=" --t2samplespacing=NONE"
+			PreFreeSurfer_cmd+=" --avgrdcmethod=NONE"
+			PreFreeSurfer_cmd+=" --SEPhaseNeg=NONE"
+			PreFreeSurfer_cmd+=" --SEPhasePos=NONE"
+			PreFreeSurfer_cmd+=" --seechospacing=NONE"
+			PreFreeSurfer_cmd+=" --topupconfig=NONE"
+			PreFreeSurfer_cmd+=" --seunwarpdir=NONE"
+			PreFreeSurfer_cmd+=" --unwarpdir=NONE"
 
 		elif [[ ("${g_fieldmap_type}" == "NONE") ]] ; then
 			# add parameters for SpinEcho fieldmap usage
