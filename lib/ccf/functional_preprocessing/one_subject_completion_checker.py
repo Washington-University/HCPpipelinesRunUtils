@@ -18,7 +18,7 @@ import utils.my_argparse as my_argparse
 
 # authorship information
 __author__ = "The Connectome Coordination Facility"
-__copyright__ = "Copyright 2017-2018, The Connectome Coordination Facility"
+__copyright__ = "Copyright 2017-2019, The Connectome Coordination Facility"
 
 
 class OneSubjectCompletionChecker(one_subject_completion_checker.OneSubjectCompletionChecker):

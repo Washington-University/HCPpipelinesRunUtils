@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-"""${HCP_RUN_UTILS}/lib/ccf/functional_preprocessing/one_subject_completion_checker.py
+"""${HCP_RUN_UTILS}/lib/ccf/multirunicafix_processing/one_subject_completion_checker.py
 
-Defines a class used for completion checking of structural preprocessing
+Defines a class used for completion checking of MultiRunIcaFix Processing
 
 """
 
@@ -22,20 +22,20 @@ __copyright__ = "Copyright 2017-2019, The Connectome Coordination Facility"
 
 
 class OneSubjectCompletionChecker(one_subject_completion_checker.OneSubjectCompletionChecker):
-	"""Used for completion checking of structural preprocessing"""
+	"""Used for completion checking of MultiRunIcaFix Processing"""
 	
 	def __init__(self):
 		super().__init__()
 
 	@property
 	def processing_name(self):
-		return 'StructuralPreprocessing'
+		return 'MultiRunIcaFixProcessing'
 	
 	
 if __name__ == "__main__":
 
 	parser = my_argparse.MyArgumentParser(
-		description="Program to check for completion of Structural Preprocessing.")
+		description="Program to check for completion of MultiRunIcaFix Processing.")
 
 	# mandatory arguments
 	parser.add_argument('-w', '--working-dir', dest='working_dir', required=True, type=str)
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 	# parse the command line arguments
 	args = parser.parse_args()
   
-	# check the specified subject for structural preprocessing completion
+	# check the specified subject for MultiRunIcaFix Processing completion
 	subject_info = ccf_subject.SubjectInfo(
 		project='irrelevant',
 		subject_id=args.subject,

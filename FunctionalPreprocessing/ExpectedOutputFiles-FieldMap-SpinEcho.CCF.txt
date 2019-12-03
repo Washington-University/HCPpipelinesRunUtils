@@ -102,6 +102,8 @@ T1w xfms {scan}2str.nii.gz
 {scan} DistortionCorrectionAndEPIToT1wReg_FLIRTBBRAndFreeSurferBBRbased FieldMap PhaseTwo.nii.gz
 {scan} DistortionCorrectionAndEPIToT1wReg_FLIRTBBRAndFreeSurferBBRbased FieldMap PhaseTwo_vol1.nii.gz
 {scan} DistortionCorrectionAndEPIToT1wReg_FLIRTBBRAndFreeSurferBBRbased FieldMap qa.txt
+# Generates PhaseTwo_gdc_one.nii.gz or PhaseOne_gdc_one.nii.gz
+# {scan} DistortionCorrectionAndEPIToT1wReg_FLIRTBBRAndFreeSurferBBRbased FieldMap PhaseTwo_gdc_one.nii.gz
 # Generates SBRef2PhaseOne_gdc.mat or SBRef2PhaseTwo_gdc.mat
 # {scan} DistortionCorrectionAndEPIToT1wReg_FLIRTBBRAndFreeSurferBBRbased FieldMap SBRef2PhaseOne_gdc.mat
 # Generates SBRef2PhaseOne_gdc.nii.gz or SBRef2PhaseTwo_gdc.nii.gz

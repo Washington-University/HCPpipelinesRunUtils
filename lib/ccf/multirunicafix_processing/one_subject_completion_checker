@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #
-# ${HCP_RUN_UTILS}/lib/ccf/diffusion_preprocessing/one_subject_completion_checker
-# Script to run diffusion preprocessing one subject completion checker Python code
+# ${HCP_RUN_UTILS}/lib/ccf/multirunicafix_processing/one_subject_completion_checker
+# Script to run structural preprocessing one subject completion checker Python code
 # Copyright 2019, The Connectome Coordination Facility
 #
 
