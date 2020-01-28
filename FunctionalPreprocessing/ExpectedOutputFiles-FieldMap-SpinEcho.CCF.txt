@@ -9,7 +9,6 @@ MNINonLinear Results {scan} Movement_Regressors.txt
 MNINonLinear Results {scan} Movement_RelativeRMS_mean.txt
 MNINonLinear Results {scan} Movement_RelativeRMS.txt
 MNINonLinear Results {scan} {scan}_Atlas.dtseries.nii
-MNINonLinear Results {scan} {scan}_Atlas_nonzero.dscalar.nii
 MNINonLinear Results {scan} {scan}_Atlas_nonzero.stats.txt
 MNINonLinear Results {scan} {scan}_finalmask.nii.gz
 MNINonLinear Results {scan} {scan}_finalmask.stats.txt
