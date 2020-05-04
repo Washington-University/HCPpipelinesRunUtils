@@ -38,8 +38,15 @@ class OneSubjectCompletionChecker(abc.ABC):
 	def list_of_expected_files(self, working_dir, fieldmap, subject_info):
 
 		hcp_run_utils = os_utils.getenv_required('HCP_RUN_UTILS')
-		f = open(hcp_run_utils + os.sep + self.processing_name + os.sep
-				 + self.expected_output_files_template_filename(fieldmap))
+		if os.path.isfile(hcp_run_utils + os.sep + self.processing_name + os.sep
+				 + self.expected_output_files_template_filename(fieldmap)):
+			f = open(hcp_run_utils + os.sep + self.processing_name + os.sep
+					 + self.expected_output_files_template_filename(fieldmap))
+		else:
+			xnat_pbs_jobs = os_utils.getenv_required('XNAT_PBS_JOBS')
+			f = open(xnat_pbs_jobs + os.sep + self.processing_name + os.sep
+					 + self.expected_output_files_template_filename(fieldmap))
+			
 		root_dir = os.sep.join([working_dir, subject_info.subject_id + '_' + subject_info.classifier])
 		l = file_utils.build_filename_list_from_file(f, root_dir,
 													 subjectid=subject_info.subject_id + '_' + subject_info.classifier,
